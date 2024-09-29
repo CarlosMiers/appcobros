@@ -1,0 +1,32 @@
+
+<ion-content class="ion-padding ion-text-center" color="secundary">
+  <img src="../../../assets/img/logo.png" class="logo" />
+  <ion-grid>
+    <ion-row justify-content-center>
+      <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+        <div padding class="item-content">
+          <ion-item>
+            <ion-icon name="person" color="primary"></ion-icon>
+            <ion-input type="text" placeholder="Login Usuario" [(ngModel)]="loginacceso"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-icon name="eye-off" color="primary"></ion-icon>
+            <ion-input type="password" placeholder="Password" [(ngModel)]="password"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-icon name="eye-off" color="primary"></ion-icon>
+            <ion-input type="password" placeholder="Confirmar Password" [(ngModel)]="confirmPassword"></ion-input>
+          </ion-item>
+        </div>
+        <div class="ion-margin-top">
+          <ion-button expand="block" (click)="AgregarUsuario()">Registrarse</ion-button>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <p>Al registrarse, acepta nuestros Términos y condiciones.</p>
+  <div class="ion-margin-top ion-text-center">
+    <a (click)="dismiss()">Salir</a>
+  </div>
+</ion-content>

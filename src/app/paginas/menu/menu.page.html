@@ -1,0 +1,18 @@
+<ion-header>
+  <div logo-container>
+    <img src="../../../assets/img/logo.png" class="logo" />
+  </div>
+  <ion-toolbar>
+    <ion-title color='primary'>Menú</ion-title>
+    <!--LISTAS E ITEM DE LISTAS-->
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let c of componentes" [routerLink]="c.redirectTo" detail>
+      <ion-icon slot="start" [name]="c.icon"></ion-icon>
+      <ion-label>{{c.name}}</ion-label>
+    </ion-item>      
+  </ion-list>
+
+</ion-content>

@@ -1,0 +1,7 @@
+{
+  "name": "AppCobros",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

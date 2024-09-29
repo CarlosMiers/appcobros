@@ -1,0 +1,86 @@
+<ion-content>
+  <div class="sign-container gradient-1">
+
+    <div class="cat">
+        <img src="../../../assets/img/logo.png" alt="">
+    </div>
+
+    <div class="login-container">
+
+      <ion-list lines="none" class="form fade-in">
+        <ion-item>
+          <ion-label>Usuario</ion-label>
+          <ion-input class="ion-text-right"   [(ngModel)]="loginacceso"></ion-input>
+          <ion-icon slot="end" name="person"></ion-icon>
+        </ion-item>
+        <ion-item>
+          <ion-label>Cédula</ion-label>
+          <ion-input class="ion-text-right"  [(ngModel)]="cedula"></ion-input>
+          <ion-icon slot="end" name="card"></ion-icon>
+        </ion-item>
+        <ion-item>
+          <ion-label>Password</ion-label>
+          <ion-input class="ion-text-right"   [(ngModel)]="password"></ion-input>
+          <ion-icon slot="end" name="key"></ion-icon>
+        </ion-item>
+      </ion-list>
+
+      <div class="ion-text-center fade-in">
+        <ion-button (click)="Ingresar()" class="green-button">
+          Ingresar
+        </ion-button>
+      </div>
+
+    </div>
+
+    <div class="sign-up-container gradient-2" [ngClass]="{'active': signupView}">
+
+      <div class="toggle-text ion-text-center" tappable (click)="toggleSignUpView()">
+
+        <span *ngIf="!signupView" [ngClass]="{'fade-in': !signupView, 'fade-out': signupView}">Sign Up</span>
+        <span *ngIf="signupView" [ngClass]="{'fade-in': signupView, 'fade-out': !signupView}">Login</span>
+        <br>
+        <ion-icon name="arrow-round-up" *ngIf="!signupView" [ngClass]="{'fade-in': !signupView, 'fade-out': signupView}"></ion-icon>
+        <ion-icon name="arrow-round-down" *ngIf="signupView" [ngClass]="{'fade-in': signupView, 'fade-out': !signupView}"></ion-icon>
+
+      </div>
+
+      <ion-list lines="none" class="form" [ngClass]="{'fade-in': signupView, 'fade-out': !signupView}">
+        <ion-item>
+          <ion-label>Nombre</ion-label>
+          <ion-input class="ion-text-right" [(ngModel)]= "comitente"></ion-input>
+          <ion-icon slot="end" name="person"></ion-icon>
+        </ion-item>
+      
+        <ion-item>
+          <ion-label>Login</ion-label>
+          <ion-input class="ion-text-right" [(ngModel)]= "loginacceso"></ion-input>
+          <ion-icon slot="end" name="person"></ion-icon>
+        </ion-item>
+        <ion-item>
+          <ion-label>Cédula</ion-label>
+          <ion-input class="ion-text-right" [(ngModel)]= "cedula"></ion-input>
+          <ion-icon slot="end" name="card"></ion-icon>
+        </ion-item>
+        <ion-item>
+          <ion-label>Ingrese Password</ion-label>
+          <ion-input class="ion-text-right" [(ngModel)]= "password"></ion-input>
+          <ion-icon slot="end" name="key"></ion-icon>
+        </ion-item>
+        <ion-item>
+          <ion-label>Repita su Password</ion-label>
+          <ion-input class="ion-text-right" [(ngModel)]= "confirmPassword"></ion-input>
+          <ion-icon slot="end" name="key"></ion-icon>
+        </ion-item>
+      </ion-list>
+      
+      <div class="ion-text-center" [ngClass]="{'fade-in': signupView, 'fade-out': !signupView}">
+        <ion-button (click)="AgregarUsuario()" class="gray-button">
+          Agregar
+        </ion-button>
+      </div>
+
+    </div>
+
+  </div>
+</ion-content>

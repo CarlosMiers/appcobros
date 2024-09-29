@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar color="primary"  >
+    <ion-title class="ion-text-center">Lista de Productos</ion-title>
+  </ion-toolbar>
+  <ion-toolbar >
+    <ion-searchbar (ionChange)="buscar($event)"> </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+      </ion-list>
+</ion-content>
+
+<ion-fab vertical="bottom" horizontal="center" slot="fixed">
+  <div>
+    <ion-fab-button type="submit" color="secondary" [routerLink]="['/edit-productos',0]">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </div>
+</ion-fab>

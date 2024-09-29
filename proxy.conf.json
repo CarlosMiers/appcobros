@@ -1,0 +1,8 @@
+{
+    "/api/*": {
+        "target": "http://192.168.0.6:3005/",
+        "secure": false,
+        "logLavel":"debug",
+        "changeOrigin":true
+    }
+}

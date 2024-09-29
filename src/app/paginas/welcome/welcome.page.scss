@@ -1,0 +1,54 @@
+.container{
+  align-content: center;
+  display: block;
+  position: relative;
+  top: 35px;
+}
+
+.logo {
+  margin-top: 8px;
+  height: 100px;
+}
+
+.logo-container {
+  margin-bottom: 20px;
+}
+
+/*.logo {
+    width: 150px;
+    height: auto;
+  }*/
+
+.welcome-message {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.description {
+  font-size: 16px;
+  margin-bottom: 40px;
+}
+
+.action-button {
+  --background: #007BFF;
+  /* Azul */
+  --background-hover: #0056b3;
+  /* Azul más oscuro */
+  --background-activated: #004085;
+  /* Azul aún más oscuro */
+  --background-focused: #003366;
+  /* Azul muy oscuro */
+  border-radius: 20px;
+  margin: 10px 0;
+}
+
+ion-button[fill="outline"] {
+  --border-color: #007BFF;
+  /* Azul */
+  --color: #007BFF;
+  /* Azul */
+  --background: transparent;
+  --background-hover: rgba(0, 123, 255, 0.1);
+  /* Azul con transparencia */
+}

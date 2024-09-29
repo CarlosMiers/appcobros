@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">Lista de Clientes</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar (ionChange)="buscar($event)"> </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item-sliding *ngFor="let datos of clientes | filtro:textoBuscar:'nombre'" (click)="openEditClienteModal(datos.codigo)">   
+      <ion-card>
+        <ion-card-subtitle>{{datos.nombre}}</ion-card-subtitle>
+        <div class="contenido">
+          <ion-grid>
+            <ion-row>
+              <ion-col class="ion-margin">
+                <div><strong>Cuenta</strong></div>
+              </ion-col>
+              <ion-col class="ion-margin">
+                <div>{{datos.codigo}}</div>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="ion-margin">
+                <div><strong>RUC</strong></div>
+              </ion-col>
+              <ion-col class="ion-margin">
+                <div>{{datos.ruc}}</div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+        <ion-icon name="person" class="icono-superior-derecho"></ion-icon>
+      </ion-card>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" class="custom-fab">
+  <ion-fab-button type="submit" color="primary" (click)="openEditClienteModal(0)">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+
+<ion-footer>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6" class="ion-text-center">
+        <ion-button  (click)="prevPage()" [disabled]="page === 1">
+          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size="6" class="ion-text-center">
+        <ion-button (click)="nextPage()">
+          <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>
