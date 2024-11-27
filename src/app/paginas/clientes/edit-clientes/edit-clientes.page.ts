@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { AlertController, ModalController, NavParams } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { ClientesService } from 'src/app/services/clientes/clientes.service';
 import { LoadingService } from 'src/app/services/loading/loading.service';
@@ -12,13 +12,13 @@ import { Cliente } from 'src/app/models/clientes/cliente';
   styleUrls: ['./edit-clientes.page.scss'],
 })
 export class EditClientesPage implements OnInit {
-  //EditCliente: any = [];
+ 
+  @Input() clienteCodigo: number=0;  // Recibe el parámetro 'codigo' desde el modal
+
   id: any;
   titulo: any = '';
-
   loading: boolean = false;
 
-  codcliente: any = null;
 
   EditCliente: Cliente = {
     codigo: 0,
@@ -44,14 +44,14 @@ export class EditClientesPage implements OnInit {
     public alertController: AlertController,
     public loadingService: LoadingService,
     public formBuilder: FormBuilder,
-    private navParams: NavParams
   ) {}
+
+
 
   ngOnInit() {
     this.getPosicionGlobal();
-    this.codcliente = this.navParams.get('codigo');
-    if (this.codcliente > 0) {
-      this.titulo = 'Editar Cliente N° ' + this.codcliente;
+    if (this.clienteCodigo > 0) {
+      this.titulo = 'Editar Cliente N° ' + this.clienteCodigo;
       this.Consultar();
     } else {
       this.titulo = 'Agregar Cliente';
@@ -65,7 +65,7 @@ export class EditClientesPage implements OnInit {
       this.EditCliente.telefono == ''
     ) {
       this.loadingService.present({
-        message: 'Los Campos de Nombre, Cédula y Tel son Obligatorios.',
+        message: 'Los Campos de Nombre, Cédula y Télefono son Obligatorios.',
         duration: 300,
       });
       return;
@@ -100,7 +100,7 @@ export class EditClientesPage implements OnInit {
       duration: 300,
     });
 
-    this._clienteService.getCliente(this.codcliente).subscribe(
+    this._clienteService.getCliente(this.clienteCodigo).subscribe(
       (data) => {
         this.EditCliente = data;
         console.log(this.EditCliente);
@@ -130,7 +130,6 @@ export class EditClientesPage implements OnInit {
         resp.coords.latitude, resp.coords.longitude;
         this.EditCliente.latitud = resp.coords.latitude.toString();
         this.EditCliente.longitud = resp.coords.longitude.toString();
-        console.log(this.EditCliente.latitud + '/' + this.EditCliente.longitud);
       })
       .catch((error) => {
         console.log('Error getting location', error);

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { catchError} from 'rxjs/operators';
 import {
   HttpRequest,
@@ -10,10 +10,11 @@ import {  Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
+
 @Injectable()
 export class AddTtokenInterceptor implements HttpInterceptor {
 
-  constructor(private router: Router) { }
+  constructor(@Inject(Router) private router: Router) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token = localStorage.getItem('token')

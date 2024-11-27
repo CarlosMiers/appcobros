@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   ModalController,
@@ -8,6 +8,8 @@ import {
 } from '@ionic/angular';
 import { ClientesService } from 'src/app/services/clientes/clientes.service';
 import { EditClientesPage } from '../edit-clientes/edit-clientes.page';
+import { LoadingService } from 'src/app/services/loading/loading.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-clientes',
@@ -17,36 +19,44 @@ import { EditClientesPage } from '../edit-clientes/edit-clientes.page';
 export class ClientesPage implements OnInit {
   textoBuscar = '';
   clientes: any[] = [];
-
   page: number = 1;
   limit: number = 10;
+  currentPage = 1;
+  totalPages: number = 1;
+  itemsPerPage = 10;
 
   constructor(
     private clienteService: ClientesService,
     public modalCtrl: ModalController,
     public formBuilder: FormBuilder,
+    private navCtrl: NavController,
+    public loadingService: LoadingService,
     public router: Router,
     private toast: ToastController,
     private ActionSheetController: ActionSheetController
   ) {}
 
   ngOnInit() {
-   // this.loadClientes();
-  }
-
-  ionViewWillEnter(){
     this.loadClientes();
   }
 
-
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadClientes(); // Recargar clientes para la página anterior
+    }
+  }
 
   loadClientes() {
+    this.loadingService.present({
+      message: 'Aguarde un Momento.',
+      duration: 300,
+    });
+
     this.clienteService.getClientes(this.page, this.limit).subscribe((data) => {
       this.clientes = data; // Asigna directamente el array a this.clientes
     });
   }
-
-  
 
   buscar(event: any) {
     this.textoBuscar = event.detail.value;
@@ -97,6 +107,11 @@ export class ClientesPage implements OnInit {
     await actionSheet.present();
   }
 
+  goBack() {
+    this.router.navigate(['/menu']);
+  }
+
+
   async openEditClienteModal(clienteCodigo: number) {
     const modal = await this.modalCtrl.create({
       component: EditClientesPage,
@@ -105,12 +120,10 @@ export class ClientesPage implements OnInit {
       backdropDismiss: false,
       cssClass: 'editCliente-modal',
       componentProps: {
-        codigo: clienteCodigo,
+        clienteCodigo: clienteCodigo,
       },
     });
-
+    //  localStorage.setItem('codcliente',clienteCodigo.toString());
     return await modal.present();
-
   }
-
 }

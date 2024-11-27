@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-icon name="arrow-back"  (click)="goBack()"></ion-icon>
+    </ion-buttons>
+
+    <ion-title class="ion-text-center">Lista de Productos</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar (ionChange)="buscar($event)"> </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item-sliding *ngFor="let datos of productos | filtro:textoBuscar:'nombre'" (click)="openEditProductoModal(datos.codigo)">   
+      <ion-card>
+        <ion-card-subtitle>{{datos.codigo}}</ion-card-subtitle>
+        <div class="contenido">
+          <ion-grid>
+            <ion-row>
+              <ion-col class="ion-margin">
+                <div>{{datos.nombre}}</div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+        <ion-icon name="cart" class="icono-superior-derecho"></ion-icon>
+      </ion-card>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" class="custom-fab">
+  <ion-fab-button type="submit" (click)="openEditProductoModal('')">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+
+<ion-footer>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6" class="ion-text-center">
+        <ion-button  (click)="prevPage()" [disabled]="page === 1">
+          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size="6" class="ion-text-center">
+        <ion-button (click)="nextPage()">
+          <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>

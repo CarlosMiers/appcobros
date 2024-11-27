@@ -16,6 +16,7 @@ export class RegisterPage implements OnInit {
   loading: boolean = false;
   mensaje: String = '';
   idusuario: number = 0;
+  descripcion:string='';
   loginacceso: string = '';
   password: string = '';
   confirmPassword: string = '';
@@ -50,6 +51,7 @@ export class RegisterPage implements OnInit {
     //creamos el objeto
     const usuario: Usuario = {
       idusuario: this.idusuario,
+      descripcion:this.descripcion,
       loginacceso: this.loginacceso,
       password: this.password
     }

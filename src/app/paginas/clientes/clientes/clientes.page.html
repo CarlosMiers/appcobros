@@ -1,5 +1,10 @@
 <ion-header>
   <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-icon name="arrow-back"  (click)="goBack()"></ion-icon>
+    </ion-buttons>
+
     <ion-title class="ion-text-center">Lista de Clientes</ion-title>
   </ion-toolbar>
   <ion-toolbar>
@@ -39,7 +44,7 @@
 </ion-content>
 
 <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="custom-fab">
-  <ion-fab-button type="submit" color="primary" (click)="openEditClienteModal(0)">
+  <ion-fab-button type="submit" (click)="openEditClienteModal(0)">
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
 </ion-fab>

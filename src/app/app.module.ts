@@ -10,10 +10,11 @@ import { Toast } from '@awesome-cordova-plugins/toast/ngx';
 import { SMS } from "@awesome-cordova-plugins/sms/ngx";
 import es from '@angular/common/locales/es';
 import { PipesModule } from './pipes/filtro/pipes.module';
-import { registerLocaleData } from '@angular/common';
+import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { NativeGeocoder } from '@awesome-cordova-plugins/native-geocoder/ngx';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
+
 
 registerLocaleData(es);
 
@@ -21,8 +22,8 @@ registerLocaleData(es);
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule,PipesModule,IonicModule.forRoot(), 
-  HttpClientModule, FormsModule,  AppRoutingModule ],
-  providers: [Toast,  NativeGeocoder,Geolocation, SMS, {provide: HTTP_INTERCEPTORS,useClass: AddTtokenInterceptor, multi:true,},
+  HttpClientModule, FormsModule,  AppRoutingModule,],
+  providers: [Toast,CurrencyPipe,  NativeGeocoder,Geolocation, SMS, {provide: HTTP_INTERCEPTORS,useClass: AddTtokenInterceptor, multi:true,},
     {provide: LOCALE_ID, useValue:'es-PY'},    
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

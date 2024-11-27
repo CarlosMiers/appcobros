@@ -1,0 +1,83 @@
+/* src/app/app.scss */
+:root {
+    --ion-padding-horizontal: 15px;
+  }
+  
+  ion-col {
+    padding: 5px; /* Ajusta según tus necesidades */
+  }
+  
+  ion-label {
+    display: inline-block;
+    width: 100px; /* Ajusta este valor según tus necesidades */
+    text-align: left;
+  }
+  
+  ion-input,
+  ion-select {
+    width: 100%;
+  }
+  
+  .ion-align-items-center {
+    align-items: center;
+  }
+  
+  .ion-justify-content-between {
+    justify-content: space-between;
+  }
+  
+  .align-right { input { text-align: right; } }
+
+
+.align-right {
+    input {
+      text-align: right;
+    }
+  }
+  
+  ion-card {
+    margin: 10px 0;
+  }
+  
+  ion-card-header {
+    background-color: #3880ff; /* Color del encabezado */
+    color: white;
+  }
+  
+  ion-card-title {
+    font-weight: bold;
+  }
+  
+  .ion-align-items-center {
+    align-items: center;
+  }
+  
+  .cliente-nombre {
+    font-size: 1.1em;
+    text-align: center;
+    color: #0e2ddf; /* Color del texto */
+    margin-top: 20px;
+    top: 20px;
+    height: 40px;
+  }
+  
+  ion-item {
+    --inner-padding-end: 8px;
+    --inner-padding-start: 8px;
+  }
+  
+  ion-footer {
+    --background: #f4f5f8;
+  }
+  
+  ion-button {
+    margin: 10px 0;
+  }
+
+
+  ion-row {
+    margin-top: 1px;
+    top: 1px;
+    height: 30px;
+  }
+  

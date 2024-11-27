@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Buscar Cliente</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="navCtrl.back()">Cancelar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar (ionInput)="buscarCliente($event)" debounce="500" placeholder="Buscar cliente por código o nombre"></ion-searchbar>
+
+  <ion-list>
+    <ion-item *ngFor="let cliente of clientes" (click)="seleccionarCliente(cliente)">
+      <ion-label>
+        <h2>{{ cliente.nombre }}</h2>
+        <p>{{ cliente.codigo }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

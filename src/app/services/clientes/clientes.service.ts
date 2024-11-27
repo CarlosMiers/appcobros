@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ParametrosService } from '../parametros/parametros.service';
-import { Cliente } from '../../models/clientes/cliente';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -29,13 +28,11 @@ export class ClientesService {base_path:String = '';
 
   updateCliente(cliente: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    //const body = {cliente};
      return this.http.put(`${this.base_path}${this.myApiUrl}${this.myApId}/`,cliente, { headers });
   }
 
   AddCliente(cliente: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    //const body = {cliente};
      return this.http.post(`${this.base_path}${this.myApiUrl}/`,cliente, { headers });
   }
 

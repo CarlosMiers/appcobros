@@ -1,0 +1,94 @@
+<ion-header style="background-color: rgba(35, 224, 200, 1)">
+  <ion-toolbar class="barra" color="primary">
+    <ion-buttons slot="start">
+      <ion-icon name="arrow-back" (click)="goBack()"></ion-icon>
+    </ion-buttons>
+
+    <div class="ion-text-center">
+      <h4>Pedidos</h4>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div class="ion-text-center">Desde</div>
+          <ion-input type="date" [(ngModel)]="fechainicio" name="fechainicio"></ion-input>
+        </ion-col>
+        <ion-col>
+          <div class="ion-text-center">Hasta</div>
+          <ion-input type="date" [(ngModel)]="fechafinal" name="fechafinal"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button (click)="Consultar()" expand="block">Consultar</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <div class="ion-text-center">
+    <h3 *ngIf="totalpedido==0">Sin Pedidos</h3>
+  </div>
+  <ion-list>
+    <ion-item-sliding *ngFor="let detalle of ListaPedido">
+      <ion-card  (click)=" OpenEditPedido(detalle.numero)">
+        <ion-card-subtitle>{{detalle.nombrecliente}}</ion-card-subtitle>
+        <div class="contenido">
+          <ion-grid>
+            <ion-row>
+                <ion-col class="ion-margin">
+                  <div><strong>N° Pedido</strong></div>
+                </ion-col>
+                <ion-col class="ion-margin">
+                  <div>{{detalle.numero}}</div>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="ion-margin">
+                <div><strong>Fecha</strong></div>
+              </ion-col>
+
+              <ion-col class="ion-margin">
+                <div>{{detalle.fecha | date}}</div>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+
+              <ion-col class="ion-margin">
+                <div><strong>Importe</strong></div>
+              </ion-col>
+
+              <ion-col class="ion-margin">
+                <div>{{detalle.totalneto | number:'1.0-0'}}</div>
+              </ion-col>
+            </ion-row>
+
+          </ion-grid>
+        </div>
+      </ion-card>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div class="row responsive-sm" class="ion-text-start">
+          <p>
+            <strong class="capitalize">Total Pedidos</strong>
+          </p>
+        </div>
+      </ion-col>
+      <ion-col>
+        <div class="row responsive-sm" class="ion-text-end">
+          <p> <strong class="capitalize">{{ totalpedido| number:'1.0-0' }}</strong></p>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>

@@ -8,10 +8,6 @@ const routes: Routes = [
     redirectTo: 'welcome',
     pathMatch: 'full'
   },
-  {
-    path: 'inicio',
-    loadChildren: () => import('./paginas/inicio/inicio.module').then( m => m.InicioPageModule)
-  },
   
   {
     path: 'home',
@@ -38,10 +34,7 @@ const routes: Routes = [
     path: 'welcome',
     loadChildren: () => import('./paginas/welcome/welcome.module').then( m => m.WelcomePageModule)
   },
-  {
-    path: 'productos',
-    loadChildren: () => import('./paginas/productos/productos.module').then( m => m.ProductosPageModule) , canActivate: [AuthGuard]
-  },
+  
   {
     path: 'clientes',
     loadChildren: () => import('./paginas/clientes/clientes/clientes.module').then( m => m.ClientesPageModule) , canActivate: [AuthGuard]
@@ -50,6 +43,31 @@ const routes: Routes = [
     path: 'edit-clientes/:codigo',
     loadChildren: () => import('./paginas/clientes/edit-clientes/edit-clientes.module').then( m => m.EditClientesPageModule) , canActivate: [AuthGuard]
   },
+  {
+    path: 'productos',
+    loadChildren: () => import('./paginas/productos/lista-productos/productos/productos.module').then( m => m.ProductosPageModule), canActivate: [AuthGuard]
+  },
+  {
+    path: 'edit-productos',
+    loadChildren: () => import('./paginas/productos/edit-productos/edit-productos/edit-productos.module').then( m => m.EditProductosPageModule), canActivate: [AuthGuard]
+  },
+  {
+    path: 'lista-pedidos',
+    loadChildren: () => import('./paginas/pedidos/lista-pedidos/lista-pedidos/lista-pedidos.module').then( m => m.ListaPedidosPageModule), canActivate: [AuthGuard]
+  },
+  {
+    path: 'detalle-pedido',
+    loadChildren: () => import('./paginas/pedidos/detalle-pedido/detalle-pedido/detalle-pedido.module').then( m => m.DetallePedidoPageModule), canActivate: [AuthGuard]
+  },
+  {
+    path: 'item-pedido',
+    loadChildren: () => import('./paginas/pedidos/item-pedido/item-pedido/item-pedido.module').then( m => m.ItemPedidoPageModule), canActivate: [AuthGuard]
+  },
+  {
+    path: 'buscar-clientes',
+    loadChildren: () => import('./paginas/clientes/buscar-clientes/buscar-clientes/buscar-clientes.module').then( m => m.BuscarClientesPageModule), canActivate: [AuthGuard]
+  },
+
 ];
 
 @NgModule({
