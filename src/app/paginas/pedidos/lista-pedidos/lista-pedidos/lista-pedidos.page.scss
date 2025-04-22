@@ -48,3 +48,8 @@ ion-card {
     --ionicon-stroke-width: 16px;
   }
   
+  .custom-fab {
+    margin-left: -180x; /* Ajusta este valor según cuánto quieras que sobresalga */
+    margin-bottom: 50px; /* Ajusta este valor para moverlo hacia abajo */
+  }
+

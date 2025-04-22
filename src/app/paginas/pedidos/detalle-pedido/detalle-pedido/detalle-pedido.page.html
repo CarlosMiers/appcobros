@@ -1,27 +1,30 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Detalle de Pedido</ion-title>
+    <ion-buttons slot="start">
+      <ion-icon name="arrow-back" (click)="dismiss()"></ion-icon>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Detalle de Pedido</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Información del Pedido</ion-card-title>
+      <ion-card-title  class="ion-text-center custom-title">Información del Pedido</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-grid>
         <ion-row>
-          <ion-col size="6" style="align-self: center;">
+          <ion-col size="6" class="ion-align-self-center">
             <ion-label>Fecha</ion-label>
           </ion-col>
-          <ion-col size="6" style="align-self: center;">
+          <ion-col size="6" class="ion-align-self-center">
             <ion-input type="date" [(ngModel)]="pedido.fecha" name="fecha"></ion-input>
           </ion-col>
         </ion-row>
 
         <ion-row>
-          <ion-col size="6" style="align-self: center;">
+          <ion-col size="6" class="ion-align-self-center">
             <ion-label>Comprobante</ion-label>
           </ion-col>
           <ion-col size="6">
@@ -33,13 +36,13 @@
         </ion-row>
 
         <ion-row>
-          <ion-col size="3" style="align-self: center;">
+          <ion-col size="3" class="ion-align-self-center">
             <ion-label>Cliente</ion-label>
           </ion-col>
-          <ion-col size="4" style="align-self: center;">
+          <ion-col size="4" class="ion-align-self-center">
             <ion-input [(ngModel)]="pedido.cliente" (ionBlur)="ValidarCliente()" class="align-right"></ion-input>
           </ion-col>
-          <ion-col size="5" style="align-self: center;">
+          <ion-col size="5" class="ion-align-self-center">
             <ion-button expand="full" color="primary" (click)="ValidarCliente()">Buscar</ion-button>
           </ion-col>
         </ion-row>
@@ -54,23 +57,59 @@
 
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Detalle de Productos</ion-card-title>
+      <ion-card-title class="ion-text-center custom-title">Productos en el Pedido</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-list>
-        <ion-item *ngFor="let detalle of detalles; let i = index">
-          <ion-label class="ion-text-wrap">
-            <h2>{{ detalle.codprod }}</h2>
-            <p>{{ detalle.descripcion }}</p>
-            <p>Precio: {{ detalle.precio | currency }}</p>
-            <p>Costo: {{ detalle.costo | currency }}</p>
-            <p>Impuesto: {{ detalle.impuesto | currency }}</p>
-          </ion-label>
-          <ion-button fill="outline" (click)="editarProducto(i)">Editar</ion-button>
-          <ion-button color="danger" fill="outline" (click)="eliminarProducto(i)">Borrar</ion-button>
-        </ion-item>
-      </ion-list>
+      <ion-item-sliding *ngFor="let detalle of detalles; let i = index">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <div><strong>Código</strong></div>
+            </ion-col>
+            <ion-col size="12">
+              <div>{{detalle.codprod}}</div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <div><strong>Descripción</strong></div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <div>{{detalle.comentario}}</div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <!-- Columna para el precio -->
+            <ion-col size="6">
+              <p><strong>Precio:</strong> {{ detalle.precio | number:'1.0-0' }}</p>
+            </ion-col>
+          </ion-row>
 
+          <!-- Columna para la cantidad -->
+          <ion-row>
+            <ion-col size="6">
+              <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <!-- Columna para el subtotal -->
+            <ion-col size="6">
+              <p><strong>Subtotal :</strong> {{ (detalle.precio * detalle.cantidad) |  number:'1.0-0' }}</p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-buttons slot="end">
+          <ion-button fill="outline" color="secondary" (click)="editarProducto(i)">Editar</ion-button>
+          <ion-button color="danger" fill="outline" (click)="eliminarProducto(i)">Borrar</ion-button>
+        </ion-buttons>
+
+      </ion-item-sliding>
+
+      <!-- Formulario de selección y edición del producto -->
       <ion-item>
         <ion-label>Código Producto</ion-label>
         <ion-select [(ngModel)]="codigoProductoSeleccionado" interface="popover" (ionChange)="seleccionarProducto()">
@@ -80,35 +119,74 @@
       </ion-item>
 
       <ion-item>
-        <ion-label>Descripción</ion-label>
-        <ion-input [(ngModel)]="productoSeleccionado.descripcion" readonly></ion-input>
+        <ion-row>
+          <ion-col size="8">
+            <ion-input [(ngModel)]="productoSeleccionado.descripcion" readonly></ion-input>
+          </ion-col>
+        </ion-row>
       </ion-item>
 
       <ion-item>
-        <ion-label>Costo</ion-label>
-        <ion-input [(ngModel)]="productoSeleccionado.costo" readonly></ion-input>
+        <ion-row>
+          <ion-col size="7">
+            <ion-label>Cantidad</ion-label>
+          </ion-col>
+          <ion-col size="5">
+            <ion-input [(ngModel)]="productoSeleccionado.cantidad" type="number"></ion-input>
+          </ion-col>
+        </ion-row>
       </ion-item>
 
       <ion-item>
-        <ion-label>Precio</ion-label>
-        <ion-input [(ngModel)]="productoSeleccionado.precio" readonly></ion-input>
+        <ion-row>
+          <ion-col size="7">
+            <ion-label>Precio</ion-label>
+          </ion-col>
+          <ion-col size="5">
+            <ion-input [(ngModel)]="productoSeleccionado.precio" type="number"></ion-input>
+          </ion-col>
+        </ion-row>
       </ion-item>
 
-      <ion-item>
-        <ion-label>Impuesto</ion-label>
-        <ion-input [(ngModel)]="productoSeleccionado.impuesto" readonly></ion-input>
-      </ion-item>
-
-      <ion-button expand="full" (click)="agregarProducto()">Agregar Producto</ion-button>
+      <ion-button expand="full" color="success" (click)="agregarProducto()">Agregar Producto</ion-button>
     </ion-card-content>
   </ion-card>
 
-  <ion-item>
-    <ion-label>Total</ion-label>
-    <ion-input [value]="totalPedido()" readonly></ion-input>
-  </ion-item>
-
-  <ion-footer class="ion-padding">
-    <ion-button expand="full" (click)="guardarPedido()">Guardar Pedido</ion-button>
-  </ion-footer>
+  <ion-grid>
+    <ion-row class="total-row">
+      <!-- Columna para el texto "Total" -->
+      <ion-col size="6" class="total-label">
+        <div><strong>Total</strong></div>
+      </ion-col>
+  
+      <!-- Columna para el valor del total con separador de miles -->
+      <ion-col size="6" class="total-value ion-text-right">
+        <ion-input [value]="totalPedido() | number:'1.0-0'" readonly></ion-input>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+
+
+
+<ion-footer class="ion-padding">
+
+  <ion-grid>
+    <ion-row class="ion-justify-content-between">
+      <!-- Botón para guardar -->
+      <ion-col size="6">
+        <ion-button expand="full" color="success" (click)="guardarPedido()">
+          Guardar
+        </ion-button>
+      </ion-col>
+  
+      <!-- Botón para regresar -->
+      <ion-col size="6">
+        <ion-button expand="full" color="danger" (click)="dismiss()">
+          Regresar
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-footer>

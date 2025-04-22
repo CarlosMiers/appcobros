@@ -9,17 +9,17 @@ export class MenuPage implements OnInit {
   componentes: Array<{ icon: string; name: string; redirectTo: string }> = [
     {
       icon: 'people-outline',
-      name: 'clientes',
+      name: 'Clientes',
       redirectTo: '/clientes',
     },
     {
       icon: 'file-tray-stacked-outline',
-      name: 'productos',
+      name: 'Productos',
       redirectTo: '/productos',
     },
     {
       icon: 'cube-outline',
-      name: 'pedidos',
+      name: 'Pedidos',
       redirectTo: '/lista-pedidos',
     },
     {
@@ -29,7 +29,7 @@ export class MenuPage implements OnInit {
     },
     {
       icon: 'people',
-      name: 'cobranzas',
+      name: 'Cobranzas',
       redirectTo: '/cobranzas',
     },
 

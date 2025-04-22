@@ -14,6 +14,23 @@
     }
     
 
+    .custom-toast {
+      text-align: center; /* Centra el texto */
+      --background: #ff9800; /* Naranja */
+      --color: white; /* Texto en blanco */
+    }
+
+    .custom-title {
+      background-color: #c9520d; /* Azul */
+      color: white; /* Texto en blanco */
+      padding: 8px;
+      border-radius: 8px;
+      display: block; /* Para que el fondo cubra todo el ancho */
+      text-align: center;
+      font-size: 14px; /* Tamaño de la fuente más pequeño */      
+    }
+
+
     /** primary **/
     --ion-color-primary: #3880ff;
     --ion-color-primary-rgb: 56, 128, 255;

@@ -1,83 +1,82 @@
-/* src/app/app.scss */
-:root {
-    --ion-padding-horizontal: 15px;
-  }
-  
-  ion-col {
-    padding: 5px; /* Ajusta según tus necesidades */
-  }
-  
-  ion-label {
-    display: inline-block;
-    width: 100px; /* Ajusta este valor según tus necesidades */
-    text-align: left;
-  }
-  
-  ion-input,
-  ion-select {
-    width: 100%;
-  }
-  
-  .ion-align-items-center {
-    align-items: center;
-  }
-  
-  .ion-justify-content-between {
-    justify-content: space-between;
-  }
-  
-  .align-right { input { text-align: right; } }
+ion-card-header {
+  background-color: #f4f5f8;
+  font-weight: bold;
+}
+
+.product-info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.product-info-col {
+  flex: 1;
+  text-align: center;
+}
 
 
-.align-right {
-    input {
-      text-align: right;
-    }
-  }
-  
-  ion-card {
-    margin: 10px 0;
-  }
-  
-  ion-card-header {
-    background-color: #3880ff; /* Color del encabezado */
-    color: white;
-  }
-  
-  ion-card-title {
-    font-weight: bold;
-  }
-  
-  .ion-align-items-center {
-    align-items: center;
-  }
-  
-  .cliente-nombre {
-    font-size: 1.1em;
-    text-align: center;
-    color: #0e2ddf; /* Color del texto */
-    margin-top: 20px;
-    top: 20px;
-    height: 40px;
-  }
-  
-  ion-item {
-    --inner-padding-end: 8px;
-    --inner-padding-start: 8px;
-  }
-  
-  ion-footer {
-    --background: #f4f5f8;
-  }
-  
-  ion-button {
-    margin: 10px 0;
-  }
+.product-details h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+ion-button {
+  margin-top: 10px;
+}
+
+.cliente-nombre {
+  font-size: 20px;
+  color: #3880ff;
+  text-align: center;
+  margin-top: 10px;
+}
+
+ion-footer {
+  background-color: #f4f5f8;
+}
+
+ion-select {
+  margin-bottom: 10px;
+}
+
+ion-label {
+  font-weight: bold;
+}
+
+.product-code {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.product-description {
+  font-size: 1em;
+}
+
+ion-grid {
+  padding: 0;
+}
+
+ion-col {
+  padding: 0 10px;
+}
+
+ion-row {
+  margin-bottom: 10px;
+}
 
 
-  ion-row {
-    margin-top: 1px;
-    top: 1px;
-    height: 30px;
-  }
-  
+.total-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.total-label,
+.total-value {
+  display: flex;
+  align-items: center;
+}
+
+.total-value {
+  text-align: right;
+}

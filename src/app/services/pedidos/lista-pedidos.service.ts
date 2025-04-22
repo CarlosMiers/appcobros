@@ -23,7 +23,6 @@ export class ListaPedidosService {
   }
 
   getListaPedidos(id:number,fechainicio:string,fechafinal:string): Observable<ListaPedido> {
-//    id= id.replace('"', '').replace('"', '');
     return this.http.get<ListaPedido>(`${this.base_path}${this.myApiUrl}${this.myApId}${id}${this.myApInicio}${fechainicio}${this.myApFinal}${fechafinal}`);
   }
 }

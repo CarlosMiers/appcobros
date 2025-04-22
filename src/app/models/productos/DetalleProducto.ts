@@ -1,7 +1,12 @@
 export interface DetalleProducto {
+  iddetalle:number;  
   codprod: string;
+  comentario: string;
+  cantidad:number;
+  prcosto: number;
+  precio: number;
+  porcentaje: number;
   descripcion: string;
   costo: number;
-  precio: number;
   impuesto: number;
 }
