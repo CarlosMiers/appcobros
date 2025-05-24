@@ -20,6 +20,8 @@ export class PedidosService {
     this.myApId = '/id';
   }
 
+// crear Preventa
+
   createPreventa(preventa: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(`${this.base_path}${this.myApiUrl}`, preventa, {
@@ -27,9 +29,20 @@ export class PedidosService {
     });
   }
 
+// actualizar Preventa
+update(id: number, preventa: any): Observable<any> {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  return this.http.put(`${this.base_path}${this.myApiUrl}/${id}`, preventa, {
+    headers,
+  });
+}
+
+// obtener Preventa por id  
   getPreventaByNumero(numero: number): Observable<any> {
     return this.http.get(
       `${this.base_path}${this.myApiUrl}${this.myApId}/${numero}`
     );
   }
+
+
 }

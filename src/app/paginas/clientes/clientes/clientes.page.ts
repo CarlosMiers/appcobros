@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { AnimationController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import {
   ModalController,
@@ -10,6 +11,7 @@ import { ClientesService } from 'src/app/services/clientes/clientes.service';
 import { EditClientesPage } from '../edit-clientes/edit-clientes.page';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { NavController } from '@ionic/angular';
+import { fadeInAnimation } from 'src/app/animations';
 
 @Component({
   selector: 'app-clientes',
@@ -26,6 +28,7 @@ export class ClientesPage implements OnInit {
   itemsPerPage = 10;
 
   constructor(
+    private animationCtrl: AnimationController,
     private clienteService: ClientesService,
     public modalCtrl: ModalController,
     public formBuilder: FormBuilder,
@@ -39,6 +42,20 @@ export class ClientesPage implements OnInit {
   ngOnInit() {
     this.loadClientes();
   }
+
+ ionViewDidEnter() {
+    this.animateItems();
+  }
+
+  animateItems() {
+    const items = document.querySelectorAll('.cliente-card');
+
+    items.forEach((item, index) => {
+      const animation = fadeInAnimation(this.animationCtrl, item as HTMLElement);
+      animation.delay(index * 100).play();
+    });
+  }
+
 
   previousPage() {
     if (this.currentPage > 1) {

@@ -1,77 +1,77 @@
-  .contenido{
-    position: relative;
-    top: -20px;
-  }
-  
+.lista-clientes {
   ion-card {
-    background-color:#1d5b8d;
-    height: 60px;
-    margin-top: 0%;
-  }
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    position: relative;
+    overflow: hidden;
 
-  .icono-superior-derecho {
-    position: absolute;
-    top: 8px; /* Ajusta según tu necesidad */
-    right: 8px; /* Ajusta según tu necesidad */
-    font-size: 24px; /* Tamaño del icono */
-    color:  #fff; /* Color del icono */
-  }
-  
-  .card-title {
-    position: absolute;
-    top: 36%;
-    font-size: 2.0em;
-    width: 100%;
-    font-weight: bold;
-    color: #fff;
-  }
+    &:hover {
+      transform: scale(1.02);
+    }
 
-  ion-card-subtitle {
-    font-size: 1.0em;
-    color: #fff;
-  }
-  
-  ion-row {
-    margin-top: 1px;
-    top: 1px;
-    height: 20px;
-  }
-  
-  ion-col {
-    font-size: 15px;
-    font-style: normal;
-    color: black;
-  }
-  
-  div{
-    color:#fff
-  }
+    .icono-superior {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 32px;
+      color: var(--ion-color-primary);
+      opacity: 0.3;
+    }
 
-  ion-icon {
-    font-size: 20px;
-    color: white;
-    --ionicon-stroke-width: 16px;
-  }
+    ion-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--ion-color-primary);
+    }
 
-  .custom-fab {
-    margin-left: -180x; /* Ajusta este valor según cuánto quieras que sobresalga */
-    margin-bottom: 50px; /* Ajusta este valor para moverlo hacia abajo */
-  }
+    ion-card-content {
+      font-size: 0.95rem;
+      color: #444;
 
-  ion-footer {
-    height: auto; /* Asegura que el footer se ajuste automáticamente al contenido */
-    min-height: 56px; /* Puedes ajustar esto según el diseño deseado */
-    max-height: 100px; /* Limita la altura si es necesario */
+      .icono {
+        font-size: 1.1rem;
+        margin-right: 4px;
+        color: var(--ion-color-medium);
+        vertical-align: middle;
+      }
+
+      strong {
+        margin-right: 4px;
+      }
+
+      span {
+        color: var(--ion-color-dark);
+      }
+    }
   }
-  
-  ion-grid {
-    padding: 0;
-  }
-  
+}
+
+ion-searchbar {
+  --background: #ffffff;
+  --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+ion-fab-button {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+ion-toolbar[color=primary] {
+  color: #fff;
+}
+
+ion-toolbar[color=light] {
+  --background: #f8f8f8;
+}
+
+ion-button[color=light] {
+  --background: #ffffff;
+  --color: var(--ion-color-primary);
+}
+
+ion-footer {
   ion-button {
-    margin: 0;
+    font-size: 0.9rem;
   }
-
-  .ion-fab-button-color{
-    color : #800080;
-  }
+}

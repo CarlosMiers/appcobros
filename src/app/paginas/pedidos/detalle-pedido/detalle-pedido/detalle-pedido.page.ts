@@ -240,7 +240,29 @@ export class DetallePedidoPage {
         },
       });
     } else {
-      
+      this.pedidosService.update(this.pedidoNumero,pedidoConDetalles).subscribe({
+        next: async (response) => {
+          const toast = await this.toastController.create({
+            message: response.message,
+            duration: 3000,
+            position: 'middle',
+            cssClass: 'custom-toast', // Aplica la clase CSS personalizada
+          });
+          await toast.present();
+          this.dismiss();
+        },
+        error: (error) => {
+          console.error('Error al Actualizar preventa:', error);
+          // Manejar el error adecuadamente (mostrar un mensaje al usuario, etc.)
+        },
+      });
+
+
+
+
+
+
+
     }
   }
 

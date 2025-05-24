@@ -33,7 +33,6 @@ export class ListaPedidosPage implements OnInit {
 
   ngOnInit() {
 
-
     const listadoPedido: ListaPedido = {
       numero: 0,
       fecha: new Date(),
@@ -48,9 +47,6 @@ export class ListaPedidosPage implements OnInit {
     this.Consultar()
 
   }
-
-
-
 
   Consultar(){
 

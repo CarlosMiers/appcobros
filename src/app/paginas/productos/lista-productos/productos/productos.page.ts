@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductosService } from '../../../../services/productos/productos.service';
-import { ModalController, NavController, ToastController, ActionSheetController } from '@ionic/angular';
+import { ModalController, NavController, ToastController, ActionSheetController, AnimationController } from '@ionic/angular';
 import { FormBuilder } from '@angular/forms';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { Router } from '@angular/router';
 import { EditProductosPage } from '../../edit-productos/edit-productos/edit-productos.page';
+import { fadeInAnimation } from 'src/app/animations';
 
 @Component({
   selector: 'app-productos',
@@ -22,6 +23,7 @@ export class ProductosPage implements OnInit {
   itemsPerPage = 10;
 
   constructor(
+    private animationCtrl: AnimationController,
     private productosService: ProductosService,
     public modalCtrl: ModalController,
     public formBuilder: FormBuilder,
@@ -35,6 +37,20 @@ export class ProductosPage implements OnInit {
   ngOnInit() {
     this.loadProductos();
   }
+
+ionViewDidEnter() {
+    this.animateItems();
+  }
+
+  animateItems() {
+    const items = document.querySelectorAll('.producto-card');
+
+    items.forEach((item, index) => {
+      const animation = fadeInAnimation(this.animationCtrl, item as HTMLElement);
+      animation.delay(index * 100).play();
+    });
+  }
+
 
   previousPage() {
     if (this.currentPage > 1) {
