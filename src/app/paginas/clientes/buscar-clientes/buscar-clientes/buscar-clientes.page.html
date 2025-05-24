@@ -1,21 +1,33 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Buscar Cliente</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="navCtrl.back()">Cancelar</ion-button>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-icon name="arrow-back" (click)="cancelar()"></ion-icon>
     </ion-buttons>
+    <ion-title class="ion-text-center">Lista de Clientes</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      [(ngModel)]="textoBuscar"
+      (ionInput)="buscarCliente($event)"
+      debounce="500"
+      placeholder="Buscar por Nombre">
+    </ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-searchbar (ionInput)="buscarCliente($event)" debounce="500" placeholder="Buscar cliente por código o nombre"></ion-searchbar>
-
   <ion-list>
-    <ion-item *ngFor="let cliente of clientes" (click)="seleccionarCliente(cliente)">
+    <ion-item 
+      *ngFor="let cliente of clientes | filtro:textoBuscar:'nombre'" 
+      button 
+      (click)="seleccionarCliente(cliente)">
+      
       <ion-label>
         <h2>{{ cliente.nombre }}</h2>
-        <p>{{ cliente.codigo }}</p>
+        <p>Código: {{ cliente.codigo }}</p>
       </ion-label>
+
+      <ion-icon name="person" slot="end"></ion-icon>
     </ion-item>
   </ion-list>
 </ion-content>

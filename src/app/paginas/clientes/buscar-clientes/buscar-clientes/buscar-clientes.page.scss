@@ -1,0 +1,77 @@
+  .contenido{
+    position: relative;
+    top: -20px;
+  }
+  
+  ion-card {
+    background-color:#1d5b8d;
+    height: 60px;
+    margin-top: 0%;
+  }
+
+  .icono-superior-derecho {
+    position: absolute;
+    top: 8px; /* Ajusta según tu necesidad */
+    right: 8px; /* Ajusta según tu necesidad */
+    font-size: 24px; /* Tamaño del icono */
+    color:  #fff; /* Color del icono */
+  }
+  
+  .card-title {
+    position: absolute;
+    top: 36%;
+    font-size: 2.0em;
+    width: 100%;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  ion-card-subtitle {
+    font-size: 1.0em;
+    color: #fff;
+  }
+  
+  ion-row {
+    margin-top: 1px;
+    top: 1px;
+    height: 20px;
+  }
+  
+  ion-col {
+    font-size: 15px;
+    font-style: normal;
+    color: black;
+  }
+  
+  div{
+    color:#fff
+  }
+
+  ion-icon {
+    font-size: 20px;
+    color: white;
+    --ionicon-stroke-width: 16px;
+  }
+
+  .custom-fab {
+    margin-left: -180x; /* Ajusta este valor según cuánto quieras que sobresalga */
+    margin-bottom: 50px; /* Ajusta este valor para moverlo hacia abajo */
+  }
+
+  ion-footer {
+    height: auto; /* Asegura que el footer se ajuste automáticamente al contenido */
+    min-height: 56px; /* Puedes ajustar esto según el diseño deseado */
+    max-height: 100px; /* Limita la altura si es necesario */
+  }
+  
+  ion-grid {
+    padding: 0;
+  }
+  
+  ion-button {
+    margin: 0;
+  }
+
+  .ion-fab-button-color{
+    color : #800080;
+  }

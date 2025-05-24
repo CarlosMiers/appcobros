@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes,CanActivate } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './utils/auth.guard';
 
 const routes: Routes = [
@@ -66,6 +66,10 @@ const routes: Routes = [
   {
     path: 'buscar-clientes',
     loadChildren: () => import('./paginas/clientes/buscar-clientes/buscar-clientes/buscar-clientes.module').then( m => m.BuscarClientesPageModule), canActivate: [AuthGuard]
+  },
+  {
+    path: 'buscar-productos',
+    loadChildren: () => import('./paginas/productos/buscar-productos/buscar-productos/buscar-productos.module').then( m => m.BuscarProductosPageModule)
   },
 
 ];

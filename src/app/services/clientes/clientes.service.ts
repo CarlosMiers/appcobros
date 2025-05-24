@@ -20,6 +20,11 @@ export class ClientesService {base_path:String = '';
     return this.http.get<any>(`${this.base_path}${this.myApiUrl}?page=${page}&limit=${limit}`);
   }
 
+  getTodos(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.base_path}${this.myApiUrl}`);
+  }
+
+
   getCliente(id: number): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = { codigo: id };

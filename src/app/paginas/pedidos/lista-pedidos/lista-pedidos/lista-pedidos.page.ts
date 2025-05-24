@@ -40,6 +40,7 @@ export class ListaPedidosPage implements OnInit {
       comprobante:0,
       cliente:0,
       nombrecliente: "",
+      codusuario: 0,
       totalneto: 0
     }
     this.fechainicio = new Date().toISOString().substring(0, 10);

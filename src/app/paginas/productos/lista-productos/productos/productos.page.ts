@@ -98,7 +98,6 @@ export class ProductosPage implements OnInit {
         productoCodigo: productoCodigo,
       },
     });
-    //  localStorage.setItem('codcliente',clienteCodigo.toString());
-    return await modal.present();
+      return await modal.present();
   }
 }

@@ -1,9 +1,18 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { Input, Component } from '@angular/core';
+import {
+  AlertController,
+  ModalController,
+  ToastController,
+} from '@ionic/angular';
 import { DetalleProducto } from 'src/app/models/productos/DetalleProducto';
-import { SharedClienteService } from 'src/app/services/clientes/shared-cliente.service';
-import { PedidosService } from 'src/app/services/pedidos/pedidos.service';
+import { SharedClienteService } from '../../../../services/clientes/shared-cliente.service';
+import { PedidosService } from '../../../../services/pedidos/pedidos.service';
+import { ProductosService } from '../../../../services/productos/productos.service';
+import { LoadingService } from '../../../../services/loading/loading.service';
+import { ClientesService } from '../../../../services/clientes/clientes.service';
+import { BuscarClientesPage } from 'src/app/paginas/clientes/buscar-clientes/buscar-clientes/buscar-clientes.page';
+import { SharedProductoService } from 'src/app/services/productos/shared-producto.service';
+import { BuscarProductosPage } from 'src/app/paginas/productos/buscar-productos/buscar-productos/buscar-productos.page';
 
 @Component({
   selector: 'app-detalle-pedido',
@@ -17,73 +26,88 @@ export class DetallePedidoPage {
     cliente: 0,
     clienteNombre: '',
     comprobante: 0,
+    codusuario: 0,
     total: 0,
   };
 
   codigoClienteSeleccionado: number = 0;
+  @Input() pedidoNumero!: number;
 
   constructor(
     private alertController: AlertController,
-    private router: Router,
     private pedidosService: PedidosService,
+    private productosService: ProductosService,
+    private loadingService: LoadingService,
+    private clienteServices: ClientesService,
     private sharedClienteService: SharedClienteService,
+    private sharedProductoService: SharedProductoService,
     private toastController: ToastController,
     public modalCtrl: ModalController
-
   ) {}
 
   selectedClient: any;
 
+  productos: any[] = [];
+  clientes: any[] = [];
   clienteSeleccionado: any;
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadProductos();
+    this.loadClientes();
+
+    if (!this.pedidoNumero || this.pedidoNumero === 0) {
+      this.pedido = {
+        numero: 0,
+        fecha: new Date().toISOString().substring(0, 10),
+        cliente: this.selectedClient?.codigo || '',
+        clienteNombre: this.selectedClient?.nombre || '',
+        comprobante: 1, // comprobante por defecto
+        codusuario: 1, // usuario por defecto
+        total: 0,
+      };
+    } else {
+      // Pedido existente
+      this.loadPedidoDesdeApi(this.pedidoNumero);
+    }
+  }
 
   ionViewDidEnter() {
-    this.selectedClient = this.sharedClienteService.getSelectedClient();
-    this.pedido = {
-      numero: 0,
-      fecha: new Date().toISOString(),
-      cliente: this.selectedClient.codigo,
-      clienteNombre: this.selectedClient.nombre,
-      comprobante: 0,
-      total: 0,
-    };
+    const clienteSeleccionado = this.sharedClienteService.getSelectedClient();
+    if (
+      clienteSeleccionado &&
+      clienteSeleccionado.codigo !== this.pedido.cliente
+    ) {
+      this.pedido.cliente = clienteSeleccionado.codigo;
+      this.pedido.clienteNombre = clienteSeleccionado.nombre;
+    }
   }
 
   // Productos disponibles para seleccionar
-  productos = [
-    {
-      codprod: '001',
-      descripcion: 'COCA 1 LITRO',
-      cantidad: 0,
-      costo: 7500,
-      precio: 9000,
-      impuesto: 10,
-    },
-    {
-      codprod: 'P002',
-      descripcion: 'LECHE ENTERA 1 LITRO LACTOLANDA',
-      cantidad: 0,
-      costo: 4500,
-      precio: 6500,
-      impuesto: 10,
-    },
-    {
-      codprod: 'P003',
-      descripcion: 'FOCO LED ECONOMICO',
-      cantidad: 0,
-      costo: 1500,
-      precio: 4500,
-      impuesto: 10,
-    },
-  ];
+  loadProductos() {
+    this.loadingService.present({
+      message: 'Aguarde un Momento.',
+      duration: 300,
+    });
+    this.productosService.getTodos().subscribe((data) => {
+      this.productos = data; //
+      console.log('Productos:', this.productos);
+    });
+    this.loadingService.dismiss();
+  }
+
+  //Clientes disponibles para seleccionar
+  loadClientes() {
+    this.loadingService.present({
+      message: 'Aguarde un Momento.',
+      duration: 300,
+    });
+    this.clienteServices.getTodos().subscribe((data) => {
+      this.clientes = data; //
+    });
+    this.loadingService.dismiss();
+  }
 
   // Lista de clientes para selección
-  clientes = [
-    { codigo: 1, nombre: 'Carlos González' },
-    { codigo: 2, nombre: 'Alice Ferreira' },
-    { codigo: 3, nombre: 'Camila Lujan' },
-  ];
 
   detalles: DetalleProducto[] = [];
   productoSeleccionado = {
@@ -102,7 +126,6 @@ export class DetallePedidoPage {
       (totalneto, detalle) => totalneto + detalle.precio * detalle.cantidad,
       0
     );
-    //    return this.detalles.reduce((total, item) => total + item.precio, 0);
   }
 
   // Seleccionar un producto por su código
@@ -166,7 +189,7 @@ export class DetallePedidoPage {
     this.codigoProductoSeleccionado = '';
   }
 
-  // Guardar el pedido (simulación de envío de datos a la base de datos)
+  // Guardar el pedido
 
   // Ajusta la función guardarPedido para enviar los detalles correctamente sin el campo 'numero'
   async guardarPedido() {
@@ -189,6 +212,7 @@ export class DetallePedidoPage {
       fecha: this.pedido.fecha,
       comprobante: +this.pedido.comprobante,
       cliente: this.pedido.cliente,
+      codusuario: this.pedido.codusuario,
       totalneto: this.totalPedido(),
       detalles: this.detalles.map((detalle) => {
         // Elimina 'numero' de los detalles, ya que lo genera el backend
@@ -198,20 +222,26 @@ export class DetallePedidoPage {
     };
 
     // Enviar los datos al servicio de pedidos para guardarlos en la base de datos
-    this.pedidosService.createPreventa(pedidoConDetalles).subscribe({
-      next: async (response) => {
-        const toast = await this.toastController.create({
-          message: response.message,
-          duration: 3000,
-          position: 'middle',
-          cssClass: 'custom-toast', // Aplica la clase CSS personalizada
-        });
-        await toast.present();      },
-      error: (error) => {
-        console.error('Error al crear preventa:', error);
-        // Manejar el error adecuadamente (mostrar un mensaje al usuario, etc.)
-      },
-    });
+    if (!this.pedidoNumero || this.pedidoNumero === 0) {
+      this.pedidosService.createPreventa(pedidoConDetalles).subscribe({
+        next: async (response) => {
+          const toast = await this.toastController.create({
+            message: response.message,
+            duration: 3000,
+            position: 'middle',
+            cssClass: 'custom-toast', // Aplica la clase CSS personalizada
+          });
+          await toast.present();
+          this.dismiss();
+        },
+        error: (error) => {
+          console.error('Error al crear preventa:', error);
+          // Manejar el error adecuadamente (mostrar un mensaje al usuario, etc.)
+        },
+      });
+    } else {
+      
+    }
   }
 
   ValidarCliente() {
@@ -226,31 +256,110 @@ export class DetallePedidoPage {
     }
   }
 
-  abrirBusquedaCliente() {
-    /*  this.router.navigateByUrl('/buscar-clientes', {
-/*      state: { clientes: this.clientes },
-    });*/
-
-    this.router.navigate(['/buscar-clientes'], {
-      state: { clientes: this.clientes }, // Pasa los datos correctamente con 'clientes'
+  async abrirBusquedaCliente() {
+    const modal = await this.modalCtrl.create({
+      component: BuscarClientesPage,
+      componentProps: {
+        clientes: this.clientes,
+      },
     });
+
+    modal.onDidDismiss().then((result) => {
+      const cliente = result.data;
+      if (cliente) {
+        this.pedido.cliente = cliente.codigo;
+        this.pedido.clienteNombre = cliente.nombre;
+      }
+    });
+
+    await modal.present();
+  }
+
+  ValidarProducto() {
+    const codigoIngresado = String(this.codigoProductoSeleccionado).trim();
+    console.log('Código a buscar:', codigoIngresado);
+
+    const producto = this.productos.find(
+      (p) => String(p.codigo).trim() === String(codigoIngresado).trim()
+    );
+
+    if (producto) {
+      this.productoSeleccionado = {
+        codprod: producto.codigo,
+        descripcion: producto.nombre,
+        cantidad: 1,
+        costo: parseFloat(producto.costo),
+        precio: parseFloat(producto.precio_maximo),
+        impuesto: producto.impuesto ? parseFloat(producto.impuesto) : 0,
+      };
+    } else {
+      this.abrirBusquedaProducto();
+    }
+  }
+
+  async abrirBusquedaProducto() {
+    const modal = await this.modalCtrl.create({
+      component: BuscarProductosPage,
+      componentProps: {
+        productos: this.productos,
+      },
+    });
+
+    modal.onDidDismiss().then((result) => {
+      const producto = result.data;
+      if (producto) {
+        this.productoSeleccionado = {
+          codprod: producto.codigo,
+          descripcion: producto.nombre,
+          cantidad: 1,
+          costo: parseFloat(producto.costo),
+          precio: parseFloat(producto.precio_maximo),
+          impuesto: producto.impuesto ? parseFloat(producto.impuesto) : 0,
+        };
+        this.codigoProductoSeleccionado = producto.codigo;
+      }
+    });
+
+    await modal.present();
   }
 
   compareWithComprobante = (o1: any, o2: any) => {
     return o1 == o2; // Para comparar '1' y '2'
   };
 
-  goBack() {
-    this.router.navigate(['/lista-pedidos']);
+  async goBack() {
+    return await this.modalCtrl.dismiss();
   }
-  
-  regresarListado() {
-    this.router.navigate(['/lista-pedidos']);
+
+  async regresarListado() {
+    return await this.modalCtrl.dismiss();
   }
 
   async dismiss() {
     return await this.modalCtrl.dismiss();
   }
 
+  loadPedidoDesdeApi(numeroPedido: number) {
+    this.pedidosService.getPreventaByNumero(numeroPedido).subscribe({
+      next: (data) => {
+        console.log('Datos de la API:', data); // Aquí verás la respuesta completa
 
+        this.pedido = {
+          numero: data.numero, // Usar 'numero' directamente si la respuesta tiene esa estructura
+          fecha: data.fecha,
+          cliente: data.cliente,
+          clienteNombre: data.clienteNombre,
+          comprobante: data.comprobante,
+          codusuario: data.codusuario,
+          total: data.totalneto, // totalneto es el campo que devuelve la API
+        };
+
+        // Aquí asumiendo que 'detalles' es el array correcto y que existe en la respuesta
+        this.detalles = data.detalles; // Corregir 'data.detalle' a 'data.detalles'
+      },
+      error: (err) => {
+        console.error('Error al cargar pedido', err);
+      },
+    });
+  }
 }

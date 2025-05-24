@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 export class PedidosService {
   base_path: String = '';
   private myApiUrl: string;
+  private myApId: string;
 
   constructor(
     private http: HttpClient,
@@ -16,12 +17,19 @@ export class PedidosService {
   ) {
     this.base_path = parametrosService.direccionIp;
     this.myApiUrl = 'api/v1/preventa';
+    this.myApId = '/id';
   }
 
   createPreventa(preventa: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(`${this.base_path}${this.myApiUrl}`, preventa, { headers });
+    return this.http.post(`${this.base_path}${this.myApiUrl}`, preventa, {
+      headers,
+    });
   }
 
-
+  getPreventaByNumero(numero: number): Observable<any> {
+    return this.http.get(
+      `${this.base_path}${this.myApiUrl}${this.myApId}/${numero}`
+    );
+  }
 }
