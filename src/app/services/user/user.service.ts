@@ -14,17 +14,33 @@ export class UserService {
 
   constructor(private http: HttpClient,public parametrosService: ParametrosService) {
     this.base_path = parametrosService.direccionIp;
-    this.myApiUrl = 'api/v1/users'
+    this.myApiUrl = 'ypora/v1/users'
   }
 
   signIn(user: Usuario): Observable<any> {
     return this.http.post(`${this.base_path}${this.myApiUrl}`, user);
   }
 
-  login(user: Usuario): Observable<string> {
+
+ login(user: Usuario): Observable<string> {
+    const url = `${this.base_path}${this.myApiUrl}/login`;
+    
+    // Configurar cabeceras para la solicitud
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+    
+    console.log(`${this.base_path}${this.myApiUrl}/login`);
+    return this.http.post<string>(url, user, { headers });
+    
+  }
+
+
+/*  login(user: Usuario): Observable<string> {
     return this.http.post<string>(`${this.base_path}${this.myApiUrl}/login`, user);
     console.log(`${this.base_path}${this.myApiUrl}/login`);
-  }
+  }*/
 
 
   

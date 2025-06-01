@@ -1,24 +1,41 @@
+.header-logo {
+  width: 100%;
+  height: 100px;  // reducido para ocupar menos alto
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--ion-color-primary);  // mantiene el azul primario
+}
+
+.logo-full {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  // ocupa todo sin distorsionar
+}
+
+.divider-line {
+  height: 2px;
+  background: white;
+  width: 100%;
+}
+
+ion-toolbar {
+  --min-height: 48px;  // reducir la altura del toolbar para que no sea tan alto
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
 .custom-title {
-    color:   #ebe711; /* Un color personalizado */
-  }
+  font-weight: 600;
+  font-size: 1.2rem;  // tamaño similar al anterior, no tan grande
+  color: white;
+  text-align: center;
+}
 
-
-.icon-clientes {
-    color: #ff6347; /* Un color rojo, puedes poner cualquier código de color */
-  }
-  
-  .icon-productos {
-    color: #4682b4; /* Un color azul */
-  }
-  
-  .icon-pedidos {
-    color: #32cd32; /* Un color verde */
-  }
-  
-  .icon-ventas {
-    color: #ffa500; /* Un color naranja */
-  }
-  
-  .icon-cobranzas {
-    color: #800080; /* Un color morado */
-  }
+.toolbar-gradient {
+  --background: linear-gradient(90deg, #007bff, #00bfff);
+  /* Alternativamente para degradado vertical:
+  --background: linear-gradient(180deg, #007bff, #00bfff);
+  */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}

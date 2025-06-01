@@ -29,7 +29,7 @@ export class DetallePedidoPage {
     codusuario: 0,
     total: 0,
   };
-
+  titulo: any = '';
   codigoClienteSeleccionado: number = 0;
   @Input() pedidoNumero!: number;
 
@@ -56,17 +56,19 @@ export class DetallePedidoPage {
     this.loadClientes();
 
     if (!this.pedidoNumero || this.pedidoNumero === 0) {
+      this.titulo = '🧾 Nuevo Pedido ';
       this.pedido = {
         numero: 0,
         fecha: new Date().toISOString().substring(0, 10),
         cliente: this.selectedClient?.codigo || '',
         clienteNombre: this.selectedClient?.nombre || '',
         comprobante: 1, // comprobante por defecto
-        codusuario: 1, // usuario por defecto
+        codusuario:parseInt(localStorage.getItem('idusuario') || '0', 10), // usuario por defecto
         total: 0,
       };
     } else {
       // Pedido existente
+      this.titulo = '🧾 Editar Pedido N°' + this.pedidoNumero;
       this.loadPedidoDesdeApi(this.pedidoNumero);
     }
   }
@@ -90,7 +92,6 @@ export class DetallePedidoPage {
     });
     this.productosService.getTodos().subscribe((data) => {
       this.productos = data; //
-      console.log('Productos:', this.productos);
     });
     this.loadingService.dismiss();
   }
@@ -110,6 +111,7 @@ export class DetallePedidoPage {
   // Lista de clientes para selección
 
   detalles: DetalleProducto[] = [];
+
   productoSeleccionado = {
     codprod: '',
     descripcion: '',
@@ -158,8 +160,11 @@ export class DetallePedidoPage {
       impuesto: this.productoSeleccionado.impuesto,
       descripcion: this.productoSeleccionado.descripcion,
       costo: this.productoSeleccionado.costo,
+      producto: {
+        codigo: '',
+        descripcion: '',
+      }, // Aquí puedes agregar más detalles del producto si es necesario
     };
-
     this.detalles.push(detalle);
     this.resetProductoSeleccionado();
   }
@@ -240,29 +245,24 @@ export class DetallePedidoPage {
         },
       });
     } else {
-      this.pedidosService.update(this.pedidoNumero,pedidoConDetalles).subscribe({
-        next: async (response) => {
-          const toast = await this.toastController.create({
-            message: response.message,
-            duration: 3000,
-            position: 'middle',
-            cssClass: 'custom-toast', // Aplica la clase CSS personalizada
-          });
-          await toast.present();
-          this.dismiss();
-        },
-        error: (error) => {
-          console.error('Error al Actualizar preventa:', error);
-          // Manejar el error adecuadamente (mostrar un mensaje al usuario, etc.)
-        },
-      });
-
-
-
-
-
-
-
+      this.pedidosService
+        .update(this.pedidoNumero, pedidoConDetalles)
+        .subscribe({
+          next: async (response) => {
+            const toast = await this.toastController.create({
+              message: response.message,
+              duration: 3000,
+              position: 'middle',
+              cssClass: 'custom-toast', // Aplica la clase CSS personalizada
+            });
+            await toast.present();
+            this.dismiss();
+          },
+          error: (error) => {
+            console.error('Error al Actualizar preventa:', error);
+            // Manejar el error adecuadamente (mostrar un mensaje al usuario, etc.)
+          },
+        });
     }
   }
 
@@ -364,20 +364,24 @@ export class DetallePedidoPage {
   loadPedidoDesdeApi(numeroPedido: number) {
     this.pedidosService.getPreventaByNumero(numeroPedido).subscribe({
       next: (data) => {
-        console.log('Datos de la API:', data); // Aquí verás la respuesta completa
+        console.log('Pedido cargado:', data);
 
+        // Asigna cliente y nombre del cliente desde el objeto recibido
         this.pedido = {
-          numero: data.numero, // Usar 'numero' directamente si la respuesta tiene esa estructura
+          numero: data.numero,
           fecha: data.fecha,
           cliente: data.cliente,
-          clienteNombre: data.clienteNombre,
+          clienteNombre: data.clientenombre,
           comprobante: data.comprobante,
           codusuario: data.codusuario,
-          total: data.totalneto, // totalneto es el campo que devuelve la API
+          total: data.totalneto,
         };
 
-        // Aquí asumiendo que 'detalles' es el array correcto y que existe en la respuesta
-        this.detalles = data.detalles; // Corregir 'data.detalle' a 'data.detalles'
+        // Asigna los detalles y extrae nombre del producto
+        this.detalles = data.detalles.map((detalle: any) => ({
+          ...detalle,
+          descripcion: detalle.producto?.descripcion || '',
+        }));
       },
       error: (err) => {
         console.error('Error al cargar pedido', err);

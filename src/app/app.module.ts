@@ -20,7 +20,7 @@ registerLocaleData(es);
 
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,],
   imports: [BrowserModule,PipesModule,IonicModule.forRoot(), 
   HttpClientModule, FormsModule,  AppRoutingModule,],
   providers: [Toast,CurrencyPipe,  NativeGeocoder,Geolocation, SMS, {provide: HTTP_INTERCEPTORS,useClass: AddTtokenInterceptor, multi:true,},

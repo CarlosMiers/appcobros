@@ -16,7 +16,7 @@ export class ListaPedidosService {
 
   constructor(private http: HttpClient, public parametrosService: ParametrosService) {
     this.base_path = parametrosService.direccionIp;
-    this.myApiUrl = 'api/v1/preventa-listado/?'
+    this.myApiUrl = 'ypora/v1/preventa-listado/?'
     this.myApId = 'id=';
     this.myApInicio="&fechainicio=";
     this.myApFinal="&fechafinal=";    

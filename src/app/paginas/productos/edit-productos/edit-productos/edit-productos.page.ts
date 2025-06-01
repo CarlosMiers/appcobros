@@ -102,13 +102,19 @@ export class EditProductosPage implements OnInit {
 
     this.productoService.getProducto(this.productoCodigo.trim()).subscribe(
       (data) => {
-        this.EditProducto = data;
+        this.EditProducto = {
+          ...data,
+          costo: Math.round(Number(data.costo)) || 0,
+          precio_maximo: Math.round(Number(data.precio_maximo)) || 0,
+        };
         console.log(this.EditProducto);
       },
-      (err) => {}
+      (err) => {
+        // Manejo de error si quieres
+      }
     );
+
     this.loading = false;
-    this.dismiss();
   }
 
   compareWithEstado = (o1: any, o0: any) => {
@@ -117,5 +123,43 @@ export class EditProductosPage implements OnInit {
 
   async dismiss() {
     return await this.modalCtrl.dismiss();
+  }
+
+  // Formatea número con separadores y prefijo 'Gs.'
+
+  formatCurrency(value: number | undefined): string {
+    if (!value || isNaN(value)) {
+      return 'Gs. 0';
+    }
+    const numberString = value.toString();
+    // Quitar puntos por si hay
+    const cleanNumberString = numberString.replace(/\./g, '');
+    const withThousands = cleanNumberString.replace(
+      /\B(?=(\d{3})+(?!\d))/g,
+      '.'
+    );
+    return `Gs. ${withThousands}`;
+  }
+
+  updateFormattedInput(event: any, modelKey: 'costo' | 'precio_maximo'): void {
+    const inputEl = event.target as HTMLInputElement;
+    // Sacar el texto "Gs." y los puntos para tener solo números
+    let rawValue = inputEl.value.replace(/[^0-9]/g, '');
+    if (rawValue === '') rawValue = '0'; // evitar vacíos
+
+    const numericValue = Number(rawValue);
+    this.EditProducto[modelKey] = numericValue;
+
+    // Actualizar el input con formato correcto (sin duplicar puntos)
+    inputEl.value = this.formatCurrency(numericValue);
+  }
+
+  // Manejadores de eventos individuales
+  onCostoInput(event: any): void {
+    this.updateFormattedInput(event, 'costo');
+  }
+
+  onPrecioInput(event: any): void {
+    this.updateFormattedInput(event, 'precio_maximo');
   }
 }

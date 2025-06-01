@@ -12,7 +12,7 @@ export class ClientesService {base_path:String = '';
 
   constructor(private http: HttpClient,public parametrosService: ParametrosService) {
     this.base_path = parametrosService.direccionIp;
-    this.myApiUrl = 'api/v1/cliente'
+    this.myApiUrl = 'ypora/v1/cliente'
     this.myApId = '/id';
   }
 

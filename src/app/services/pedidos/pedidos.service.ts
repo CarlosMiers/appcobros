@@ -16,7 +16,7 @@ export class PedidosService {
     public parametrosService: ParametrosService
   ) {
     this.base_path = parametrosService.direccionIp;
-    this.myApiUrl = 'api/v1/preventa';
+    this.myApiUrl = 'ypora/v1/preventa';
     this.myApId = '/id';
   }
 

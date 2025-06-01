@@ -18,4 +18,8 @@
     createdAt?: string | null;
     updatedAt?: string | null;
     detalles: DetallePreventa[];
+    codusuario: number;  
   }
+
+
+  

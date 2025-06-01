@@ -1,10 +1,15 @@
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { AlertController, ModalController } from '@ionic/angular';
+import {
+  AlertController,
+  ModalController,
+  NavController,
+} from '@ionic/angular';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { ClientesService } from 'src/app/services/clientes/clientes.service';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { Cliente } from 'src/app/models/clientes/cliente';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-clientes',
@@ -12,13 +17,11 @@ import { Cliente } from 'src/app/models/clientes/cliente';
   styleUrls: ['./edit-clientes.page.scss'],
 })
 export class EditClientesPage implements OnInit {
- 
-  @Input() clienteCodigo: number=0;  // Recibe el parámetro 'codigo' desde el modal
+  @Input() clienteCodigo: number = 0; // Recibe el parámetro 'codigo' desde el modal
 
   id: any;
   titulo: any = '';
   loading: boolean = false;
-
 
   EditCliente: Cliente = {
     codigo: 0,
@@ -38,15 +41,15 @@ export class EditClientesPage implements OnInit {
   };
 
   constructor(
+    private navCtrl: NavController,
     private _clienteService: ClientesService,
+    private router: Router,
     private geolocation: Geolocation,
     public modalCtrl: ModalController,
     public alertController: AlertController,
     public loadingService: LoadingService,
-    public formBuilder: FormBuilder,
+    public formBuilder: FormBuilder
   ) {}
-
-
 
   ngOnInit() {
     this.getPosicionGlobal();
@@ -108,7 +111,7 @@ export class EditClientesPage implements OnInit {
       (err) => {}
     );
     this.loading = false;
-    this.dismiss();
+ 
   }
 
   compareWithSexo = (o1: any, o2: any) => {
@@ -120,7 +123,7 @@ export class EditClientesPage implements OnInit {
   };
 
   async dismiss() {
-    return await this.modalCtrl.dismiss();
+    await this.modalCtrl.dismiss({}); // Devuelve un valor
   }
 
   getPosicionGlobal() {

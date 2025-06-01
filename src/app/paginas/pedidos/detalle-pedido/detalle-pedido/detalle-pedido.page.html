@@ -5,7 +5,7 @@
         <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">🧾 Detalle del Pedido</ion-title>
+    <ion-title class="ion-text-center">{{titulo}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -24,12 +24,12 @@
         <ion-input type="date" [(ngModel)]="pedido.fecha"></ion-input>
       </ion-item>
 
-    
+
       <ion-item>
-       <ion-label position="stacked">Comprobante</ion-label>
+        <ion-label position="stacked">Comprobante</ion-label>
         <ion-select [(ngModel)]="pedido.comprobante" style="min-width: 150px;">
-          <ion-select-option value="1">Contado</ion-select-option>
-          <ion-select-option value="2">Crédito</ion-select-option>
+          <ion-select-option [value]="1">Contado</ion-select-option>
+          <ion-select-option [value]="2">Crédito</ion-select-option>
         </ion-select>
       </ion-item>
 
@@ -59,9 +59,9 @@
         <ion-item-sliding *ngFor="let detalle of detalles; let i = index">
           <ion-item>
             <ion-label class="ion-text-wrap">
-              <h3>{{ detalle.comentario }}</h3>
+              <h3>{{ detalle.descripcion}}</h3>
               <p>
-                Código: <strong>{{ detalle.codprod }}</strong><br>
+                Código: <strong>{{ detalle.codprod}}</strong><br>
                 Precio: <strong>{{ detalle.precio | number:'1.0-0' }}</strong> |
                 Cantidad: <strong>{{ detalle.cantidad }}</strong> |
                 Subtotal: <strong>{{ (detalle.precio * detalle.cantidad) | number:'1.0-0' }}</strong>
@@ -89,12 +89,12 @@
 
       <ion-item>
         <ion-label position="stacked">Cantidad</ion-label>
-        <ion-input [(ngModel)]="productoSeleccionado.cantidad" type="number"></ion-input>
+        <ion-input [(ngModel)]="productoSeleccionado.cantidad" type="number:'1.0-0' "></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label position="stacked">Precio</ion-label>
-        <ion-input [(ngModel)]="productoSeleccionado.precio" type="number"></ion-input>
+        <ion-input [(ngModel)]="productoSeleccionado.precio" type="number:'1.0-0' "></ion-input>
       </ion-item>
 
       <ion-button expand="block" color="success" (click)="agregarProducto()">➕ Agregar Producto</ion-button>

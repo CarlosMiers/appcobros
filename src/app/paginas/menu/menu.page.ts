@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { ClientesPage } from '../clientes/clientes/clientes.page';
+import { ProductosPage } from '../productos/lista-productos/productos/productos.page';
+import { ListaPedidosPage } from '../pedidos/lista-pedidos/lista-pedidos/lista-pedidos.page';
 
 @Component({
   selector: 'app-menu',
@@ -6,39 +10,58 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./menu.page.scss'],
 })
 export class MenuPage implements OnInit {
-  componentes: Array<{ icon: string; name: string; redirectTo: string }> = [
+  componentes: Array<{
+    icon: string;
+    name: string;
+    component: any;
+    color: string;
+  }> = [
     {
       icon: 'people-outline',
       name: 'Clientes',
-      redirectTo: '/clientes',
+      component: ClientesPage,
+      color: 'blue',
     },
     {
       icon: 'file-tray-stacked-outline',
       name: 'Productos',
-      redirectTo: '/productos',
+      component: ProductosPage,
+      color: 'green',
     },
     {
       icon: 'cube-outline',
       name: 'Pedidos',
-      redirectTo: '/lista-pedidos',
+      component: ListaPedidosPage,
+      color: 'orange',
     },
     {
       icon: 'cart-outline',
       name: 'Ventas',
-      redirectTo: '/ventas',
+      component: ClientesPage,
+      color: 'red',
     },
     {
       icon: 'people',
       name: 'Cobranzas',
-      redirectTo: '/cobranzas',
+      component: ClientesPage,
+      color: 'purple',
     },
-
-    // Añade aquí otras rutas según sea necesario
   ];
 
-  constructor() {}
+  constructor(private modalController: ModalController) {}
 
   ngOnInit() {}
+
+  async openModal(component: any) {
+    const modal = await this.modalController.create({
+      component: component,
+    });
+    return await modal.present();
+  }
+
+  dismiss() {
+    this.modalController.dismiss();
+  }
 
   getIconClass(name: string): string {
     switch (name.toLowerCase()) {

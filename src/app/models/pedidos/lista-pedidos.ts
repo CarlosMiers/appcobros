@@ -8,3 +8,4 @@ export interface ListaPedido{
     codusuario:number;
     totalneto:number;
  }
+

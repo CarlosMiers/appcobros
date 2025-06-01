@@ -5,8 +5,8 @@
       <certificates src="system" />
     </trust-anchors>
   </base-config>
-  <domain-config cleartextTrafficPermitted="true">
-    <domain includeSubdomains="true">localhost</domain>
-    <domain includeSubdomains="true">192.168.0.7</domain>
+  <domain-config cleartextTrafficPermitted="false">
+    <!-- Aquí va solo el dominio sin https:// -->
+    <domain includeSubdomains="true">api.synsa.com.py</domain>
   </domain-config>
 </network-security-config>

@@ -43,7 +43,7 @@ export class ClientesPage implements OnInit {
     this.loadClientes();
   }
 
- ionViewDidEnter() {
+  ionViewDidEnter() {
     this.animateItems();
   }
 
@@ -51,11 +51,13 @@ export class ClientesPage implements OnInit {
     const items = document.querySelectorAll('.cliente-card');
 
     items.forEach((item, index) => {
-      const animation = fadeInAnimation(this.animationCtrl, item as HTMLElement);
+      const animation = fadeInAnimation(
+        this.animationCtrl,
+        item as HTMLElement
+      );
       animation.delay(index * 100).play();
     });
   }
-
 
   previousPage() {
     if (this.currentPage > 1) {
@@ -128,19 +130,51 @@ export class ClientesPage implements OnInit {
     this.router.navigate(['/menu']);
   }
 
+  async dismiss() {
+    return await this.modalCtrl.dismiss();
+  }
+
+
+/* async openEditClienteModal(clienteCodigo: number) {
+  const modal = await this.modalCtrl.create({
+    component: EditClientesPage,
+    componentProps: {
+      clienteCodigo,
+    },
+    cssClass: 'editCliente-modal',
+    backdropDismiss: false,
+    animated: true,
+    mode: 'md',
+  });
+
+  const { data } = await modal.onDidDismiss();
+
+  if (data?.actualizado) {
+    this.loadClientes(); // Recargar lista
+  }
+}*/
 
   async openEditClienteModal(clienteCodigo: number) {
     const modal = await this.modalCtrl.create({
       component: EditClientesPage,
+    componentProps: {
+      clienteCodigo,
+    },
+      cssClass: 'editCliente-modal',
+      backdropDismiss: false,
       animated: true,
       mode: 'md',
-      backdropDismiss: false,
-      cssClass: 'editCliente-modal',
-      componentProps: {
-        clienteCodigo: clienteCodigo,
-      },
     });
-    //  localStorage.setItem('codcliente',clienteCodigo.toString());
     return await modal.present();
   }
+
+  async presentToast(message: string) {
+    const toast = await this.toast.create({
+      message,
+      duration: 2000,
+      position: 'bottom',
+    });
+    toast.present();
+  }
+
 }

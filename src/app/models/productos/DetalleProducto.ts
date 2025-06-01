@@ -9,4 +9,10 @@ export interface DetalleProducto {
   descripcion: string;
   costo: number;
   impuesto: number;
+  producto: Producto;
+}
+
+interface Producto {
+  codigo: string; 
+  descripcion: string;
 }

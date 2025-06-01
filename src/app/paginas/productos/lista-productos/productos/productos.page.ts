@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductosService } from '../../../../services/productos/productos.service';
-import { ModalController, NavController, ToastController, ActionSheetController, AnimationController } from '@ionic/angular';
+import {
+  ModalController,
+  NavController,
+  ToastController,
+  ActionSheetController,
+  AnimationController,
+} from '@ionic/angular';
 import { FormBuilder } from '@angular/forms';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { Router } from '@angular/router';
@@ -13,7 +19,6 @@ import { fadeInAnimation } from 'src/app/animations';
   styleUrls: ['./productos.page.scss'],
 })
 export class ProductosPage implements OnInit {
-
   textoBuscar = '';
   productos: any[] = [];
   page: number = 1;
@@ -38,7 +43,7 @@ export class ProductosPage implements OnInit {
     this.loadProductos();
   }
 
-ionViewDidEnter() {
+  ionViewDidEnter() {
     this.animateItems();
   }
 
@@ -46,11 +51,13 @@ ionViewDidEnter() {
     const items = document.querySelectorAll('.producto-card');
 
     items.forEach((item, index) => {
-      const animation = fadeInAnimation(this.animationCtrl, item as HTMLElement);
+      const animation = fadeInAnimation(
+        this.animationCtrl,
+        item as HTMLElement
+      );
       animation.delay(index * 100).play();
     });
   }
-
 
   previousPage() {
     if (this.currentPage > 1) {
@@ -73,7 +80,9 @@ ionViewDidEnter() {
         console.error('Error al cargar los productos:', error);
         this.loadingService.dismiss();
         // Opcional: Mostrar un mensaje al usuario
-        alert('Ocurrió un error al cargar los productos. Por favor, intenta de nuevo.');
+        alert(
+          'Ocurrió un error al cargar los productos. Por favor, intenta de nuevo.'
+        );
       },
       () => {
         // Finalización de la solicitud: detiene el loading en todos los casos
@@ -102,8 +111,12 @@ ionViewDidEnter() {
     this.router.navigate(['/menu']);
   }
 
+  async dismiss() {
+    return await this.modalCtrl.dismiss();
+  }
 
-  async openEditProductoModal(productoCodigo: string) {
+  
+ async openEditProductoModal(productoCodigo: string) {
     const modal = await this.modalCtrl.create({
       component: EditProductosPage,
       animated: true,
@@ -112,8 +125,9 @@ ionViewDidEnter() {
       cssClass: 'editProducto-modal',
       componentProps: {
         productoCodigo: productoCodigo,
-      },
+      }
     });
-      return await modal.present();
+    return await modal.present();
   }
+
 }

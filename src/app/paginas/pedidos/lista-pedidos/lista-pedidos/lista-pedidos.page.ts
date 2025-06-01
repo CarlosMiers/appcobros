@@ -20,7 +20,7 @@ export class ListaPedidosPage implements OnInit {
   totalpedido: number = 0;
   fechainicio: any;
   fechafinal: any;
-  ListaPedido: any = []
+  ListaPedido: any = [];
   constructor(
     private listapedidosService: ListaPedidosService,
     public modalCtrl: ModalController,
@@ -32,45 +32,49 @@ export class ListaPedidosPage implements OnInit {
   ) {}
 
   ngOnInit() {
-
     const listadoPedido: ListaPedido = {
       numero: 0,
       fecha: new Date(),
-      comprobante:0,
-      cliente:0,
-      nombrecliente: "",
+      comprobante: 0,
+      cliente: 0,
+      nombrecliente: '',
       codusuario: 0,
-      totalneto: 0
-    }
+      totalneto: 0,
+    };
     this.fechainicio = new Date().toISOString().substring(0, 10);
     this.fechafinal = new Date().toISOString().substring(0, 10);
-    this.Consultar()
-
+    this.Consultar();
   }
 
-  Consultar(){
-
-    this.totalpedido=0
+  Consultar() {
+    this.totalpedido = 0;
     this.loadingService.present({
       message: 'Aguarde un Momento.',
-      duration: 300
+      duration: 300,
     });
 
-    this.listapedidosService.getListaPedidos(1,this.fechainicio, this.fechafinal).subscribe(data => {
-      //CARGAMOS CONSULTA EN EL ARRAY
-      this.ListaPedido = data;
-      console.log(data);
-      let totalRow = this.ListaPedido.length;
-      totalRow -= 1;
-      for (let i = 0; i <= (totalRow); i++) {
-        this.totalpedido += parseFloat(this.ListaPedido[i].totalneto);
-      }
-    }, err => {
-    });
-   }
+    this.listapedidosService
+      .getListaPedidos(1, this.fechainicio, this.fechafinal)
+      .subscribe(
+        (data) => {
+          //CARGAMOS CONSULTA EN EL ARRAY
+          this.ListaPedido = data;
+          console.log(data);
+          let totalRow = this.ListaPedido.length;
+          totalRow -= 1;
+          for (let i = 0; i <= totalRow; i++) {
+            this.totalpedido += parseFloat(this.ListaPedido[i].totalneto);
+          }
+        },
+        (err) => {}
+      );
+  }
 
+  async dismiss() {
+    return await this.modalCtrl.dismiss();
+  }
 
-  goBack(){
+  goBack() {
     this.router.navigate(['/menu']);
   }
 
@@ -87,6 +91,4 @@ export class ListaPedidosPage implements OnInit {
     });
     return await modal.present();
   }
-
-
 }
