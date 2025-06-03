@@ -1,0 +1,77 @@
+.lista-clientes {
+  ion-card {
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+
+    .icono-superior {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 32px;
+      color: var(--ion-color-primary);
+      opacity: 0.3;
+    }
+
+    ion-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--ion-color-primary);
+    }
+
+    ion-card-content {
+      font-size: 0.95rem;
+      color: #444;
+
+      .icono {
+        font-size: 1.1rem;
+        margin-right: 4px;
+        color: var(--ion-color-medium);
+        vertical-align: middle;
+      }
+
+      strong {
+        margin-right: 4px;
+      }
+
+      span {
+        color: var(--ion-color-dark);
+      }
+    }
+  }
+}
+
+ion-searchbar {
+  --background: #ffffff;
+  --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+ion-fab-button {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+ion-toolbar[color=primary] {
+  color: #fff;
+}
+
+ion-toolbar[color=light] {
+  --background: #f8f8f8;
+}
+
+ion-button[color=light] {
+  --background: #ffffff;
+  --color: var(--ion-color-primary);
+}
+
+ion-footer {
+  ion-button {
+    font-size: 0.9rem;
+  }
+}

@@ -6,7 +6,7 @@
   "type": "angular",
   "proxy": {
     "/ysati": {
-      "target": "https://api.synsa.com.py/serverapp/",
+      "target": "//Localhost:3001/",
       "secure": false,
         "logLavel":"debug",
         "changeOrigin":true

@@ -22,11 +22,17 @@ export class RegisterPage implements OnInit {
   confirmPassword: string = '';
   cedula: string = '';
 
+  showPassword: boolean = false;
 
-
+  // Función para alternar la visibilidad de la contraseña
+  
   constructor(  public modalCtrl: ModalController,private _userService: UserService, private router: Router, public loadingService: LoadingService) { }
 
   ngOnInit() {
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 
   AgregarUsuario() {

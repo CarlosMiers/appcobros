@@ -1,23 +1,22 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ParametrosService } from '../parametros/parametros.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ClientesService {base_path:String = '';
+export class CajasService {base_path:String = '';
   private myApiUrl: string;
   private myApId: string;
 
   constructor(private http: HttpClient,public parametrosService: ParametrosService) {
     this.base_path = parametrosService.direccionIp;
-    this.myApiUrl = 'ypora/v1/cliente'
+    this.myApiUrl = 'ypora/v1/caja'
     this.myApId = '/id';
   }
 
-  getClientes(page: number, limit: number): Observable<any[]> {
-    console.log(`${this.base_path}${this.myApiUrl}?page=${page}&limit=${limit}`);
+  getCajas(page: number, limit: number): Observable<any[]> {
     return this.http.get<any>(`${this.base_path}${this.myApiUrl}?page=${page}&limit=${limit}`);
   }
 
@@ -26,21 +25,19 @@ export class ClientesService {base_path:String = '';
   }
 
 
-  getCliente(id: number): Observable<any> {
+  getCaja(id: number): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = { codigo: id };
     return this.http.post<any>(`${this.base_path}${this.myApiUrl}${this.myApId}`, body, { headers });
   }
 
-  updateCliente(cliente: any): Observable<any> {
+  updateCaja(caja: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-     return this.http.put(`${this.base_path}${this.myApiUrl}${this.myApId}/`,cliente, { headers });
+     return this.http.put(`${this.base_path}${this.myApiUrl}${this.myApId}/`,caja, { headers });
   }
 
-  AddCliente(cliente: any): Observable<any> {
+  AddCaja(caja: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-     return this.http.post(`${this.base_path}${this.myApiUrl}/`,cliente, { headers });
+     return this.http.post(`${this.base_path}${this.myApiUrl}/`,caja, { headers });
   }
-
-
 }

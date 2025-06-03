@@ -21,7 +21,7 @@
     "@angular/platform-browser": "^17.0.2",
     "@angular/platform-browser-dynamic": "^17.0.2",
     "@angular/router": "^17.0.2",
-    "@awesome-cordova-plugins/geolocation": "^6.11.0",
+    "@awesome-cordova-plugins/geolocation": "^6.16.0",
     "@awesome-cordova-plugins/native-geocoder": "^6.8.0",
     "@awesome-cordova-plugins/sms": "^6.7.0",
     "@awesome-cordova-plugins/toast": "^6.7.0",

@@ -20,7 +20,7 @@ export class UsuariosPage implements OnInit {
   loginacceso: string = '';
   password: string = '';
   confirmPassword: string = '';
-
+  showPassword: boolean = false; 
   constructor(
     private _userService: UserService,
     private router: Router,
@@ -97,4 +97,9 @@ export class UsuariosPage implements OnInit {
     //this.router.navigate(['/home']);
     this.router.navigate(['/menu']);
   }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
 }

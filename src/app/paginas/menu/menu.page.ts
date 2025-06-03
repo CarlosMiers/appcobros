@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { ClientesPage } from '../clientes/clientes/clientes.page';
 import { ProductosPage } from '../productos/lista-productos/productos/productos.page';
 import { ListaPedidosPage } from '../pedidos/lista-pedidos/lista-pedidos/lista-pedidos.page';
+import { CajasPage } from '../cajas/cajas/cajas.page';
 
 @Component({
   selector: 'app-menu',
@@ -27,6 +28,12 @@ export class MenuPage implements OnInit {
       name: 'Productos',
       component: ProductosPage,
       color: 'green',
+    },
+     {
+      icon: 'briefcase-outline',
+      name: 'Cajas',
+      component: CajasPage,
+      color: 'brown',
     },
     {
       icon: 'cube-outline',

@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.tuempresa.tuapp" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>MiApp</name>
+  <description>Descripción de la app</description>
+  <author email="tuemail@dominio.com" href="http://www.ejemplo.com">Tu Nombre</author>
+  
+  <access origin="*" />
+  
+  <!-- Plugin de Geolocation -->
+  <feature name="Geolocation">
+    <param name="android-package" value="org.apache.cordova.geolocation.Geolocation"/>
+  </feature>
+  
+  <!-- Si usas otros plugins de Cordova, los declaras aquí -->
+  <feature name="NativeGeocoder">
+    <param name="android-package" value="cordova-plugin-nativegeocoder.NativeGeocoder"/>
+  </feature>
+</widget>

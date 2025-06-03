@@ -71,6 +71,14 @@ const routes: Routes = [
     path: 'buscar-productos',
     loadChildren: () => import('./paginas/productos/buscar-productos/buscar-productos/buscar-productos.module').then( m => m.BuscarProductosPageModule)
   },
+  {
+    path: 'cajas',
+    loadChildren: () => import('./paginas/cajas/cajas/cajas.module').then( m => m.CajasPageModule), canActivate: [AuthGuard]
+  },
+  {
+    path: 'edit-cajas',
+    loadChildren: () => import('./paginas/cajas/edit-cajas/edit-cajas.module').then( m => m.EditCajasPageModule), canActivate: [AuthGuard]
+  },
 
 ];
 

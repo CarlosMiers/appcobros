@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ParametrosService {
-  public direccionIp: String = "https://api.synsa.com.py/serverapp/";
-  constructor() {}
+  //public direccionIp: String = "https://api.synsa.com.py/serverapp/";
+  public direccionIp: String = "//Localhost:3001/";
+
 }
