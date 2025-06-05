@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Configuración</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="guardar()">
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">Vendedor</ion-label>
+        <ion-input type="number" [(ngModel)]="config.vendedor" name="vendedor" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Caja</ion-label>
+        <ion-input type="number" [(ngModel)]="config.caja" name="caja" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Chofer</ion-label>
+        <ion-input type="number" [(ngModel)]="config.chofer" name="chofer" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Moneda</ion-label>
+        <ion-input type="number" [(ngModel)]="config.moneda" name="moneda" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Sucursal</ion-label>
+        <ion-input type="number" [(ngModel)]="config.sucursal" name="sucursal" required></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-button expand="full" type="submit">
+      Guardar
+    </ion-button>
+  </form>
+</ion-content>

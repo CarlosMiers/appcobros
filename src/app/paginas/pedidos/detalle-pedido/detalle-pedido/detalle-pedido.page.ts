@@ -11,7 +11,6 @@ import { ProductosService } from '../../../../services/productos/productos.servi
 import { LoadingService } from '../../../../services/loading/loading.service';
 import { ClientesService } from '../../../../services/clientes/clientes.service';
 import { BuscarClientesPage } from 'src/app/paginas/clientes/buscar-clientes/buscar-clientes/buscar-clientes.page';
-import { SharedProductoService } from 'src/app/services/productos/shared-producto.service';
 import { BuscarProductosPage } from 'src/app/paginas/productos/buscar-productos/buscar-productos/buscar-productos.page';
 
 @Component({
@@ -40,7 +39,6 @@ export class DetallePedidoPage {
     private loadingService: LoadingService,
     private clienteServices: ClientesService,
     private sharedClienteService: SharedClienteService,
-    private sharedProductoService: SharedProductoService,
     private toastController: ToastController,
     public modalCtrl: ModalController
   ) {}

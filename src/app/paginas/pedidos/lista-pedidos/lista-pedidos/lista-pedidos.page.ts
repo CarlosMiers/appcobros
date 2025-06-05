@@ -54,7 +54,7 @@ export class ListaPedidosPage implements OnInit {
     });
 
     this.listapedidosService
-      .getListaPedidos(1, this.fechainicio, this.fechafinal)
+      .getListaPedidos(parseInt(localStorage.getItem('idusuario') || '0', 10), this.fechainicio, this.fechafinal)
       .subscribe(
         (data) => {
           //CARGAMOS CONSULTA EN EL ARRAY

@@ -14,14 +14,14 @@ import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { NativeGeocoder } from '@awesome-cordova-plugins/native-geocoder/ngx';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
-
+import { IonicStorageModule } from '@ionic/storage-angular';
 
 registerLocaleData(es);
 
 
 @NgModule({
   declarations: [AppComponent,],
-  imports: [BrowserModule,PipesModule,IonicModule.forRoot(), 
+  imports: [BrowserModule,PipesModule,IonicModule.forRoot(), IonicStorageModule.forRoot(),
   HttpClientModule, FormsModule,  AppRoutingModule,],
   providers: [Toast,CurrencyPipe,  NativeGeocoder,Geolocation, SMS, {provide: HTTP_INTERCEPTORS,useClass: AddTtokenInterceptor, multi:true,},
     {provide: LOCALE_ID, useValue:'es-PY'},    

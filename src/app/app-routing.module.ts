@@ -60,10 +60,6 @@ const routes: Routes = [
     loadChildren: () => import('./paginas/pedidos/detalle-pedido/detalle-pedido/detalle-pedido.module').then( m => m.DetallePedidoPageModule), canActivate: [AuthGuard]
   },
   {
-    path: 'item-pedido',
-    loadChildren: () => import('./paginas/pedidos/item-pedido/item-pedido/item-pedido.module').then( m => m.ItemPedidoPageModule), canActivate: [AuthGuard]
-  },
-  {
     path: 'buscar-clientes',
     loadChildren: () => import('./paginas/clientes/buscar-clientes/buscar-clientes/buscar-clientes.module').then( m => m.BuscarClientesPageModule), canActivate: [AuthGuard]
   },
@@ -78,6 +74,18 @@ const routes: Routes = [
   {
     path: 'edit-cajas',
     loadChildren: () => import('./paginas/cajas/edit-cajas/edit-cajas.module').then( m => m.EditCajasPageModule), canActivate: [AuthGuard]
+  },
+  {
+    path: 'lista-ventas',
+    loadChildren: () => import('./paginas/ventas/lista-ventas/lista-ventas.module').then( m => m.ListaVentasPageModule)
+  },
+  {
+    path: 'detalle-venta',
+    loadChildren: () => import('./paginas/ventas/detalle-venta/detalle-venta.module').then( m => m.DetalleVentaPageModule)
+  },
+  {
+    path: 'configuracion',
+    loadChildren: () => import('./paginas/configuracion/configuracion/configuracion.module').then( m => m.ConfiguracionPageModule), canActivate:[AuthGuard]
   },
 
 ];
