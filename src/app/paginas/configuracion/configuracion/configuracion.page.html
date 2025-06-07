@@ -1,40 +1,68 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Configuración</ion-title>
+<ion-header class="ion-padding">
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">Configuración</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <form (ngSubmit)="guardar()">
-    <ion-list>
-      <ion-item>
-        <ion-label position="floating">Vendedor</ion-label>
-        <ion-input type="number" [(ngModel)]="config.vendedor" name="vendedor" required></ion-input>
-      </ion-item>
+<ion-content class="form-content">
+  <form>
+    <ion-grid>
+      <ion-row>
+        <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+          <ion-item class="custom-item">
+            <ion-label position="floating">Vendedor</ion-label>
+            <ion-input type="number" [(ngModel)]="config.vendedor" name="vendedor" required></ion-input>
+          </ion-item>
+        </ion-col>
 
-      <ion-item>
-        <ion-label position="floating">Caja</ion-label>
-        <ion-input type="number" [(ngModel)]="config.caja" name="caja" required></ion-input>
-      </ion-item>
+        <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+          <ion-item class="custom-item">
+            <ion-label position="floating">Caja</ion-label>
+            <ion-input type="number" [(ngModel)]="config.caja" name="caja" required></ion-input>
+          </ion-item>
+        </ion-col>
 
-      <ion-item>
-        <ion-label position="floating">Chofer</ion-label>
-        <ion-input type="number" [(ngModel)]="config.chofer" name="chofer" required></ion-input>
-      </ion-item>
+        <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+          <ion-item class="custom-item">
+            <ion-label position="floating">Camión</ion-label>
+            <ion-input type="number" [(ngModel)]="config.camion" name="camion" required></ion-input>
+          </ion-item>
+        </ion-col>
 
-      <ion-item>
-        <ion-label position="floating">Moneda</ion-label>
-        <ion-input type="number" [(ngModel)]="config.moneda" name="moneda" required></ion-input>
-      </ion-item>
+        <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+          <ion-item class="custom-item">
+            <ion-label position="floating">Moneda</ion-label>
+            <ion-input type="number" [(ngModel)]="config.moneda" name="moneda" required></ion-input>
+          </ion-item>
+        </ion-col>
 
-      <ion-item>
-        <ion-label position="floating">Sucursal</ion-label>
-        <ion-input type="number" [(ngModel)]="config.sucursal" name="sucursal" required></ion-input>
-      </ion-item>
-    </ion-list>
+        <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+          <ion-item class="custom-item">
+            <ion-label position="floating">Sucursal</ion-label>
+            <ion-input type="number" [(ngModel)]="config.sucursal" name="sucursal" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
-    <ion-button expand="full" type="submit">
-      Guardar
-    </ion-button>
   </form>
 </ion-content>
+
+<ion-footer class="custom-footer">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6" class="ion-text-center">
+        <ion-button expand="block" color="success" (click)="guardar()">
+          <ion-icon slot="start" name="save"></ion-icon>
+          Guardar
+        </ion-button>
+      </ion-col>
+      <ion-col size="6" class="ion-text-center">
+        <ion-button expand="block" color="medium" fill="outline" (click)="dismiss()">
+          <ion-icon slot="start" name="close"></ion-icon>
+          Salir
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>

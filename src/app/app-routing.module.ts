@@ -77,11 +77,11 @@ const routes: Routes = [
   },
   {
     path: 'lista-ventas',
-    loadChildren: () => import('./paginas/ventas/lista-ventas/lista-ventas.module').then( m => m.ListaVentasPageModule)
+    loadChildren: () => import('./paginas/ventas/lista-ventas/lista-ventas.module').then( m => m.ListaVentasPageModule), canActivate: [AuthGuard] 
   },
   {
     path: 'detalle-venta',
-    loadChildren: () => import('./paginas/ventas/detalle-venta/detalle-venta.module').then( m => m.DetalleVentaPageModule)
+    loadChildren: () => import('./paginas/ventas/detalle-venta/detalle-venta.module').then( m => m.DetalleVentaPageModule), canActivate: [AuthGuard]
   },
   {
     path: 'configuracion',

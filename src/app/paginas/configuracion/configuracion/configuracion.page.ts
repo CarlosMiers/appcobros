@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController,ModalController } from '@ionic/angular';
 import { ConfigService } from 'src/app/services/configuracion/configuracion.service';
 
 @Component({
@@ -11,14 +11,16 @@ export class ConfiguracionPage implements OnInit {
   config = {
     vendedor: null,
     caja: null,
-    chofer: null,
+    camion: null,
     moneda: null,
     sucursal: null
   };
 
   constructor(
     private configService: ConfigService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    public modalCtrl: ModalController
+   
   ) {}
 
   async ngOnInit() {
@@ -32,7 +34,7 @@ export class ConfiguracionPage implements OnInit {
     if (
       this.config.vendedor == null ||
       this.config.caja == null ||
-      this.config.chofer == null ||
+      this.config.camion == null ||
       this.config.moneda == null ||
       this.config.sucursal == null
     ) {
@@ -44,5 +46,10 @@ export class ConfiguracionPage implements OnInit {
     alert('Configuración guardada correctamente.');
     this.navCtrl.back();
   }
+
+  async dismiss() {
+    await this.modalCtrl.dismiss({}); // Devuelve un valor
+  }
+
 }
 

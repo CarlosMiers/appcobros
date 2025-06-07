@@ -47,7 +47,7 @@ export class EditCajasPage implements OnInit {
 
   ngOnInit() {
     if (this.cajaCodigo > 0) {
-      this.titulo = 'Editar Cliente N° ' + this.cajaCodigo;
+      this.titulo = 'Editar Caja N° ' + this.cajaCodigo;
       this.Consultar();
     } else {
       this.titulo = 'Agregar Caja';
@@ -99,7 +99,6 @@ export class EditCajasPage implements OnInit {
     this._cajaService.getCaja(this.cajaCodigo).subscribe(
       (data) => {
         this.EditCaja = data;
-        console.log(this.EditCaja);
       },
       (err) => {}
     );

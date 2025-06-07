@@ -23,6 +23,7 @@ export class EditProductosPage implements OnInit {
     codigo: '',
     nombre: '',
     costo: 0,
+    ivaporcentaje:0,
     precio_maximo: 0,
     estado: 1,
     createdAt: null,

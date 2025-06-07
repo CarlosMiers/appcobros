@@ -91,7 +91,7 @@ export class ListaVentasPage implements OnInit {
       this.router.navigate(['/menu']);
     }
   
-    async OpenEditVenta(ventaNumero: number) {
+    async OpenEditVenta(idVenta: number) {
       const modal = await this.modalCtrl.create({
         component: DetalleVentaPage,
         animated: true,
@@ -99,7 +99,7 @@ export class ListaVentasPage implements OnInit {
         backdropDismiss: false,
         cssClass: 'editVenta-modal',
         componentProps: {
-          pedidoNumero: ventaNumero,
+          ventaNumero: idVenta,
         },
       });
       return await modal.present();

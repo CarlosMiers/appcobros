@@ -106,7 +106,6 @@ export class DetallePedidoPage {
     this.loadingService.dismiss();
   }
 
-  // Lista de clientes para selección
 
   detalles: DetalleProducto[] = [];
 
@@ -116,7 +115,7 @@ export class DetallePedidoPage {
     cantidad: 0,
     costo: 0,
     precio: 0,
-    impuesto: 0,
+    ivaporcentaje: 0,
   };
   codigoProductoSeleccionado = '';
 
@@ -148,14 +147,16 @@ export class DetallePedidoPage {
     }
 
     const detalle: DetalleProducto = {
+      idventadet:0,
       iddetalle: 0,
       codprod: this.productoSeleccionado.codprod,
       comentario: this.productoSeleccionado.descripcion,
       cantidad: this.productoSeleccionado.cantidad,
       prcosto: this.productoSeleccionado.costo,
       precio: this.productoSeleccionado.precio,
-      porcentaje: this.productoSeleccionado.impuesto,
-      impuesto: this.productoSeleccionado.impuesto,
+      porcentaje:Math.round(Number(this.productoSeleccionado.ivaporcentaje)) || 0,
+      ivaporcentaje: Math.round(Number(this.productoSeleccionado.ivaporcentaje)) || 0,
+      impuesto:    Math.round(Number(this.productoSeleccionado.ivaporcentaje)) || 0 , // Asegúrate de que este campo sea un número,
       descripcion: this.productoSeleccionado.descripcion,
       costo: this.productoSeleccionado.costo,
       producto: {
@@ -187,7 +188,7 @@ export class DetallePedidoPage {
       cantidad: 0,
       costo: 0,
       precio: 0,
-      impuesto: 0,
+      ivaporcentaje: 0,
     };
     this.codigoProductoSeleccionado = '';
   }
@@ -310,7 +311,7 @@ export class DetallePedidoPage {
         cantidad: 1,
         costo: parseFloat(producto.costo),
         precio: parseFloat(producto.precio_maximo),
-        impuesto: producto.impuesto ? parseFloat(producto.impuesto) : 0,
+        ivaporcentaje: producto.impuesto ? parseFloat(producto.impuesto) : 0,
       };
     } else {
       this.abrirBusquedaProducto();
@@ -334,7 +335,7 @@ export class DetallePedidoPage {
           cantidad: 1,
           costo: parseFloat(producto.costo),
           precio: parseFloat(producto.precio_maximo),
-          impuesto: producto.impuesto ? parseFloat(producto.impuesto) : 0,
+          ivaporcentaje: producto.ivaporcentaje ? parseFloat(producto.ivaporcentaje) : 0,
         };
         this.codigoProductoSeleccionado = producto.codigo;
       }
@@ -362,8 +363,6 @@ export class DetallePedidoPage {
   loadPedidoDesdeApi(numeroPedido: number) {
     this.pedidosService.getPreventaByNumero(numeroPedido).subscribe({
       next: (data) => {
-        console.log('Pedido cargado:', data);
-
         // Asigna cliente y nombre del cliente desde el objeto recibido
         this.pedido = {
           numero: data.numero,

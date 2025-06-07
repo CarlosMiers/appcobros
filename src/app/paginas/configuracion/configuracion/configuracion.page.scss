@@ -1,0 +1,15 @@
+.form-content {
+  padding: 16px;
+}
+
+.custom-item {
+  margin-bottom: 16px;
+}
+
+.custom-footer {
+  padding: 16px;
+  position: sticky;
+  bottom: 0;
+  background: var(--ion-background-color);
+  z-index: 10;
+}

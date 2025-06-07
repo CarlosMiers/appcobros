@@ -3,13 +3,11 @@ import { FormBuilder } from '@angular/forms';
 import {
   AlertController,
   ModalController,
-  NavController,
 } from '@ionic/angular';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { ClientesService } from 'src/app/services/clientes/clientes.service';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { Cliente } from 'src/app/models/clientes/cliente';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-clientes',
@@ -41,9 +39,7 @@ export class EditClientesPage implements OnInit {
   };
 
   constructor(
-    private navCtrl: NavController,
     private _clienteService: ClientesService,
-    private router: Router,
     private geolocation: Geolocation,
     public modalCtrl: ModalController,
     public alertController: AlertController,
