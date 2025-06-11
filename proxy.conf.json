@@ -5,8 +5,8 @@
   },
   "type": "angular",
   "proxy": {
-    "/ysati": {
-      "target": "//Localhost:3001/",
+    "/ypora": {
+      "target": "//192.168.0.100:3001/",
       "secure": false,
         "logLavel":"debug",
         "changeOrigin":true

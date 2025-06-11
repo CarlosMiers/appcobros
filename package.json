@@ -36,6 +36,7 @@
     "@types/swiper": "^6.0.0",
     "add": "^2.0.6",
     "cordova": "^12.0.0",
+    "cordova-plugin-device": "^3.0.0",
     "cordova-plugin-geolocation": "^5.0.0",
     "cordova-plugin-nativegeocoder": "^3.5.1",
     "cordova-sms-plugin": "^1.0.3",

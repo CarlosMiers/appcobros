@@ -121,7 +121,7 @@ export class DetalleVentaPage implements OnInit {
         vencimiento: new Date().toISOString().substring(0, 10),
         cliente: 1,
         nombrecliente: 'CLIENTES VARIOS',
-        camion:this.config.camion || 1, // Camión por defecto
+        camion: this.config.camion || 1, // Camión por defecto
         sucursal: this.config.sucursal || 1, // Sucursal por defecto
         moneda: this.config.moneda || 1,
         comprobante: 1,
@@ -142,7 +142,9 @@ export class DetalleVentaPage implements OnInit {
       };
     } else {
       // Factura existente
-      this.titulo = '🧾 Editar Venta N°' + this.ventaNumero;
+       this.titulo = '🧾 Editar Venta ';
+       this.loadVentaDesdeApi(this.ventaNumero);
+
     }
   }
 
@@ -166,12 +168,9 @@ export class DetalleVentaPage implements OnInit {
         const numeroid = `${expedicion}-${facturaFormateada}`;
         this.venta.formatofactura = numeroid;
         this.venta.factura = Number(numeroid.replace(/-/g, '')); // Actualiza el número de factura en la venta
-        this.venta.iniciovencetimbrado= data.iniciotimbrado;
-        this.venta.vencimientotimbrado= data.vencetimbrado;
-        this.venta.nrotimbrado= data.timbrado; 
-        console.log("Vencimiento Inicial ",this.venta.iniciovencetimbrado);
-        console.log("Vencimiento Final ",this.venta.vencimientotimbrado);
-        console.log("Noro de Timbrado ",this.venta.nrotimbrado);
+        this.venta.iniciovencetimbrado = data.iniciotimbrado;
+        this.venta.vencimientotimbrado = data.vencetimbrado;
+        this.venta.nrotimbrado = data.timbrado;
       },
       (err) => {}
     );
@@ -278,14 +277,14 @@ export class DetalleVentaPage implements OnInit {
 
     const detalle: DetalleProducto = {
       idventadet: 0,
-      iddetalle:0,
+      iddetalle: 0,
       codprod: this.productoSeleccionado.codprod,
       comentario: this.productoSeleccionado.descripcion,
       cantidad: this.productoSeleccionado.cantidad,
       prcosto: this.productoSeleccionado.costo,
       precio: this.productoSeleccionado.precio,
       ivaporcentaje: this.productoSeleccionado.ivaporcentaje,
-      porcentaje:this.productoSeleccionado.ivaporcentaje,
+      porcentaje: this.productoSeleccionado.ivaporcentaje,
       impuesto: this.productoSeleccionado.ivaporcentaje,
       descripcion: this.productoSeleccionado.descripcion,
       costo: this.productoSeleccionado.costo,
@@ -376,10 +375,14 @@ export class DetalleVentaPage implements OnInit {
         codprod: producto.codigo,
         descripcion: producto.nombre,
         cantidad: 1,
-        ivaporcentaje: producto.ivaporcentaje ? parseFloat(producto.ivaporcentaje) : 0,
+        ivaporcentaje: producto.ivaporcentaje
+          ? parseFloat(producto.ivaporcentaje)
+          : 0,
         costo: parseFloat(producto.costo),
         precio: parseFloat(producto.precio_maximo),
-        impuesto: producto.ivaporcentaje ? parseFloat(producto.ivaporcentaje) : 0,
+        impuesto: producto.ivaporcentaje
+          ? parseFloat(producto.ivaporcentaje)
+          : 0,
       };
     } else {
       this.abrirBusquedaProducto();
@@ -403,8 +406,12 @@ export class DetalleVentaPage implements OnInit {
           cantidad: 1,
           costo: parseFloat(producto.costo),
           precio: parseFloat(producto.precio_maximo),
-          impuesto: producto.ivaporcentaje ? parseFloat(producto.ivaporcentaje) : 0,
-          ivaporcentaje: producto.ivaporcentaje ? parseFloat(producto.ivaporcentaje) : 0,
+          impuesto: producto.ivaporcentaje
+            ? parseFloat(producto.ivaporcentaje)
+            : 0,
+          ivaporcentaje: producto.ivaporcentaje
+            ? parseFloat(producto.ivaporcentaje)
+            : 0,
         };
         this.codigoProductoSeleccionado = producto.codigo;
       }
@@ -430,13 +437,13 @@ export class DetalleVentaPage implements OnInit {
 
     // Crear un objeto que contenga los datos necesarios para el backend
     const ventaConDetalles = {
+      idventa: this.venta.idventa, // ID de la venta, si es una nueva será 0
       creferencia: this.venta.creferencia, // Referencia única
       fecha: this.venta.fecha,
       factura: +this.venta.factura, // Asegurarse de que sea un número
       formatofactura: this.venta.formatofactura, // Formato de la factura
       vencimiento: this.venta.vencimiento,
       cliente: this.venta.cliente,
-      nombrecliente: this.venta.nombrecliente,
       sucursal: this.venta.sucursal,
       camion: this.venta.camion,
       moneda: this.venta.moneda,
@@ -450,6 +457,10 @@ export class DetalleVentaPage implements OnInit {
       gravadas10: this.gravadas10(),
       gravadas5: this.gravadas5(),
       totalneto: this.totalVenta(),
+      cuotas: this.venta.cuotas,
+      iniciovencetimbrado: this.venta.iniciovencetimbrado,
+      vencimientotimbrado: this.venta.vencimientotimbrado,
+      nrotimbrado: this.venta.nrotimbrado,
       idusuario: this.venta.idusuario,
       detalles: this.detalles.map((detalle) => {
         // Elimina 'numero' de los detalles, ya que lo genera el backend
@@ -459,8 +470,26 @@ export class DetalleVentaPage implements OnInit {
     };
 
     // Enviar los datos al servicio de ventas para guardarlos en la base de datos
-    if (!this.ventaNumero  || this.ventaNumero === 0) {
+    if (!this.ventaNumero || this.ventaNumero === 0) {
       this.ventasService.createVenta(ventaConDetalles).subscribe({
+        next: async (response) => {
+          const toast = await this.toastController.create({
+            message: response.message,
+            duration: 3000,
+            position: 'middle',
+            cssClass: 'custom-toast', // Aplica la clase CSS personalizada
+          });
+          this.updateFactura(); // Actualiza la caja después de crear la venta
+          await toast.present();
+          this.dismiss();
+        },
+        error: (error) => {
+          console.error('Error al crear Venta:', error);
+          // Manejar el error adecuadamente (mostrar un mensaje al usuario, etc.)
+        },
+      });
+    } else {
+      this.ventasService.updateVenta(this.ventaNumero, ventaConDetalles).subscribe({
         next: async (response) => {
           const toast = await this.toastController.create({
             message: response.message,
@@ -472,30 +501,68 @@ export class DetalleVentaPage implements OnInit {
           this.dismiss();
         },
         error: (error) => {
-          console.error('Error al crear Venta:', error);
+          console.error('Error al Actualizar Venta:', error);
           // Manejar el error adecuadamente (mostrar un mensaje al usuario, etc.)
         },
       });
-    } else {
-      this.ventasService
-        .update(this.ventaNumero, ventaConDetalles)
-        .subscribe({
-          next: async (response) => {
-            const toast = await this.toastController.create({
-              message: response.message,
-              duration: 3000,
-              position: 'middle',
-              cssClass: 'custom-toast', // Aplica la clase CSS personalizada
-            });
-            await toast.present();
-            this.dismiss();
-          },
-          error: (error) => {
-            console.error('Error al Actualizar Venta:', error);
-            // Manejar el error adecuadamente (mostrar un mensaje al usuario, etc.)
-          },
-        });
     }
+  }
+
+
+   loadVentaDesdeApi(numeroVenta: number) {
+      this.ventasService.getVentaByNumero(numeroVenta).subscribe({
+        next: (data) => {
+          // Asigna cliente y nombre del cliente desde el objeto recibido
+          this.venta = {
+            idventa: data.idventa,
+            formatofactura: data.formatofactura,
+            factura: data.factura,
+            creferencia: data.creferencia,
+            fecha: data.fecha, // <-- Agregado
+            vencimiento: data.vencimiento,
+            camion: data.camion,
+            sucursal: data.sucursal,
+            moneda: data.moneda,
+            comprobante: data.comprobante,
+            cotizacion: data.cotizacion,
+            vendedor: data.vendedor,
+            caja: data.caja,
+            supago: data.supago,
+            sucambio: data.sucambio,
+            exentas: data.exentas,
+            gravadas10: data.gravadas10,
+            gravadas5: data.gravadas5,
+            totalneto: data.totalneto,
+            cuotas: data.cuotas,
+            iniciovencetimbrado: data.iniciovencetimbrado,
+            vencimientotimbrado: data.vencimientotimbrado,
+            nrotimbrado: data.nrotimbrado,
+            idusuario: data.idusuario,
+            cliente: data.cliente,
+            nombrecliente: data.nombrecliente ?? data.clientenombre ?? '', // <-- Agregado
+            clienteNombre: data.clientenombre,
+          };
+  
+          // Asigna los detalles y extrae nombre del producto
+          this.detalles = data.detalles.map((detalle: any) => ({
+            ...detalle,
+            descripcion: detalle.producto?.descripcion || '',
+          }));
+        },
+        error: (err) => {
+          console.error('Error al cargar Venta', err);
+        },
+      });
+    }
+
+  updateFactura() {
+    const caja = {
+      codigo: this.venta.caja, // Este es el código de la venta o caja que quieres actualizar
+    };
+    this._cajaService.updateFacturaCaja(caja).subscribe(
+      (response) => {},
+      (error) => {}
+    );
   }
 
   async dismiss() {

@@ -1,18 +1,33 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.tuempresa.tuapp" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>MiApp</name>
-  <description>Descripción de la app</description>
-  <author email="tuemail@dominio.com" href="http://www.ejemplo.com">Tu Nombre</author>
-  
+<widget version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <access origin="*" />
-  
-  <!-- Plugin de Geolocation -->
-  <feature name="Geolocation">
-    <param name="android-package" value="org.apache.cordova.geolocation.Geolocation"/>
+
+  <feature name="AndroidSmsRetriever">
+    <param name="android-package" value="com.codingsans.ionic.smsRetriever.AndroidSmsRetriever" />
   </feature>
-  
-  <!-- Si usas otros plugins de Cordova, los declaras aquí -->
+
+  <feature name="Toast">
+    <param name="android-package" value="nl.xservices.plugins.Toast" />
+  </feature>
+
+  <feature name="Device">
+    <param name="android-package" value="org.apache.cordova.device.Device" />
+  </feature>
+
+  <feature name="StatusBar">
+    <param name="android-package" value="org.apache.cordova.statusbar.StatusBar" />
+    <param name="onload" value="true" />
+  </feature>
+
+  <feature name="Sms">
+    <param name="android-package" value="com.cordova.plugins.sms.Sms" />
+  </feature>
+
+  <feature name="Geolocation">
+    <param name="android-package" value="org.apache.cordova.geolocation.Geolocation" />
+  </feature>
+
   <feature name="NativeGeocoder">
-    <param name="android-package" value="cordova-plugin-nativegeocoder.NativeGeocoder"/>
+    <param name="android-package" value="cordova.plugin.nativegeocoder.NativeGeocoder" />
   </feature>
 </widget>

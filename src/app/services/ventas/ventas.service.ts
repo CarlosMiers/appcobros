@@ -36,7 +36,7 @@ export class VentasService {
   }
 
   // actualizar ventas
-  update(id: number, venta: any): Observable<any> {
+  updateVenta(id: number, venta: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.put(`${this.base_path}${this.myApiUrl}/${id}`, venta, {
       headers,
