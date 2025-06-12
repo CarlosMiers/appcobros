@@ -1,16 +1,10 @@
 {
-  "name": "AppCobros",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular",
-  "proxy": {
-    "/ypora": {
-      "target": "//192.168.0.100:3001/",
-      "secure": false,
-        "logLavel":"debug",
-        "changeOrigin":true
+  "/api": {
+    "target": "https://api.synsa.com.py/serverapp",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
     }
   }
 }
-
