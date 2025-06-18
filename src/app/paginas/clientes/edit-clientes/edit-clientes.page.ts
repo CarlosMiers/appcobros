@@ -1,9 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import {
-  AlertController,
-  ModalController,
-} from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { ClientesService } from 'src/app/services/clientes/clientes.service';
 import { LoadingService } from 'src/app/services/loading/loading.service';
@@ -57,57 +54,54 @@ export class EditClientesPage implements OnInit {
     }
   }
 
-  saveCliente() {
+  async saveCliente() {
     if (
       this.EditCliente.nombre == '' ||
       this.EditCliente.cedula == '' ||
       this.EditCliente.telefono == ''
     ) {
       this.loadingService.present({
-        message: 'Los Campos de Nombre, Cédula y Télefono son Obligatorios.',
+        message: 'Los Campos de Nombre, Cédula y Teléfono son Obligatorios.',
         duration: 300,
       });
       return;
     }
 
     this.loading = true;
-    if (this.EditCliente.codigo > 0) {
-      this._clienteService.updateCliente(this.EditCliente).subscribe(
-        (response) => {
-          this.loading = false;
-        },
-        (err) => {
-          this.loading = false;
-        }
-      );
-    } else {
-      this._clienteService.AddCliente(this.EditCliente).subscribe(
-        (response) => {
-          this.loading = false;
-        },
-        (err) => {
-          this.loading = false;
-        }
-      );
+
+    try {
+      if (this.EditCliente.codigo > 0) {
+        // Si el código es mayor a 0, actualiza el cliente
+        await this._clienteService.updateCliente(this.EditCliente);
+      } else {
+        // Si el código es 0 o no existe, agrega un nuevo cliente
+        await this._clienteService.addCliente(this.EditCliente);
+      }
+      this.loading = false;
+    } catch (error) {
+      console.error('Error al guardar el cliente:', error);
+      this.loading = false;
+    } finally {
+      this.dismiss(); // Cierra el modal o pantalla
     }
-    this.dismiss();
   }
 
-  Consultar() {
+  async Consultar() {
     this.loadingService.present({
       message: 'Aguarde un Momento.',
       duration: 300,
     });
 
-    this._clienteService.getCliente(this.clienteCodigo).subscribe(
-      (data) => {
-        this.EditCliente = data;
-        console.log(this.EditCliente);
-      },
-      (err) => {}
-    );
-    this.loading = false;
- 
+    try {
+      // Usamos el servicio para obtener los datos del cliente
+      const data = await this._clienteService.getCliente(this.clienteCodigo);
+      this.EditCliente = data; // Asigna los datos del cliente
+      console.log(this.EditCliente);
+    } catch (error) {
+      console.error('Error al consultar el cliente:', error);
+    } finally {
+      this.loading = false;
+    }
   }
 
   compareWithSexo = (o1: any, o2: any) => {

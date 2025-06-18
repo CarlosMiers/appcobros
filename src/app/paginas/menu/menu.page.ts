@@ -79,20 +79,5 @@ export class MenuPage implements OnInit {
     this.modalController.dismiss();
   }
 
-  getIconClass(name: string): string {
-    switch (name.toLowerCase()) {
-      case 'clientes':
-        return 'icon-clientes';
-      case 'productos':
-        return 'icon-productos';
-      case 'pedidos':
-        return 'icon-pedidos';
-      case 'ventas':
-        return 'icon-ventas';
-      case 'cobranzas':
-        return 'icon-cobranzas';
-      default:
-        return '';
-    }
-  }
+  
 }

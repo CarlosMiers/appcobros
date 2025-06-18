@@ -1,52 +1,83 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ParametrosService } from '../parametros/parametros.service';
-import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { Http } from '@capacitor-community/http'; // Usamos Http nativo de Capacitor
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VentasService {
-  base_path: String = '';
+  base_path: string = '';
   private myApiUrl: string;
   private myApId: string;
 
-  constructor(
-    private http: HttpClient,
-    public parametrosService: ParametrosService
-  ) {
-    this.base_path = parametrosService.direccionIp;
-    this.myApiUrl = 'ypora/v1/ventas';
+  constructor() {
+    this.base_path = environment.apiUrl;
+    this.myApiUrl = '/ventas';
     this.myApId = '/id';
   }
 
-  // crear Ventas
+  // Crear Venta
+  async createVenta(venta: any): Promise<any> {
+    const token = localStorage.getItem('token'); // Obtenemos el token desde localStorage
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
 
-  createVenta(venta: any): Observable<any> {
-    // Asegurarse de que el objeto venta tenga la estructura correcta
-    console.log('Creando venta:', venta);
-    if (!venta || typeof venta !== 'object') {
-      throw new Error('El objeto venta es inválido');
+    try {
+      const response = await Http.post({
+        url: `${this.base_path}${this.myApiUrl}`,
+        headers,
+        params: {},
+        data: venta,
+      });
+      return response.data; // Retornamos los datos de la respuesta
+    } catch (error) {
+      console.error('Error al crear la venta:', error);
+      throw error;
     }
-
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(`${this.base_path}${this.myApiUrl}`, venta, {
-      headers,
-    });
   }
 
-  // actualizar ventas
-  updateVenta(id: number, venta: any): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.put(`${this.base_path}${this.myApiUrl}/${id}`, venta, {
-      headers,
-    });
+  // Actualizar Venta
+  async updateVenta(id: number, venta: any): Promise<any> {
+    const token = localStorage.getItem('token'); // Obtenemos el token
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const response = await Http.put({
+        url: `${this.base_path}${this.myApiUrl}/${id}`,
+        headers,
+        params: {},
+        data: venta,
+      });
+      return response.data; // Retornamos los datos de la respuesta
+    } catch (error) {
+      console.error('Error al actualizar la venta:', error);
+      throw error;
+    }
   }
 
-  // obtener Venta por id
-  getVentaByNumero(idventa: number): Observable<any> {
-    return this.http.get(
-      `${this.base_path}${this.myApiUrl}${this.myApId}/${idventa}`
-    );
+  // Obtener Venta por id
+  async getVentaByNumero(idventa: number): Promise<any> {
+    const token = localStorage.getItem('token'); // Obtenemos el token
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const response = await Http.get({
+        url: `${this.base_path}${this.myApiUrl}${this.myApId}/${idventa}`,
+        params: {},
+        headers,
+      });
+      return response.data; // Retornamos los datos de la respuesta
+    } catch (error) {
+      console.error('Error al obtener la venta:', error);
+      throw error;
+    }
   }
 }

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ParametrosService } from '../parametros/parametros.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Http } from '@capacitor-community/http'; // Usamos Http nativo de Capacitor
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,38 +10,74 @@ export class PedidosService {
   private myApiUrl: string;
   private myApId: string;
 
-  constructor(
-    private http: HttpClient,
-    public parametrosService: ParametrosService
-  ) {
-    this.base_path = parametrosService.direccionIp;
-    this.myApiUrl = 'ypora/v1/preventa';
+  constructor() {
+    this.base_path = environment.apiUrl;
+    this.myApiUrl = '/preventa';
     this.myApId = '/id';
   }
 
-// crear Preventa
+  // Crear Preventa
+  async createPreventa(preventa: any): Promise<any> {
+    const token = localStorage.getItem('token'); // Obtenemos el token desde localStorage
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
 
-  createPreventa(preventa: any): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(`${this.base_path}${this.myApiUrl}`, preventa, {
-      headers,
-    });
+    try {
+      const response = await Http.post({
+        url: `${this.base_path}${this.myApiUrl}`,
+        headers,
+        params: {},
+        data: preventa,
+      });
+      return response.data; // Retornamos los datos de la respuesta
+    } catch (error) {
+      console.error('Error al crear la preventa:', error);
+      throw error;
+    }
   }
 
-// actualizar Preventa
-update(id: number, preventa: any): Observable<any> {
-  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-  return this.http.put(`${this.base_path}${this.myApiUrl}/${id}`, preventa, {
-    headers,
-  });
-}
+  // Actualizar Preventa
+  async update(id: number, preventa: any): Promise<any> {
+    const token = localStorage.getItem('token'); // Obtenemos el token
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
 
-// obtener Preventa por id  
-  getPreventaByNumero(numero: number): Observable<any> {
-    return this.http.get(
-      `${this.base_path}${this.myApiUrl}${this.myApId}/${numero}`
-    );
+    try {
+      const response = await Http.put({
+        url: `${this.base_path}${this.myApiUrl}/${id}`,
+        headers,
+        params: {},
+        data: preventa,
+      });
+      return response.data; // Retornamos los datos de la respuesta
+    } catch (error) {
+      console.error('Error al actualizar la preventa:', error);
+      throw error;
+    }
   }
 
+  // Obtener Preventa por id
+  async getPreventaByNumero(numero: number): Promise<any> {
+    const token = localStorage.getItem('token'); // Obtenemos el token
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
 
+    try {
+      const response = await Http.get({
+        url: `${this.base_path}${this.myApiUrl}${this.myApId}/${numero}`,
+        params: {},
+        headers,
+      });
+      return response.data; // Retornamos los datos de la respuesta
+    } catch (error) {
+      console.error('Error al obtener la preventa:', error);
+      throw error;
+    }
+  }
 }

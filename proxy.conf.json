@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://api.synsa.com.py/serverapp",
+    "target": "http://192.168.0.100:3001",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {
@@ -8,3 +8,4 @@
     }
   }
 }
+

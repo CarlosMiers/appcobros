@@ -15,6 +15,9 @@ import { BuscarClientesPage } from '../../clientes/buscar-clientes/buscar-client
 import { ConfigService } from 'src/app/services/configuracion/configuracion.service';
 import { Caja } from 'src/app/models/cajas/cajas';
 import { CajasService } from 'src/app/services/cajas/cajas.service';
+import { BluetoothSerial } from '@awesome-cordova-plugins/bluetooth-serial/ngx';
+import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+import { Device } from '@capacitor/device';
 
 @Component({
   selector: 'app-detalle-venta',
@@ -94,7 +97,9 @@ export class DetalleVentaPage implements OnInit {
     private sharedClienteService: SharedClienteService,
     private toastController: ToastController,
     public modalCtrl: ModalController,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private bluetoothSerial: BluetoothSerial,
+    private androidPermissions: AndroidPermissions
   ) {}
 
   selectedClient: any;
@@ -142,9 +147,8 @@ export class DetalleVentaPage implements OnInit {
       };
     } else {
       // Factura existente
-       this.titulo = '🧾 Editar Venta ';
-       this.loadVentaDesdeApi(this.ventaNumero);
-
+      this.titulo = '🧾 Editar Venta ';
+      this.loadVentaDesdeApi(this.ventaNumero);
     }
   }
 
@@ -158,22 +162,30 @@ export class DetalleVentaPage implements OnInit {
   // Obtener la caja y generar el número de factura
   async ObtenerCaja() {
     const cajaId = this.config.caja ?? 1; // Usa 1 como valor por defecto si es null
-    this._cajaService.getCaja(cajaId).subscribe(
-      (data) => {
-        this.EditCaja = data;
-        console.log('Caja obtenida:', this.EditCaja);
-        const expedicion = this.EditCaja.expedicion;
-        const factura = Number(this.EditCaja.factura) + 1;
-        const facturaFormateada = factura.toString().padStart(7, '0');
-        const numeroid = `${expedicion}-${facturaFormateada}`;
-        this.venta.formatofactura = numeroid;
-        this.venta.factura = Number(numeroid.replace(/-/g, '')); // Actualiza el número de factura en la venta
-        this.venta.iniciovencetimbrado = data.iniciotimbrado;
-        this.venta.vencimientotimbrado = data.vencetimbrado;
-        this.venta.nrotimbrado = data.timbrado;
-      },
-      (err) => {}
-    );
+
+    try {
+      // Hacemos la solicitud para obtener la caja con el ID correspondiente
+      const data = await this._cajaService.getCaja(cajaId);
+
+      // Asignamos la respuesta a EditCaja
+      this.EditCaja = data;
+      console.log('Caja obtenida:', this.EditCaja);
+
+      const expedicion = this.EditCaja.expedicion;
+      const factura = Number(this.EditCaja.factura) + 1;
+      const facturaFormateada = factura.toString().padStart(7, '0');
+      const numeroid = `${expedicion}-${facturaFormateada}`;
+
+      // Asignamos el número de factura formateado y otros valores
+      this.venta.formatofactura = numeroid;
+      this.venta.factura = Number(numeroid.replace(/-/g, '')); // Actualiza el número de factura en la venta
+      this.venta.iniciovencetimbrado = data.iniciotimbrado;
+      this.venta.vencimientotimbrado = data.vencetimbrado;
+      this.venta.nrotimbrado = data.timbrado;
+    } catch (error) {
+      // Manejo de errores si algo falla en la solicitud
+      console.error('Error al obtener la caja:', error);
+    }
   }
 
   // Cargar configuración desde el servicio
@@ -188,27 +200,30 @@ export class DetalleVentaPage implements OnInit {
   }
 
   // Productos disponibles para seleccionar
-  loadProductos() {
-    this.loadingService.present({
-      message: 'Aguarde un Momento.',
-      duration: 300,
-    });
-    this.productosService.getTodos().subscribe((data) => {
-      this.productos = data; //
-    });
-    this.loadingService.dismiss();
+  async loadProductos() {
+    try {
+      const data = await this.productosService.getTodos();
+      this.productos = data; // Asigna directamente el array de productos
+    } catch (error) {
+      // Manejo de error si ocurre algo al cargar los productos
+      console.error('Error al cargar los productos:', error);
+      this.loadingService.dismiss();
+      alert(
+        'Ocurrió un error al cargar los productos. Por favor, intenta de nuevo.'
+      );
+    }
   }
 
   //Clientes disponibles para seleccionar
-  loadClientes() {
-    this.loadingService.present({
-      message: 'Aguarde un Momento.',
-      duration: 300,
-    });
-    this.clienteServices.getTodos().subscribe((data) => {
-      this.clientes = data; //
-    });
-    this.loadingService.dismiss();
+  async loadClientes() {
+    try {
+      // Usamos el servicio para obtener todos los clientes
+      const data = await this.clienteServices.getTodos();
+      this.clientes = data; // Asigna los clientes obtenidos
+    } catch (error) {
+      console.error('Error al cargar los clientes:', error);
+      // Puedes agregar un mensaje adicional de error aquí si es necesario
+    }
   }
 
   detalles: DetalleProducto[] = [];
@@ -421,6 +436,7 @@ export class DetalleVentaPage implements OnInit {
   }
 
   async guardarVenta() {
+    // Validación de campos obligatorios
     if (
       !this.venta.cliente ||
       !this.venta.comprobante ||
@@ -469,101 +485,338 @@ export class DetalleVentaPage implements OnInit {
       }),
     };
 
-    // Enviar los datos al servicio de ventas para guardarlos en la base de datos
-    if (!this.ventaNumero || this.ventaNumero === 0) {
-      this.ventasService.createVenta(ventaConDetalles).subscribe({
-        next: async (response) => {
-          const toast = await this.toastController.create({
-            message: response.message,
-            duration: 3000,
-            position: 'middle',
-            cssClass: 'custom-toast', // Aplica la clase CSS personalizada
-          });
-          this.updateFactura(); // Actualiza la caja después de crear la venta
-          await toast.present();
-          this.dismiss();
-        },
-        error: (error) => {
-          console.error('Error al crear Venta:', error);
-          // Manejar el error adecuadamente (mostrar un mensaje al usuario, etc.)
-        },
-      });
-    } else {
-      this.ventasService.updateVenta(this.ventaNumero, ventaConDetalles).subscribe({
-        next: async (response) => {
-          const toast = await this.toastController.create({
-            message: response.message,
-            duration: 3000,
-            position: 'middle',
-            cssClass: 'custom-toast', // Aplica la clase CSS personalizada
-          });
-          await toast.present();
-          this.dismiss();
-        },
-        error: (error) => {
-          console.error('Error al Actualizar Venta:', error);
-          // Manejar el error adecuadamente (mostrar un mensaje al usuario, etc.)
-        },
-      });
+    try {
+      // Enviar los datos al servicio de ventas para guardarlos en la base de datos
+      if (!this.ventaNumero || this.ventaNumero === 0) {
+        const response = await this.ventasService.createVenta(ventaConDetalles);
+
+        // Mostramos un toast con la respuesta
+        const toast = await this.toastController.create({
+          message: response.message,
+          duration: 3000,
+          position: 'middle',
+          cssClass: 'custom-toast',
+        });
+
+        this.updateFactura();
+        // Presentar el toast y cerrar el modal
+        await toast.present();
+        this.imprimirTicket(ventaConDetalles)
+        this.dismiss();
+      } else {
+        // Si ya existe una venta, actualizarla
+        const response = await this.ventasService.updateVenta(
+          this.ventaNumero,
+          ventaConDetalles
+        );
+
+        // Mostrar el mensaje de éxito
+        const toast = await this.toastController.create({
+          message: response.message,
+          duration: 3000,
+          position: 'middle',
+          cssClass: 'custom-toast',
+        });
+
+        await toast.present();
+        this.imprimirTicket(ventaConDetalles)
+        this.dismiss();
+      }
+    } catch (error) {
+      console.error('Error al guardar/actualizar venta:', error);
+      // Manejar el error de forma adecuada (alerta, mensaje en consola, etc.)
     }
   }
 
+  async loadVentaDesdeApi(numeroVenta: number) {
+    try {
+      // Llamamos al servicio para obtener la venta por su número
+      const data = await this.ventasService.getVentaByNumero(numeroVenta);
 
-   loadVentaDesdeApi(numeroVenta: number) {
-      this.ventasService.getVentaByNumero(numeroVenta).subscribe({
-        next: (data) => {
-          // Asigna cliente y nombre del cliente desde el objeto recibido
-          this.venta = {
-            idventa: data.idventa,
-            formatofactura: data.formatofactura,
-            factura: data.factura,
-            creferencia: data.creferencia,
-            fecha: data.fecha, // <-- Agregado
-            vencimiento: data.vencimiento,
-            camion: data.camion,
-            sucursal: data.sucursal,
-            moneda: data.moneda,
-            comprobante: data.comprobante,
-            cotizacion: data.cotizacion,
-            vendedor: data.vendedor,
-            caja: data.caja,
-            supago: data.supago,
-            sucambio: data.sucambio,
-            exentas: data.exentas,
-            gravadas10: data.gravadas10,
-            gravadas5: data.gravadas5,
-            totalneto: data.totalneto,
-            cuotas: data.cuotas,
-            iniciovencetimbrado: data.iniciovencetimbrado,
-            vencimientotimbrado: data.vencimientotimbrado,
-            nrotimbrado: data.nrotimbrado,
-            idusuario: data.idusuario,
-            cliente: data.cliente,
-            nombrecliente: data.nombrecliente ?? data.clientenombre ?? '', // <-- Agregado
-            clienteNombre: data.clientenombre,
-          };
-  
-          // Asigna los detalles y extrae nombre del producto
-          this.detalles = data.detalles.map((detalle: any) => ({
-            ...detalle,
-            descripcion: detalle.producto?.descripcion || '',
-          }));
-        },
-        error: (err) => {
-          console.error('Error al cargar Venta', err);
-        },
-      });
+      // Asigna los valores del objeto recibido
+      this.venta = {
+        idventa: data.idventa,
+        formatofactura: data.formatofactura,
+        factura: data.factura,
+        creferencia: data.creferencia,
+        fecha: data.fecha, // <-- Agregado
+        vencimiento: data.vencimiento,
+        camion: data.camion,
+        sucursal: data.sucursal,
+        moneda: data.moneda,
+        comprobante: data.comprobante,
+        cotizacion: data.cotizacion,
+        vendedor: data.vendedor,
+        caja: data.caja,
+        supago: data.supago,
+        sucambio: data.sucambio,
+        exentas: data.exentas,
+        gravadas10: data.gravadas10,
+        gravadas5: data.gravadas5,
+        totalneto: data.totalneto,
+        cuotas: data.cuotas,
+        iniciovencetimbrado: data.iniciovencetimbrado,
+        vencimientotimbrado: data.vencimientotimbrado,
+        nrotimbrado: data.nrotimbrado,
+        idusuario: data.idusuario,
+        cliente: data.cliente,
+        nombrecliente: data.nombrecliente ?? data.clientenombre ?? '', // <-- Agregado
+        clienteNombre: data.clientenombre,
+      };
+
+      // Asigna los detalles y extrae el nombre del producto
+      this.detalles = data.detalles.map((detalle: any) => ({
+        ...detalle,
+        descripcion: detalle.producto?.descripcion || '',
+      }));
+    } catch (error) {
+      console.error('Error al cargar la venta:', error);
     }
+  }
 
-  updateFactura() {
+  async updateFactura() {
+    // Creamos el objeto con el código de la caja que queremos actualizar
     const caja = {
       codigo: this.venta.caja, // Este es el código de la venta o caja que quieres actualizar
     };
-    this._cajaService.updateFacturaCaja(caja).subscribe(
-      (response) => {},
-      (error) => {}
-    );
+
+    try {
+      // Llamamos al servicio para actualizar la factura usando await
+      const response = await this._cajaService.updateFacturaCaja(caja);
+
+      // Aquí puedes manejar la respuesta si es necesario
+      console.log('Factura actualizada:', response);
+    } catch (error) {
+      // Manejo de errores
+      console.error('Error al actualizar la factura:', error);
+    }
   }
+
+
+  // Paso 3: Enviar un texto de prueba ESC/POS a la impresora
+  async imprimirTest() {
+    const impresoraMAC = 'DC:0D:30:77:1E:46'; // Cambiar por MAC real
+    const textoTest = 'PRUEBA DE IMPRESIÓN\n\n';
+
+    try {
+      const deviceInfo = await Device.getInfo();
+      const androidVersion = parseInt(deviceInfo.osVersion || '0', 10);
+      console.log('Versión de Android:', androidVersion);
+
+      const permisos = [
+        this.androidPermissions.PERMISSION.BLUETOOTH,
+        this.androidPermissions.PERMISSION.BLUETOOTH_ADMIN,
+        this.androidPermissions.PERMISSION.BLUETOOTH_CONNECT,
+        this.androidPermissions.PERMISSION.BLUETOOTH_SCAN,
+        this.androidPermissions.PERMISSION.ACCESS_FINE_LOCATION,
+      ];
+
+      if (androidVersion >= 13) {
+        permisos.push(this.androidPermissions.PERMISSION.NEARBY_WIFI_DEVICES);
+      }
+
+      await this.androidPermissions.requestPermissions(permisos);
+
+      const result = await this.androidPermissions.checkPermission(
+        this.androidPermissions.PERMISSION.BLUETOOTH_CONNECT
+      );
+
+      if (!result.hasPermission) {
+        alert('No se concedieron los permisos necesarios.');
+        return;
+      }
+
+      console.log('Intentando conectar a la impresora...');
+
+      this.bluetoothSerial.connectInsecure(impresoraMAC).subscribe(
+        async () => {
+          console.log('Conectado a la impresora.');
+
+          await new Promise((r) => setTimeout(r, 1500));
+
+          await this.bluetoothSerial.write(textoTest);
+          console.log('Texto enviado correctamente.');
+
+          await new Promise((r) => setTimeout(r, 500));
+
+          await this.bluetoothSerial.disconnect();
+          console.log('Desconectado de la impresora.');
+
+          alert('Texto de prueba impreso exitosamente');
+        },
+        (error) => {
+          console.error('Error de conexión:', error);
+          alert(
+            'No se pudo conectar a la impresora. Verifica que esté encendida y emparejada.'
+          );
+        }
+      );
+    } catch (error) {
+      console.error('Error durante la impresión:', error);
+
+      const message = (error as any)?.message || '';
+
+      if (message.includes('Unable to connect')) {
+        alert(
+          'No se pudo conectar a la impresora. Verifica que esté encendida y emparejada.'
+        );
+      } else if (message.includes('write')) {
+        alert('Error al enviar datos. Verifica el formato del texto.');
+      } else {
+        alert('Error inesperado: ' + JSON.stringify(error));
+      }
+    }
+  }
+
+  async imprimirTicket(ventaConDetalles: any) {
+    const impresoraMAC = 'DC:0D:30:77:1E:46'; // Cambiar por la MAC real
+    const contenidoTicket = this.generarTicketTexto(ventaConDetalles); // Genera Uint8Array
+
+    try {
+      const deviceInfo = await Device.getInfo();
+      const androidVersion = parseInt(deviceInfo.osVersion || '0', 10);
+      console.log('Versión de Android:', androidVersion);
+
+      const permisos = [
+        this.androidPermissions.PERMISSION.BLUETOOTH,
+        this.androidPermissions.PERMISSION.BLUETOOTH_ADMIN,
+        this.androidPermissions.PERMISSION.BLUETOOTH_CONNECT,
+        this.androidPermissions.PERMISSION.BLUETOOTH_SCAN,
+        this.androidPermissions.PERMISSION.ACCESS_FINE_LOCATION,
+      ];
+
+      if (androidVersion >= 13) {
+        permisos.push(this.androidPermissions.PERMISSION.NEARBY_WIFI_DEVICES);
+      }
+
+      await this.androidPermissions.requestPermissions(permisos);
+
+      const result = await this.androidPermissions.checkPermission(
+        this.androidPermissions.PERMISSION.BLUETOOTH_CONNECT
+      );
+
+      if (!result.hasPermission) {
+        alert('No se concedieron los permisos necesarios.');
+        return;
+      }
+
+      console.log('Intentando conectar a la impresora...');
+
+      this.bluetoothSerial.connectInsecure(impresoraMAC).subscribe(
+        async () => {
+          console.log('Conectado a la impresora.');
+
+          await new Promise((r) => setTimeout(r, 1500));
+
+          await this.bluetoothSerial.write(contenidoTicket); // Aquí va el ticket real
+          console.log('Ticket enviado correctamente.');
+
+          await new Promise((r) => setTimeout(r, 500));
+
+          await this.bluetoothSerial.disconnect();
+          console.log('Desconectado de la impresora.');
+
+          alert('Factura impresa correctamente.');
+        },
+        (error) => {
+          console.error('Error de conexión:', error);
+          alert(
+            'No se pudo conectar a la impresora. Verifica que esté encendida y emparejada.'
+          );
+        }
+      );
+    } catch (error) {
+      console.error('Error durante la impresión:', error);
+
+      const message = (error as any)?.message || '';
+
+      if (message.includes('Unable to connect')) {
+        alert(
+          'No se pudo conectar a la impresora. Verifica que esté encendida y emparejada.'
+        );
+      } else if (message.includes('write')) {
+        alert('Error al enviar datos. Verifica el formato del texto.');
+      } else {
+        alert('Error inesperado: ' + JSON.stringify(error));
+      }
+    }
+  }
+
+  // Paso 4: Generar el texto completo del ticket (usando ESC/POS)
+  generarTicketTexto(ventaConDetalles: any): Uint8Array {
+    let contenido = '';
+
+    const centrado = '\x1B\x61\x01';
+    const izquierda = '\x1B\x61\x00';
+    const negritaOn = '\x1B\x45\x01';
+    const negritaOff = '\x1B\x45\x00';
+
+    // Encabezado
+    contenido += centrado + negritaOn;
+    contenido += 'FACTURA ELECTRÓNICA\n';
+    contenido += 'GO-LINK COMERCIO\n';
+    contenido += negritaOff + izquierda;
+    contenido += '-'.repeat(32) + '\n';
+
+    // Datos generales
+    contenido += `Fecha: ${ventaConDetalles.fecha}\n`;
+    contenido += `Factura Nº: ${ventaConDetalles.factura}\n`;
+    contenido += `Cliente: ${
+      ventaConDetalles.cliente?.nombre || ventaConDetalles.cliente
+    }\n`;
+    contenido += `Sucursal: ${ventaConDetalles.sucursal}\n`;
+    contenido += `Camión: ${ventaConDetalles.camion}\n`;
+    contenido += `Vendedor: ${ventaConDetalles.vendedor}\n`;
+    contenido += `Moneda: ${ventaConDetalles.moneda}\n`;
+    contenido += '-'.repeat(32) + '\n';
+
+    // Timbrado
+    contenido += `Timbrado: ${ventaConDetalles.nrotimbrado}\n`;
+    contenido += `Válido: ${ventaConDetalles.iniciovencetimbrado} al\n         ${ventaConDetalles.vencimientotimbrado}\n`;
+    contenido += '-'.repeat(32) + '\n';
+
+    // Detalle de productos
+    contenido += 'Detalle de productos:\n';
+    ventaConDetalles.detalles.forEach((d: any) => {
+      const descripcion = d.producto?.descripcion || d.descripcion;
+      const precioTotal = (Number(d.cantidad) * Number(d.precio)).toFixed(0);
+
+      contenido += descripcion.slice(0, 32) + '\n';
+      const lineaPrecio =
+        `${d.cantidad} x ${d.precio}`.padEnd(16) +
+        `= ${precioTotal}`.padStart(14);
+      contenido += lineaPrecio + '\n';
+    });
+
+    contenido += '-'.repeat(32) + '\n';
+
+    // Totales
+    contenido += `GRAV. 10%: ${ventaConDetalles.gravadas10
+      .toFixed(0)
+      .padStart(20)}\n`;
+    contenido += `GRAV. 5%:  ${ventaConDetalles.gravadas5
+      .toFixed(0)
+      .padStart(20)}\n`;
+    contenido += `EXENTAS:   ${(ventaConDetalles.exentas?.toFixed(0) || 0)
+      .toString()
+      .padStart(20)}\n`;
+    contenido += `TOTAL:     ${ventaConDetalles.totalneto
+      .toFixed(0)
+      .padStart(20)}\n`;
+
+    contenido += '-'.repeat(32) + '\n';
+
+    // Mensaje final
+    contenido += centrado;
+    contenido += '¡Gracias por su compra!\n\n\n';
+
+    // Corte de papel (si aplica)
+    contenido += '\x1D\x56\x00';
+
+    const encoder = new TextEncoder();
+    return encoder.encode(contenido);
+  }
+  // Paso 5: Imprimir el ticket completo
 
   async dismiss() {
     return await this.modalCtrl.dismiss();

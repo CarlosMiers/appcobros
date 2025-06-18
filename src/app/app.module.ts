@@ -15,15 +15,19 @@ import { AppRoutingModule } from './app-routing.module';
 import { NativeGeocoder } from '@awesome-cordova-plugins/native-geocoder/ngx';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { IonicStorageModule } from '@ionic/storage-angular';
+import { BluetoothSerial } from '@awesome-cordova-plugins/bluetooth-serial/ngx';
+import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 
 registerLocaleData(es);
 
 
 @NgModule({
-  declarations: [AppComponent,],
-  imports: [BrowserModule,PipesModule,IonicModule.forRoot(), IonicStorageModule.forRoot(),
-  HttpClientModule, FormsModule,  AppRoutingModule,],
-  providers: [Toast,CurrencyPipe,  NativeGeocoder,Geolocation, SMS, {provide: HTTP_INTERCEPTORS,useClass: AddTtokenInterceptor, multi:true,},
+  declarations: [
+    AppComponent, // 🔴 Esto es clave: asegurate de que AppComponent esté declarado aquí
+  ],
+  imports: [BrowserModule, PipesModule, IonicModule.forRoot(), IonicStorageModule.forRoot(),
+    HttpClientModule, FormsModule, AppRoutingModule],
+  providers: [ AndroidPermissions,BluetoothSerial, Toast,CurrencyPipe,  NativeGeocoder,Geolocation, SMS, {provide: HTTP_INTERCEPTORS,useClass: AddTtokenInterceptor, multi:true,},
     {provide: LOCALE_ID, useValue:'es-PY'},    
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

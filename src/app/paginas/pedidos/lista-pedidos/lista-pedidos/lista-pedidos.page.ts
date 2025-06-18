@@ -46,28 +46,44 @@ export class ListaPedidosPage implements OnInit {
     this.Consultar();
   }
 
-  Consultar() {
-    this.totalpedido = 0;
+  async Consultar() {
+    this.totalpedido = 0; // Reiniciamos el total del pedido
+
+    // Mostramos el loading
     this.loadingService.present({
       message: 'Aguarde un Momento.',
       duration: 300,
     });
 
-    this.listapedidosService
-      .getListaPedidos(parseInt(localStorage.getItem('idusuario') || '0', 10), this.fechainicio, this.fechafinal)
-      .subscribe(
-        (data) => {
-          //CARGAMOS CONSULTA EN EL ARRAY
-          this.ListaPedido = data;
-          console.log(data);
-          let totalRow = this.ListaPedido.length;
-          totalRow -= 1;
-          for (let i = 0; i <= totalRow; i++) {
-            this.totalpedido += parseFloat(this.ListaPedido[i].totalneto);
-          }
-        },
-        (err) => {}
+    try {
+      // Llamamos al servicio de lista de pedidos y obtenemos la respuesta de manera asíncrona
+      const data = await this.listapedidosService.getListaPedidos(
+        parseInt(localStorage.getItem('idusuario') || '0', 10),
+        this.fechainicio,
+        this.fechafinal
       );
+
+      // Cargamos la respuesta en el array ListaPedido
+      this.ListaPedido = data;
+      console.log(data);
+
+      // Calculamos el total del pedido
+      let totalRow = this.ListaPedido.length;
+      totalRow -= 1;
+
+      for (let i = 0; i <= totalRow; i++) {
+        this.totalpedido += parseFloat(this.ListaPedido[i].totalneto);
+      }
+    } catch (err) {
+      console.error('Error al obtener la lista de pedidos:', err);
+      // Aquí puedes agregar manejo de errores, como mostrar un mensaje de alerta si lo deseas
+      alert(
+        'Ocurrió un error al cargar la lista de pedidos. Intenta nuevamente.'
+      );
+    } finally {
+      // Cerramos el loading en todos los casos
+      this.loadingService.dismiss();
+    }
   }
 
   async dismiss() {

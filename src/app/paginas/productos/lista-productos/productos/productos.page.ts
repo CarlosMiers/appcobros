@@ -66,29 +66,30 @@ export class ProductosPage implements OnInit {
     }
   }
 
-  loadProductos() {
+  async loadProductos() {
+    // Muestra el mensaje de carga
     this.loadingService.present({
       message: 'Aguarde un Momento.',
       duration: 300,
     });
-    this.productosService.getProductos(this.page, this.limit).subscribe(
-      (data) => {
-        this.productos = data;
-      },
-      (error) => {
-        // Manejo de error: puedes mostrar un mensaje o hacer un registro del error
-        console.error('Error al cargar los productos:', error);
-        this.loadingService.dismiss();
-        // Opcional: Mostrar un mensaje al usuario
-        alert(
-          'Ocurrió un error al cargar los productos. Por favor, intenta de nuevo.'
-        );
-      },
-      () => {
-        // Finalización de la solicitud: detiene el loading en todos los casos
-        this.loadingService.dismiss();
-      }
-    );
+
+    try {
+      // Llamamos al servicio para obtener los productos
+      this.productos = await this.productosService.getProductos(
+        this.page,
+        this.limit
+      );
+
+      // Aquí ya tienes los productos disponibles en this.productos
+      console.log(this.productos); // Si deseas verificar que los datos se hayan cargado correctamente
+    } catch (error) {
+      // Manejo de error: puedes mostrar un mensaje o hacer un registro del error
+      console.error('Error al cargar los productos:', error);
+      // Opcional: Mostrar un mensaje al usuario
+      alert(
+        'Ocurrió un error al cargar los productos. Por favor, intenta de nuevo.'
+      );
+    }
   }
 
   buscar(event: any) {
@@ -115,8 +116,7 @@ export class ProductosPage implements OnInit {
     return await this.modalCtrl.dismiss();
   }
 
-  
- async openEditProductoModal(productoCodigo: string) {
+  async openEditProductoModal(productoCodigo: string) {
     const modal = await this.modalCtrl.create({
       component: EditProductosPage,
       animated: true,
@@ -125,9 +125,8 @@ export class ProductosPage implements OnInit {
       cssClass: 'editProducto-modal',
       componentProps: {
         productoCodigo: productoCodigo,
-      }
+      },
     });
     return await modal.present();
   }
-
 }

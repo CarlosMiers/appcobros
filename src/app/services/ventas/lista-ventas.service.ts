@@ -1,28 +1,52 @@
 import { Injectable } from '@angular/core';
-import { ParametrosService } from '../parametros/parametros.service';
-import { HttpClient } from '@angular/common/http';
+import { Http } from '@capacitor-community/http';
 import { Observable } from 'rxjs';
 import { ListaVenta } from 'src/app/models/ventas/lista-ventas';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ListaVentasService {
-  base_path: String = '';
+  base_path: string = '';
   private myApiUrl: string;
   private myApId: string;
   private myApInicio: string;
   private myApFinal: string;
 
-  constructor(private http: HttpClient, public parametrosService: ParametrosService) {
-    this.base_path = parametrosService.direccionIp;
-    this.myApiUrl = 'ypora/v1/ventas-listado/?'
+  constructor() {
+    this.base_path = environment.apiUrl;
+    this.myApiUrl = '/ventas-listado/?';
     this.myApId = 'id=';
-    this.myApInicio="&fechainicio=";
-    this.myApFinal="&fechafinal=";    
+    this.myApInicio = '&fechainicio=';
+    this.myApFinal = '&fechafinal=';
   }
 
-  getListaVenta(id:number,fechainicio:string,fechafinal:string): Observable<ListaVenta> {
-    return this.http.get<ListaVenta>(`${this.base_path}${this.myApiUrl}${this.myApId}${id}${this.myApInicio}${fechainicio}${this.myApFinal}${fechafinal}`);
+  async getListaVenta(id: number, fechainicio: string, fechafinal: string): Promise<ListaVenta> {
+    const token = localStorage.getItem('token') || '';  // Obtén el token desde el localStorage
+
+    // Configura los headers
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    };
+
+    // Construye la URL de la API
+    const url = `${this.base_path}${this.myApiUrl}${this.myApId}${id}${this.myApInicio}${fechainicio}${this.myApFinal}${fechafinal}`;
+
+    try {
+      // Realiza la solicitud HTTP GET con los headers y la URL
+      const response = await Http.get({
+        url,
+        params: {},
+        headers
+      });
+
+      // Retorna los datos de la respuesta
+      return response.data;
+    } catch (error) {
+      console.error('Error al obtener la lista de ventas:', error);
+      throw error;
+    }
   }
 }

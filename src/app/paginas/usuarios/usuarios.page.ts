@@ -54,6 +54,8 @@ export class UsuariosPage implements OnInit {
 //        const data = typeof token === 'string' ? JSON.parse(token) : token;
         const data = typeof token === 'string' ? JSON.parse(token) : token;
 
+        console.log('Token recibido:', data);
+
         localStorage.setItem('token', data.token); // Guarda el JWT
         localStorage.setItem('idusuario', data.userId.toString()); // Guarda el ID como string
 

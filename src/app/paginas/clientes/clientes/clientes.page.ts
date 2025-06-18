@@ -66,15 +66,20 @@ export class ClientesPage implements OnInit {
     }
   }
 
-  loadClientes() {
+  async loadClientes() {
     this.loadingService.present({
       message: 'Aguarde un Momento.',
       duration: 300,
     });
 
-    this.clienteService.getClientes(this.page, this.limit).subscribe((data) => {
-      this.clientes = data; // Asigna directamente el array a this.clientes
-    });
+    try {
+      // Usamos el servicio con await para obtener los clientes de manera asíncrona
+      const data = await this.clienteService.getClientes(this.page, this.limit);
+      this.clientes = data; // Asigna los datos a la propiedad `clientes`
+    } catch (error) {
+      console.error('Error al cargar los clientes:', error);
+      // Aquí puedes manejar el error si es necesario (ej. mostrar un mensaje de error)
+    }
   }
 
   buscar(event: any) {
@@ -134,8 +139,7 @@ export class ClientesPage implements OnInit {
     return await this.modalCtrl.dismiss();
   }
 
-
-/* async openEditClienteModal(clienteCodigo: number) {
+  /* async openEditClienteModal(clienteCodigo: number) {
   const modal = await this.modalCtrl.create({
     component: EditClientesPage,
     componentProps: {
@@ -157,9 +161,9 @@ export class ClientesPage implements OnInit {
   async openEditClienteModal(clienteCodigo: number) {
     const modal = await this.modalCtrl.create({
       component: EditClientesPage,
-    componentProps: {
-      clienteCodigo,
-    },
+      componentProps: {
+        clienteCodigo,
+      },
       cssClass: 'editCliente-modal',
       backdropDismiss: false,
       animated: true,
@@ -176,5 +180,4 @@ export class ClientesPage implements OnInit {
     });
     toast.present();
   }
-
 }

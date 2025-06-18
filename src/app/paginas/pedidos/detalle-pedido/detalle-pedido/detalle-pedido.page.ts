@@ -61,7 +61,7 @@ export class DetallePedidoPage {
         cliente: this.selectedClient?.codigo || '',
         clienteNombre: this.selectedClient?.nombre || '',
         comprobante: 1, // comprobante por defecto
-        codusuario:parseInt(localStorage.getItem('idusuario') || '0', 10), // usuario por defecto
+        codusuario: parseInt(localStorage.getItem('idusuario') || '0', 10), // usuario por defecto
         total: 0,
       };
     } else {
@@ -83,29 +83,31 @@ export class DetallePedidoPage {
   }
 
   // Productos disponibles para seleccionar
-  loadProductos() {
-    this.loadingService.present({
-      message: 'Aguarde un Momento.',
-      duration: 300,
-    });
-    this.productosService.getTodos().subscribe((data) => {
-      this.productos = data; //
-    });
-    this.loadingService.dismiss();
+  async loadProductos() {
+    try {
+      const data = await this.productosService.getTodos();
+      this.productos = data; // Asigna directamente el array de productos
+    } catch (error) {
+      // Manejo de error si ocurre algo al cargar los productos
+      console.error('Error al cargar los productos:', error);
+      this.loadingService.dismiss();
+      alert(
+        'Ocurrió un error al cargar los productos. Por favor, intenta de nuevo.'
+      );
+    }
   }
 
   //Clientes disponibles para seleccionar
-  loadClientes() {
-    this.loadingService.present({
-      message: 'Aguarde un Momento.',
-      duration: 300,
-    });
-    this.clienteServices.getTodos().subscribe((data) => {
-      this.clientes = data; //
-    });
-    this.loadingService.dismiss();
+  async loadClientes() {
+    try {
+      // Usamos el servicio para obtener todos los clientes
+      const data = await this.clienteServices.getTodos();
+      this.clientes = data; // Asigna los clientes obtenidos
+    } catch (error) {
+      console.error('Error al cargar los clientes:', error);
+      // Puedes agregar un mensaje adicional de error aquí si es necesario
+    }
   }
-
 
   detalles: DetalleProducto[] = [];
 
@@ -147,16 +149,19 @@ export class DetallePedidoPage {
     }
 
     const detalle: DetalleProducto = {
-      idventadet:0,
+      idventadet: 0,
       iddetalle: 0,
       codprod: this.productoSeleccionado.codprod,
       comentario: this.productoSeleccionado.descripcion,
       cantidad: this.productoSeleccionado.cantidad,
       prcosto: this.productoSeleccionado.costo,
       precio: this.productoSeleccionado.precio,
-      porcentaje:Math.round(Number(this.productoSeleccionado.ivaporcentaje)) || 0,
-      ivaporcentaje: Math.round(Number(this.productoSeleccionado.ivaporcentaje)) || 0,
-      impuesto:    Math.round(Number(this.productoSeleccionado.ivaporcentaje)) || 0 , // Asegúrate de que este campo sea un número,
+      porcentaje:
+        Math.round(Number(this.productoSeleccionado.ivaporcentaje)) || 0,
+      ivaporcentaje:
+        Math.round(Number(this.productoSeleccionado.ivaporcentaje)) || 0,
+      impuesto:
+        Math.round(Number(this.productoSeleccionado.ivaporcentaje)) || 0, // Asegúrate de que este campo sea un número,
       descripcion: this.productoSeleccionado.descripcion,
       costo: this.productoSeleccionado.costo,
       producto: {
@@ -225,43 +230,42 @@ export class DetallePedidoPage {
       }),
     };
 
-    // Enviar los datos al servicio de pedidos para guardarlos en la base de datos
-    if (!this.pedidoNumero || this.pedidoNumero === 0) {
-      this.pedidosService.createPreventa(pedidoConDetalles).subscribe({
-        next: async (response) => {
-          const toast = await this.toastController.create({
-            message: response.message,
-            duration: 3000,
-            position: 'middle',
-            cssClass: 'custom-toast', // Aplica la clase CSS personalizada
-          });
-          await toast.present();
-          this.dismiss();
-        },
-        error: (error) => {
-          console.error('Error al crear preventa:', error);
-          // Manejar el error adecuadamente (mostrar un mensaje al usuario, etc.)
-        },
-      });
-    } else {
-      this.pedidosService
-        .update(this.pedidoNumero, pedidoConDetalles)
-        .subscribe({
-          next: async (response) => {
-            const toast = await this.toastController.create({
-              message: response.message,
-              duration: 3000,
-              position: 'middle',
-              cssClass: 'custom-toast', // Aplica la clase CSS personalizada
-            });
-            await toast.present();
-            this.dismiss();
-          },
-          error: (error) => {
-            console.error('Error al Actualizar preventa:', error);
-            // Manejar el error adecuadamente (mostrar un mensaje al usuario, etc.)
-          },
+    try {
+      // Revisar si es un nuevo pedido o uno existente
+      if (!this.pedidoNumero || this.pedidoNumero === 0) {
+        const response = await this.pedidosService.createPreventa(
+          pedidoConDetalles
+        );
+        const toast = await this.toastController.create({
+          message: response.message,
+          duration: 3000,
+          position: 'middle',
+          cssClass: 'custom-toast', // Aplica la clase CSS personalizada
         });
+        await toast.present();
+        this.dismiss();
+      } else {
+        const response = await this.pedidosService.update(
+          this.pedidoNumero,
+          pedidoConDetalles
+        );
+        const toast = await this.toastController.create({
+          message: response.message,
+          duration: 3000,
+          position: 'middle',
+          cssClass: 'custom-toast', // Aplica la clase CSS personalizada
+        });
+        await toast.present();
+        this.dismiss();
+      }
+    } catch (error) {
+      console.error('Error al guardar pedido:', error);
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Ocurrió un error al guardar el pedido. Intenta nuevamente.',
+        buttons: ['OK'],
+      });
+      await alert.present();
     }
   }
 
@@ -335,7 +339,9 @@ export class DetallePedidoPage {
           cantidad: 1,
           costo: parseFloat(producto.costo),
           precio: parseFloat(producto.precio_maximo),
-          ivaporcentaje: producto.ivaporcentaje ? parseFloat(producto.ivaporcentaje) : 0,
+          ivaporcentaje: producto.ivaporcentaje
+            ? parseFloat(producto.ivaporcentaje)
+            : 0,
         };
         this.codigoProductoSeleccionado = producto.codigo;
       }
@@ -360,29 +366,29 @@ export class DetallePedidoPage {
     return await this.modalCtrl.dismiss();
   }
 
-  loadPedidoDesdeApi(numeroPedido: number) {
-    this.pedidosService.getPreventaByNumero(numeroPedido).subscribe({
-      next: (data) => {
-        // Asigna cliente y nombre del cliente desde el objeto recibido
-        this.pedido = {
-          numero: data.numero,
-          fecha: data.fecha,
-          cliente: data.cliente,
-          clienteNombre: data.clientenombre,
-          comprobante: data.comprobante,
-          codusuario: data.codusuario,
-          total: data.totalneto,
-        };
+  async loadPedidoDesdeApi(numeroPedido: number) {
+    try {
+      const response = await this.pedidosService.getPreventaByNumero(
+        numeroPedido
+      ); // Llamada al servicio
+      // Asigna cliente y nombre del cliente desde el objeto recibido
+      this.pedido = {
+        numero: response.numero,
+        fecha: response.fecha,
+        cliente: response.cliente,
+        clienteNombre: response.clientenombre,
+        comprobante: response.comprobante,
+        codusuario: response.codusuario,
+        total: response.totalneto,
+      };
 
-        // Asigna los detalles y extrae nombre del producto
-        this.detalles = data.detalles.map((detalle: any) => ({
-          ...detalle,
-          descripcion: detalle.producto?.descripcion || '',
-        }));
-      },
-      error: (err) => {
-        console.error('Error al cargar pedido', err);
-      },
-    });
+      // Asigna los detalles y extrae nombre del producto
+      this.detalles = response.detalles.map((detalle: any) => ({
+        ...detalle,
+        descripcion: detalle.producto?.descripcion || '',
+      }));
+    } catch (err) {
+      console.error('Error al cargar pedido:', err);
+    }
   }
 }

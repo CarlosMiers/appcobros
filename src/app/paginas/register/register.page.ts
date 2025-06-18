@@ -12,11 +12,10 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage implements OnInit {
-
   loading: boolean = false;
   mensaje: String = '';
   idusuario: number = 0;
-  descripcion:string='';
+  descripcion: string = '';
   loginacceso: string = '';
   password: string = '';
   confirmPassword: string = '';
@@ -25,23 +24,31 @@ export class RegisterPage implements OnInit {
   showPassword: boolean = false;
 
   // Función para alternar la visibilidad de la contraseña
-  
-  constructor(  public modalCtrl: ModalController,private _userService: UserService, private router: Router, public loadingService: LoadingService) { }
 
-  ngOnInit() {
-  }
+  constructor(
+    public modalCtrl: ModalController,
+    private _userService: UserService,
+    private router: Router,
+    public loadingService: LoadingService
+  ) {}
+
+  ngOnInit() {}
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
 
-  AgregarUsuario() {
-    //validamos
-    if (this.loginacceso == '' || this.password == '' || this.confirmPassword == '' ) {
+  async AgregarUsuario() {
+    // Validación de campos
+    if (
+      this.loginacceso == '' ||
+      this.password == '' ||
+      this.confirmPassword == ''
+    ) {
       console.log('Todos los campos son obligatorios');
       this.loadingService.present({
         message: 'Todos los Campos son Obligatorios.',
-        duration: 300
+        duration: 300,
       });
       return;
     }
@@ -49,39 +56,42 @@ export class RegisterPage implements OnInit {
     if (this.password != this.confirmPassword) {
       this.loadingService.present({
         message: 'Los Passwords son Diferentes',
-        duration: 300
+        duration: 300,
       });
       return;
     }
 
-    //creamos el objeto
+    // Creamos el objeto usuario
     const usuario: Usuario = {
       idusuario: this.idusuario,
-      descripcion:this.descripcion,
+      descripcion: this.descripcion,
       loginacceso: this.loginacceso,
-      password: this.password
-    }
-    this.loading = true;
-    this._userService.signIn(usuario).subscribe({
-      next: (v) => {
-        this.loading = false;
-        this.loadingService.present({
-          message: 'El Usuario ' + this.loginacceso + ' fue Registrado con éxito", "Usuario Registrado',
-          duration: 800
-        });
-        this.dismiss();
-        //this.router.navigate(['/usuarios']);
-      },
+      password: this.password,
+    };
 
-      error: (e: HttpErrorResponse) => {
-        this.loading = false;
-        this.loadingService.present({
-          message: 'El Usuario ' + this.loginacceso + ' no existe o no es un Cliente',
-          duration: 800
-        });
-      },
-      complete: () => console.info('complete')
-    })
+    this.loading = true;
+
+    try {
+      // Llamamos al servicio signIn usando el método nativo Http
+      const response = await this._userService.signIn(usuario);
+
+      this.loading = false;
+      this.loadingService.present({
+        message: 'El Usuario ' + this.loginacceso + ' fue Registrado con éxito',
+        duration: 800,
+      });
+
+      this.dismiss();
+      // this.router.navigate(['/usuarios']); // Si necesitas redirigir después del registro
+    } catch (error) {
+      this.loading = false;
+      console.error('Error al registrar el usuario:', error);
+      this.loadingService.present({
+        message:
+          'El Usuario ' + this.loginacceso + ' no existe o no es un Cliente',
+        duration: 800,
+      });
+    }
   }
 
   async dismiss() {

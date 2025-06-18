@@ -23,7 +23,7 @@ export class EditProductosPage implements OnInit {
     codigo: '',
     nombre: '',
     costo: 0,
-    ivaporcentaje:0,
+    ivaporcentaje: 0,
     precio_maximo: 0,
     estado: 1,
     createdAt: null,
@@ -59,7 +59,8 @@ export class EditProductosPage implements OnInit {
     this[campo] = valorFormateado;
   }
 
-  saveProducto() {
+  async saveProducto() {
+    // Validación de campos obligatorios
     if (
       this.EditProducto.nombre == '' ||
       this.EditProducto.costo == 0 ||
@@ -73,49 +74,46 @@ export class EditProductosPage implements OnInit {
     }
 
     this.loading = true;
-    if (this.productoCodigo.length > 0) {
-      this.productoService.updateProducto(this.EditProducto).subscribe(
-        (response) => {
-          this.loading = false;
-        },
-        (err) => {
-          this.loading = false;
-        }
-      );
-    } else {
-      this.productoService.AddProducto(this.EditProducto).subscribe(
-        (response) => {
-          this.loading = false;
-        },
-        (err) => {
-          this.loading = false;
-        }
-      );
-    }
-    this.dismiss();
-  }
 
-  Consultar() {
+    try {
+      if (this.productoCodigo.length > 0) {
+        // Llamamos al servicio para actualizar el producto si el código es válido
+        await this.productoService.updateProducto(this.EditProducto);
+      } else {
+        // Llamamos al servicio para agregar el producto si el código es vacío
+        await this.productoService.AddProducto(this.EditProducto);
+      }
+    } catch (error) {
+      console.error('Error al guardar el producto:', error);
+      // Opcional: Puedes agregar un mensaje o alerta para el usuario aquí
+    } finally {
+      this.loading = false;
+      this.dismiss(); // Cierra el modal o diálogo
+    }
+  }
+  async Consultar() {
     this.loadingService.present({
       message: 'Aguarde un Momento.',
       duration: 300,
     });
 
-    this.productoService.getProducto(this.productoCodigo.trim()).subscribe(
-      (data) => {
-        this.EditProducto = {
-          ...data,
-          costo: Math.round(Number(data.costo)) || 0,
-          precio_maximo: Math.round(Number(data.precio_maximo)) || 0,
-        };
-        console.log(this.EditProducto);
-      },
-      (err) => {
-        // Manejo de error si quieres
-      }
-    );
-
-    this.loading = false;
+    try {
+      const data = await this.productoService.getProducto(
+        this.productoCodigo.trim()
+      );
+      // Asignamos los valores al objeto EditProducto con redondeo
+      this.EditProducto = {
+        ...data,
+        costo: Math.round(Number(data.costo)) || 0,
+        precio_maximo: Math.round(Number(data.precio_maximo)) || 0,
+      };
+      console.log(this.EditProducto);
+    } catch (error) {
+      // Manejo de error si deseas agregar algún detalle
+      console.error('Error al consultar el producto:', error);
+    } finally {
+      this.loading = false;
+    }
   }
 
   compareWithEstado = (o1: any, o0: any) => {

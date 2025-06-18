@@ -3,9 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
-};
+  production: false,
+  //apiUrl: 'http://localhost:3001/ypora/v1'
+  //apiUrl: 'http://192.168.0.100:3001/ypora/v1'
+  apiUrl: 'https://api.synsa.com.py/serverapp/ypora/v1'  
 
+};
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

@@ -4,8 +4,10 @@ const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
   appName: 'AppCobros',
   webDir: 'www',
+  
   server: {
-    cleartext: true,
-    androidScheme: 'http'
-  }
+  cleartext: true,
+  url: 'https://api.synsa.com.py/serverapp/ypora/v1'
+}
+  
 };
