@@ -6,6 +6,8 @@ import { ListaPedidosPage } from '../pedidos/lista-pedidos/lista-pedidos/lista-p
 import { CajasPage } from '../cajas/cajas/cajas.page';
 import { ListaVentasPage } from '../ventas/lista-ventas/lista-ventas.page';
 import { ConfiguracionPage } from '../configuracion/configuracion/configuracion.page';
+import { HomePage } from 'src/app/home/home.page';
+import { ListaCobranzaPage } from '../cobranzas/lista-cobranza/lista-cobranza/lista-cobranza.page';
 
 @Component({
   selector: 'app-menu',
@@ -49,11 +51,19 @@ export class MenuPage implements OnInit {
       component: ListaVentasPage,
       color: 'red',
     },
+
     {
       icon: 'people',
       name: 'Cobranzas',
-      component: ClientesPage,
+      component: ListaCobranzaPage,
       color: 'purple',
+    },
+
+    {
+      icon: 'print-outline',
+      name: 'Impresora',
+      component: HomePage,
+      color: 'gray',
     },
 
     {
@@ -64,9 +74,13 @@ export class MenuPage implements OnInit {
     },
   ];
 
-  constructor(private modalController: ModalController) {}
 
-  ngOnInit() {}
+  constructor(
+    private modalController: ModalController,
+  ) {}
+
+  ngOnInit() {
+  }
 
   async openModal(component: any) {
     const modal = await this.modalController.create({
@@ -79,5 +93,5 @@ export class MenuPage implements OnInit {
     this.modalController.dismiss();
   }
 
-  
+
 }

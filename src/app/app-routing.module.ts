@@ -87,6 +87,10 @@ const routes: Routes = [
     path: 'configuracion',
     loadChildren: () => import('./paginas/configuracion/configuracion/configuracion.module').then( m => m.ConfiguracionPageModule), canActivate:[AuthGuard]
   },
+  {
+    path: 'lista-cobranza',
+    loadChildren: () => import('./paginas/cobranzas/lista-cobranza/lista-cobranza/lista-cobranza.module').then( m => m.ListaCobranzaPageModule)
+  },
 
 ];
 

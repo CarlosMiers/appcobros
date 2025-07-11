@@ -5,7 +5,6 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { ClientesService } from 'src/app/services/clientes/clientes.service';
-import { SharedClienteService } from 'src/app/services/clientes/shared-cliente.service';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { DetalleProducto } from 'src/app/models/productos/DetalleProducto';
 import { ProductosService } from 'src/app/services/productos/productos.service';
@@ -94,7 +93,6 @@ export class DetalleVentaPage implements OnInit {
     private productosService: ProductosService,
     private loadingService: LoadingService,
     private clienteServices: ClientesService,
-    private sharedClienteService: SharedClienteService,
     private toastController: ToastController,
     public modalCtrl: ModalController,
     private configService: ConfigService,
@@ -498,17 +496,19 @@ export class DetalleVentaPage implements OnInit {
           cssClass: 'custom-toast',
         });
 
-        this.updateFactura();
+        await this.updateFactura();
         // Presentar el toast y cerrar el modal
+        await this.imprimirFactura(ventaConDetalles);
         await toast.present();
-        this.imprimirTicket(ventaConDetalles)
-        this.dismiss();
       } else {
         // Si ya existe una venta, actualizarla
         const response = await this.ventasService.updateVenta(
           this.ventaNumero,
           ventaConDetalles
         );
+
+        //        await this.imprimirVenta(ventaConDetalles);
+        await this.imprimirFactura(ventaConDetalles);
 
         // Mostrar el mensaje de éxito
         const toast = await this.toastController.create({
@@ -517,15 +517,13 @@ export class DetalleVentaPage implements OnInit {
           position: 'middle',
           cssClass: 'custom-toast',
         });
-
         await toast.present();
-        this.imprimirTicket(ventaConDetalles)
-        this.dismiss();
       }
     } catch (error) {
       console.error('Error al guardar/actualizar venta:', error);
       // Manejar el error de forma adecuada (alerta, mensaje en consola, etc.)
     }
+    this.dismiss();
   }
 
   async loadVentaDesdeApi(numeroVenta: number) {
@@ -592,84 +590,8 @@ export class DetalleVentaPage implements OnInit {
     }
   }
 
-
-  // Paso 3: Enviar un texto de prueba ESC/POS a la impresora
-  async imprimirTest() {
-    const impresoraMAC = 'DC:0D:30:77:1E:46'; // Cambiar por MAC real
-    const textoTest = 'PRUEBA DE IMPRESIÓN\n\n';
-
-    try {
-      const deviceInfo = await Device.getInfo();
-      const androidVersion = parseInt(deviceInfo.osVersion || '0', 10);
-      console.log('Versión de Android:', androidVersion);
-
-      const permisos = [
-        this.androidPermissions.PERMISSION.BLUETOOTH,
-        this.androidPermissions.PERMISSION.BLUETOOTH_ADMIN,
-        this.androidPermissions.PERMISSION.BLUETOOTH_CONNECT,
-        this.androidPermissions.PERMISSION.BLUETOOTH_SCAN,
-        this.androidPermissions.PERMISSION.ACCESS_FINE_LOCATION,
-      ];
-
-      if (androidVersion >= 13) {
-        permisos.push(this.androidPermissions.PERMISSION.NEARBY_WIFI_DEVICES);
-      }
-
-      await this.androidPermissions.requestPermissions(permisos);
-
-      const result = await this.androidPermissions.checkPermission(
-        this.androidPermissions.PERMISSION.BLUETOOTH_CONNECT
-      );
-
-      if (!result.hasPermission) {
-        alert('No se concedieron los permisos necesarios.');
-        return;
-      }
-
-      console.log('Intentando conectar a la impresora...');
-
-      this.bluetoothSerial.connectInsecure(impresoraMAC).subscribe(
-        async () => {
-          console.log('Conectado a la impresora.');
-
-          await new Promise((r) => setTimeout(r, 1500));
-
-          await this.bluetoothSerial.write(textoTest);
-          console.log('Texto enviado correctamente.');
-
-          await new Promise((r) => setTimeout(r, 500));
-
-          await this.bluetoothSerial.disconnect();
-          console.log('Desconectado de la impresora.');
-
-          alert('Texto de prueba impreso exitosamente');
-        },
-        (error) => {
-          console.error('Error de conexión:', error);
-          alert(
-            'No se pudo conectar a la impresora. Verifica que esté encendida y emparejada.'
-          );
-        }
-      );
-    } catch (error) {
-      console.error('Error durante la impresión:', error);
-
-      const message = (error as any)?.message || '';
-
-      if (message.includes('Unable to connect')) {
-        alert(
-          'No se pudo conectar a la impresora. Verifica que esté encendida y emparejada.'
-        );
-      } else if (message.includes('write')) {
-        alert('Error al enviar datos. Verifica el formato del texto.');
-      } else {
-        alert('Error inesperado: ' + JSON.stringify(error));
-      }
-    }
-  }
-
-  async imprimirTicket(ventaConDetalles: any) {
-    const impresoraMAC = 'DC:0D:30:77:1E:46'; // Cambiar por la MAC real
+  async imprimirFactura(ventaConDetalles: any) {
+    const impresoraMAC = this.EditCaja.impresoracaja; // Cambiar por la MAC real
     const contenidoTicket = this.generarTicketTexto(ventaConDetalles); // Genera Uint8Array
 
     try {
@@ -753,30 +675,29 @@ export class DetalleVentaPage implements OnInit {
 
     // Encabezado
     contenido += centrado + negritaOn;
-    contenido += 'FACTURA ELECTRÓNICA\n';
-    contenido += 'GO-LINK COMERCIO\n';
+    contenido += `${JSON.parse(localStorage.getItem('empresa') ?? '""')}\n`;
+    contenido += `${JSON.parse(localStorage.getItem('ruc') ?? '""')}\n`;
+    contenido += `${JSON.parse(localStorage.getItem('direccion') ?? '""')}\n`;
+    contenido += `${JSON.parse(localStorage.getItem('telefono') ?? '""')}\n`;
+    contenido += `${JSON.parse(localStorage.getItem('ramo') ?? '""')}\n`;
+    contenido += `Factura Nro: ${ventaConDetalles.formatofactura}\n`;
+    contenido += `Fecha: ${this.formatearFechaPY(ventaConDetalles.fecha)}\n`;
+    contenido += `Hora: ${new Date().toLocaleTimeString()}\n`;
+    contenido += `Cliente: ${this.venta.nombrecliente}\n`;
     contenido += negritaOff + izquierda;
-    contenido += '-'.repeat(32) + '\n';
-
-    // Datos generales
-    contenido += `Fecha: ${ventaConDetalles.fecha}\n`;
-    contenido += `Factura Nº: ${ventaConDetalles.factura}\n`;
-    contenido += `Cliente: ${
-      ventaConDetalles.cliente?.nombre || ventaConDetalles.cliente
-    }\n`;
-    contenido += `Sucursal: ${ventaConDetalles.sucursal}\n`;
-    contenido += `Camión: ${ventaConDetalles.camion}\n`;
-    contenido += `Vendedor: ${ventaConDetalles.vendedor}\n`;
-    contenido += `Moneda: ${ventaConDetalles.moneda}\n`;
-    contenido += '-'.repeat(32) + '\n';
-
-    // Timbrado
     contenido += `Timbrado: ${ventaConDetalles.nrotimbrado}\n`;
-    contenido += `Válido: ${ventaConDetalles.iniciovencetimbrado} al\n         ${ventaConDetalles.vencimientotimbrado}\n`;
-    contenido += '-'.repeat(32) + '\n';
+    contenido += `Valido:  ${this.formatearFechaPY(
+      ventaConDetalles.iniciovencetimbrado
+    )} al\n${this.formatearFechaPY(ventaConDetalles.vencimientotimbrado)}\n`;
+    //contenido += '-'.repeat(32) + '\n';
+
+    //contenido += '-'.repeat(32) + '\n';
 
     // Detalle de productos
-    contenido += 'Detalle de productos:\n';
+    contenido += centrado + negritaOn;
+    contenido += 'DETALLE DE PRODUCTOS\n';
+    contenido += 'Descripcion  Cant. Precio Total\n';
+    contenido += negritaOff + izquierda;
     ventaConDetalles.detalles.forEach((d: any) => {
       const descripcion = d.producto?.descripcion || d.descripcion;
       const precioTotal = (Number(d.cantidad) * Number(d.precio)).toFixed(0);
@@ -788,7 +709,7 @@ export class DetalleVentaPage implements OnInit {
       contenido += lineaPrecio + '\n';
     });
 
-    contenido += '-'.repeat(32) + '\n';
+    //contenido += '-'.repeat(32) + '\n';
 
     // Totales
     contenido += `GRAV. 10%: ${ventaConDetalles.gravadas10
@@ -804,19 +725,23 @@ export class DetalleVentaPage implements OnInit {
       .toFixed(0)
       .padStart(20)}\n`;
 
-    contenido += '-'.repeat(32) + '\n';
+    //    contenido += '-'.repeat(32) + '\n';
 
     // Mensaje final
     contenido += centrado;
-    contenido += '¡Gracias por su compra!\n\n\n';
+    contenido += 'Gracias por su Compra\n\n\n';
 
-    // Corte de papel (si aplica)
+    // Corte de papel (si aplica)*/
     contenido += '\x1D\x56\x00';
 
     const encoder = new TextEncoder();
     return encoder.encode(contenido);
   }
-  // Paso 5: Imprimir el ticket completo
+
+  formatearFechaPY(fechaISO: string): string {
+    const [año, mes, dia] = fechaISO.split('-');
+    return `${dia}/${mes}/${año}`;
+  }
 
   async dismiss() {
     return await this.modalCtrl.dismiss();

@@ -1,10 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
 import {
   AlertController,
   ModalController,
-  NavController,
 } from '@ionic/angular';
 import { Caja } from 'src/app/models/cajas/cajas';
 import { CajasService } from 'src/app/services/cajas/cajas.service';
@@ -39,9 +37,7 @@ export class EditCajasPage implements OnInit {
   };
 
   constructor(
-    private navCtrl: NavController,
     private _cajaService: CajasService,
-    private router: Router,
     public modalCtrl: ModalController,
     public alertController: AlertController,
     public loadingService: LoadingService,

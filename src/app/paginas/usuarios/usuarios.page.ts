@@ -6,6 +6,7 @@ import { Usuario } from 'src/app/models/usuarios/usuario';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { MenuPage } from '../menu/menu.page';
+import { ConfigEmpresaService } from 'src/app/services/config/config.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -20,13 +21,17 @@ export class UsuariosPage implements OnInit {
   loginacceso: string = '';
   password: string = '';
   confirmPassword: string = '';
-  showPassword: boolean = false; 
+  showPassword: boolean = false;
+
+
+
   constructor(
     private _userService: UserService,
     private router: Router,
     public loadingService: LoadingService,
     private navCtrl: NavController,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    configserviceEmpresa: ConfigEmpresaService
   ) {}
   ngOnInit() {}
 
@@ -51,13 +56,12 @@ export class UsuariosPage implements OnInit {
     this._userService.login(user).subscribe({
       next: (token) => {
         // Si el token viene como string JSON, lo parseamos
-//        const data = typeof token === 'string' ? JSON.parse(token) : token;
+        //        const data = typeof token === 'string' ? JSON.parse(token) : token;
         const data = typeof token === 'string' ? JSON.parse(token) : token;
-
-        console.log('Token recibido:', data);
 
         localStorage.setItem('token', data.token); // Guarda el JWT
         localStorage.setItem('idusuario', data.userId.toString()); // Guarda el ID como string
+        this.configuracion(new ConfigEmpresaService());
 
         this.Menu(); // Redirección a menú
         this.loginacceso = '';
@@ -104,4 +108,29 @@ export class UsuariosPage implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
+  async configuracion(
+    configserviceEmpresa: ConfigEmpresaService
+  ): Promise<void> {
+    try {
+      const configArray = await configserviceEmpresa.getConfig();
+      console.log('Configuración obtenida:', configArray);
+
+      if (Array.isArray(configArray) && configArray.length > 0) {
+        const config = configArray[0]; // 👈 Acceder al primer elemento del array
+        localStorage.setItem('empresa', JSON.stringify(config.empresa));
+        localStorage.setItem('ruc', JSON.stringify(config.ruc));
+        localStorage.setItem('direccion',JSON.stringify(config.direccion || ''));
+        localStorage.setItem('telefono', JSON.stringify(config.telefono || ''));
+        localStorage.setItem('fax', JSON.stringify(config.fax || ''));
+        localStorage.setItem('mail', JSON.stringify(config.mail || ''));
+        localStorage.setItem('web', JSON.stringify(config.web || ''));
+        localStorage.setItem('ramo', JSON.stringify(config.ramo || ''));
+        localStorage.setItem('responsable', JSON.stringify(config.responsable || ''));
+      } else {
+        console.warn('⚠️ No se recibió ninguna configuración en el array.');
+      }
+    } catch (error) {
+      console.error('Error obteniendo configuración:', error);
+    }
+  }
 }

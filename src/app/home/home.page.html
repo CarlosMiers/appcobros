@@ -1,18 +1,87 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="dismiss()">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">📋 Configurar Impresora</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
 
-  <div id="container">
-  </div>
+  <!-- Botón para buscar dispositivos Bluetooth -->
+  <ion-button expand="full" (click)="listarDispositivos()">
+    🔍 Buscar dispositivos Bluetooth
+  </ion-button>
+
+  <!-- Lista de dispositivos encontrados -->
+  <ion-list>
+    <ion-item *ngFor="let dispositivo of dispositivos" (click)="conectar(dispositivo)">
+      <ion-label>
+        {{ dispositivo.name || 'Sin nombre' }}<br />
+        <small>{{ dispositivo.address }}</small>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Botón para testeo de impresión -->
+  <ion-button
+    expand="full"
+    color="success"
+    [disabled]="!dispositivoSeleccionado"
+    (click)="imprimirTicket()"
+  >
+    🧾 Testeo Impresora
+  </ion-button>
+
+  <!-- Botón para guardar la MAC de la impresora -->
+  <ion-button
+    expand="full"
+    color="primary"
+    [disabled]="!dispositivoSeleccionado"
+    (click)="updateImpresora()"
+  >
+    💾 Guardar MAC de Impresora
+  </ion-button>
+
+  <!-- Dispositivo actualmente conectado -->
+  <ion-card *ngIf="dispositivoSeleccionado">
+    <ion-card-header>
+      <ion-card-title>Dispositivo conectado</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Nombre:</strong> {{ dispositivoSeleccionado.name }}</p>
+      <p><strong>Dirección:</strong> {{ dispositivoSeleccionado.address }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Resumen de impresora registrada -->
+  <ion-card *ngIf="macDispositivo">
+    <ion-card-header>
+      <ion-card-title>📝 Impresora Registrada</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Nombre:</strong> {{ nombreDispositivo }}</p>
+      <p><strong>MAC:</strong> {{ macDispositivo }}</p>
+      <p><strong>Caja:</strong> {{ EditCaja.codigo }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Mensaje Toast -->
+  <ion-toast
+    *ngIf="mensajeToast"
+    [message]="mensajeToast"
+    duration="2500"
+    position="bottom"
+  ></ion-toast>
+
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-title>© 2025 Configurar Impresora</ion-title>
+  </ion-toolbar>
+</ion-footer>

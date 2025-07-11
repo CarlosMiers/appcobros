@@ -1,27 +1,59 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+ion-content {
+  --background: #f0f4f8;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
-
-#container p {
+ion-button {
+  margin-top: 10px;
   font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
 }
 
-#container a {
-  text-decoration: none;
+ion-card {
+  margin-top: 20px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+ion-card-title {
+  font-size: 18px;
+  color: #2c3e50;
+}
+
+ion-card-content p {
+  margin: 6px 0;
+  font-size: 15px;
+  color: #34495e;
+}
+
+ion-toolbar {
+  --background: #3880ff;
+  --color: #ffffff;
+}
+
+ion-title {
+  font-weight: bold;
+  text-align: center;
+}
+
+ion-toast {
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Diferenciamos los botones por color */
+ion-button[color="success"] {
+  --background: #2ecc71;
+  --background-activated: #27ae60;
+  --background-focused: #27ae60;
+}
+
+ion-button[color="primary"] {
+  --background: #3498db;
+  --background-activated: #2980b9;
+  --background-focused: #2980b9;
+}
+
+/* Lista de dispositivos con hover */
+ion-item:hover {
+  background-color: #e1eaff;
+  cursor: pointer;
 }

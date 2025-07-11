@@ -10,12 +10,14 @@ export class CajasService {
   private myApiUrl: string;
   private myApId: string;
   private myApIdFactura: string = '';
+  private myApIdImpresora: string = '';
 
   constructor() {
     this.base_path = environment.apiUrl;
     this.myApiUrl = '/caja';
     this.myApId = '/id';
     this.myApIdFactura = '/update-factura';
+    this.myApIdImpresora = '/update-impresora';
   }
 
   // Método para obtener todas las cajas (paginado)
@@ -164,6 +166,26 @@ export class CajasService {
   // Actualizar la factura de una caja
   async updateFacturaCaja(caja: any): Promise<any> {
     const url = `${this.base_path}${this.myApiUrl}${this.myApIdFactura}`;
+    const token = localStorage.getItem('token');  // Obtener el token
+    try {
+      const response = await Http.put({
+        url: url,
+        params: {},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,  // Agregar token en los headers
+        },
+        data: caja,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error al actualizar la factura de la caja:', error);
+      throw error;
+    }
+  }
+
+  async updateImpresoraCaja(caja: any): Promise<any> {
+    const url = `${this.base_path}${this.myApiUrl}${this.myApIdImpresora}`;
     const token = localStorage.getItem('token');  // Obtener el token
     try {
       const response = await Http.put({
