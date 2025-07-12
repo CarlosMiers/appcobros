@@ -1,4 +1,4 @@
-export interface Config {
+export interface ConfigEmpresa {
   empresa: string;
   ruc: string;
   direccion?: string;

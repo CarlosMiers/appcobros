@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Config } from '../../models/config/config';
+import { ConfigEmpresa } from '../../models/config/config';
 import { Http } from '@capacitor-community/http';
 
 @Injectable({
@@ -15,25 +15,24 @@ base_path: string = '';
     this.myApiUrl = '/config';
   }
 
- getConfig(): Promise<Config[]> {
+
+  async getConfig(): Promise<ConfigEmpresa[]> {
     const url = `${this.base_path}${this.myApiUrl}`;
-    return Http.get({
-      url: url,
-      params: {},
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          throw new Error('Error al obtener la Empresa');
-        }
-        // El contenido de la respuesta es directamente accesible a través de `response.data`
-        return response.data as Config[];
-      })
-      .catch((error) => {
-        console.error('Error al obtener Empresa:', error);
-        throw error;
+    const token = localStorage.getItem('token');  // Obtener el token
+
+    try {
+      const response = await Http.get({
+        url: url,
+        params: {},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,  // Agregar token en los headers
+        },
       });
+      return response.data as ConfigEmpresa[];
+    } catch (error) {
+      console.error('Error al obtener la configuración:', error);
+      throw error;
+    }
   }
 }

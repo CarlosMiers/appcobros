@@ -24,7 +24,6 @@ export class UsuariosPage implements OnInit {
   showPassword: boolean = false;
 
 
-
   constructor(
     private _userService: UserService,
     private router: Router,
@@ -108,29 +107,21 @@ export class UsuariosPage implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
-  async configuracion(
-    configserviceEmpresa: ConfigEmpresaService
-  ): Promise<void> {
-    try {
-      const configArray = await configserviceEmpresa.getConfig();
-      console.log('Configuración obtenida:', configArray);
-
-      if (Array.isArray(configArray) && configArray.length > 0) {
-        const config = configArray[0]; // 👈 Acceder al primer elemento del array
-        localStorage.setItem('empresa', JSON.stringify(config.empresa));
-        localStorage.setItem('ruc', JSON.stringify(config.ruc));
-        localStorage.setItem('direccion',JSON.stringify(config.direccion || ''));
-        localStorage.setItem('telefono', JSON.stringify(config.telefono || ''));
-        localStorage.setItem('fax', JSON.stringify(config.fax || ''));
-        localStorage.setItem('mail', JSON.stringify(config.mail || ''));
-        localStorage.setItem('web', JSON.stringify(config.web || ''));
-        localStorage.setItem('ramo', JSON.stringify(config.ramo || ''));
-        localStorage.setItem('responsable', JSON.stringify(config.responsable || ''));
-      } else {
-        console.warn('⚠️ No se recibió ninguna configuración en el array.');
-      }
-    } catch (error) {
-      console.error('Error obteniendo configuración:', error);
-    }
+async configuracion(configserviceEmpresa: ConfigEmpresaService): Promise<void> {
+  try {
+    const configArr = await configserviceEmpresa.getConfig(); // recibe el objeto directamente
+    const data = typeof configArr === 'string' ? JSON.parse(configArr) : configArr;
+    localStorage.setItem('empresa', data.empresa || '');
+    localStorage.setItem('ruc', data.ruc || '');
+    localStorage.setItem('direccion', data.direccion || '');
+    localStorage.setItem('telefono', data.telefono || '');
+    localStorage.setItem('fax', data.fax || '');
+    localStorage.setItem('mail', data.mail || '');
+    localStorage.setItem('web', data.web || '');
+    localStorage.setItem('ramo', data.ramo || '');
+    localStorage.setItem('responsable', data.responsable || '');
+  } catch (error) {
+    console.error('❌ Error obteniendo configuración:', error);
   }
+}
 }

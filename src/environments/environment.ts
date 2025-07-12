@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3001/ypora/v1'
+  apiUrl: 'http://192.168.0.100:3001/ypora/v1'
   //apiUrl: 'http://192.168.0.100:3001/ypora/v1'
   //apiUrl: 'https://api.synsa.com.py/serverapp/ebenezer/v1'  
 

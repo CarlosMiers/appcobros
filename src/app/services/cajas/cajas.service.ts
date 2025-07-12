@@ -120,26 +120,6 @@ export class CajasService {
     }
   }
 
-  // Actualizar la factura de una caja
-  async updateCajaFactura(caja: any): Promise<any> {
-    const url = `${this.base_path}${this.myApiUrl}${this.myApIdFactura}`;
-    const token = localStorage.getItem('token');  // Obtener el token
-    try {
-      const response = await Http.put({
-        url: url,
-        params: {},
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,  // Agregar token en los headers
-        },
-        data: caja,
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error al actualizar la factura de la caja:', error);
-      throw error;
-    }
-  }
 
   // Agregar una nueva caja
   async addCaja(caja: any): Promise<any> {

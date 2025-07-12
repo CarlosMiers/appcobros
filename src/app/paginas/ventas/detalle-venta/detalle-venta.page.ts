@@ -675,15 +675,15 @@ export class DetalleVentaPage implements OnInit {
 
     // Encabezado
     contenido += centrado + negritaOn;
-    contenido += `${JSON.parse(localStorage.getItem('empresa') ?? '""')}\n`;
-    contenido += `${JSON.parse(localStorage.getItem('ruc') ?? '""')}\n`;
-    contenido += `${JSON.parse(localStorage.getItem('direccion') ?? '""')}\n`;
-    contenido += `${JSON.parse(localStorage.getItem('telefono') ?? '""')}\n`;
-    contenido += `${JSON.parse(localStorage.getItem('ramo') ?? '""')}\n`;
-    contenido += `Factura Nro: ${ventaConDetalles.formatofactura}\n`;
+
+    contenido += `${localStorage.getItem('empresa') || ''}\n`;
+    contenido += `${localStorage.getItem('ruc') || ''}\n`;
+    contenido += `${localStorage.getItem('direccion') || ''}\n`;
+    contenido += `${localStorage.getItem('telefono') || ''}\n`;
+    contenido += `${localStorage.getItem('ramo') || ''}\n`;
     contenido += `Fecha: ${this.formatearFechaPY(ventaConDetalles.fecha)}\n`;
     contenido += `Hora: ${new Date().toLocaleTimeString()}\n`;
-    contenido += `Cliente: ${this.venta.nombrecliente}\n`;
+    contenido += `Cliente: ${this.venta.clienteNombre}\n`;
     contenido += negritaOff + izquierda;
     contenido += `Timbrado: ${ventaConDetalles.nrotimbrado}\n`;
     contenido += `Valido:  ${this.formatearFechaPY(
