@@ -6,6 +6,7 @@ import { Device } from '@capacitor/device';
 import { CajasService } from '../services/cajas/cajas.service';
 import { Caja } from '../models/cajas/cajas';
 import { ConfigService } from 'src/app/services/configuracion/configuracion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -48,6 +49,7 @@ export class HomePage {
 
   constructor(
     public modalCtrl: ModalController,
+    public router: Router,
     private bluetoothSerial: BluetoothSerial,
     private platform: Platform,
     private configService: ConfigService,
@@ -183,6 +185,6 @@ export class HomePage {
   }
 
   async dismiss() {
-    return await this.modalCtrl.dismiss();
+    this.router.navigate(['/menu']);
   }
 }

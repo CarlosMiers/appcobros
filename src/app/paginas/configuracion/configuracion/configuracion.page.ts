@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NavController,ModalController } from '@ionic/angular';
 import { ConfigService } from 'src/app/services/configuracion/configuracion.service';
 
@@ -17,6 +18,7 @@ export class ConfiguracionPage implements OnInit {
   };
 
   constructor(
+    public router: Router,
     private configService: ConfigService,
     private navCtrl: NavController,
     public modalCtrl: ModalController
@@ -48,7 +50,7 @@ export class ConfiguracionPage implements OnInit {
   }
 
   async dismiss() {
-    await this.modalCtrl.dismiss({}); // Devuelve un valor
+     this.router.navigate(['/menu']);
   }
 
 }

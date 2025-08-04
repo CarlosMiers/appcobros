@@ -1,10 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { AlertController, ModalController } from '@ionic/angular';
+import {
+  AlertController,
+  ModalController,
+  NavController,
+} from '@ionic/angular';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { ClientesService } from 'src/app/services/clientes/clientes.service';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { Cliente } from 'src/app/models/clientes/cliente';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-edit-clientes',
@@ -12,7 +17,9 @@ import { Cliente } from 'src/app/models/clientes/cliente';
   styleUrls: ['./edit-clientes.page.scss'],
 })
 export class EditClientesPage implements OnInit {
-  @Input() clienteCodigo: number = 0; // Recibe el parámetro 'codigo' desde el modal
+  //@Input() clienteCodigo: number = 0; // Recibe el parámetro 'codigo' desde el modal
+
+  clienteCodigo: number | null = null; // Para almacenar el código del cliente
 
   id: any;
   titulo: any = '';
@@ -36,9 +43,10 @@ export class EditClientesPage implements OnInit {
   };
 
   constructor(
+    private activatedRoute: ActivatedRoute,
+    private navCtrl: NavController,
     private _clienteService: ClientesService,
     private geolocation: Geolocation,
-    public modalCtrl: ModalController,
     public alertController: AlertController,
     public loadingService: LoadingService,
     public formBuilder: FormBuilder
@@ -46,9 +54,13 @@ export class EditClientesPage implements OnInit {
 
   ngOnInit() {
     this.getPosicionGlobal();
-    if (this.clienteCodigo > 0) {
+
+    const idParam = this.activatedRoute.snapshot.paramMap.get('id');
+    this.clienteCodigo = idParam !== null ? Number(idParam) : null;
+
+    if (this.clienteCodigo !== null && this.clienteCodigo > 0) {
       this.titulo = 'Editar Cliente N° ' + this.clienteCodigo;
-      this.Consultar();
+      this.Consultar(this.clienteCodigo);
     } else {
       this.titulo = 'Agregar Cliente';
     }
@@ -86,7 +98,7 @@ export class EditClientesPage implements OnInit {
     }
   }
 
-  async Consultar() {
+  async Consultar(clienteCodigo: number) {
     this.loadingService.present({
       message: 'Aguarde un Momento.',
       duration: 300,
@@ -94,7 +106,7 @@ export class EditClientesPage implements OnInit {
 
     try {
       // Usamos el servicio para obtener los datos del cliente
-      const data = await this._clienteService.getCliente(this.clienteCodigo);
+      const data = await this._clienteService.getCliente(clienteCodigo);
       this.EditCliente = data; // Asigna los datos del cliente
       console.log(this.EditCliente);
     } catch (error) {
@@ -113,7 +125,7 @@ export class EditClientesPage implements OnInit {
   };
 
   async dismiss() {
-    await this.modalCtrl.dismiss({}); // Devuelve un valor
+    await this.navCtrl.pop();
   }
 
   getPosicionGlobal() {

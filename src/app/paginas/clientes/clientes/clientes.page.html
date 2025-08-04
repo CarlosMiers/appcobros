@@ -20,7 +20,7 @@
 
 <ion-content [fullscreen]="true">
   <ion-list lines="none" class="lista-clientes">
-    <ion-card *ngFor="let datos of clientes | filtro:textoBuscar:'nombre'" (click)="openEditClienteModal(datos.codigo)" class="card-cliente ion-margin">
+    <ion-card *ngFor="let datos of clientes | filtro:textoBuscar:'nombre'" (click)="openEditCliente(datos.codigo)" class="card-cliente ion-margin">
       <ion-card-header class="cliente-card">
         <ion-card-title class="ion-text-capitalize">{{ datos.nombre }}</ion-card-title>
       </ion-card-header>
@@ -48,7 +48,7 @@
 
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-adjusted">
-    <ion-fab-button color="success" (click)="openEditClienteModal(0)">
+    <ion-fab-button color="success" (click)="openEditCliente(0)">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>

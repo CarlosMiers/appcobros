@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { UsuariosPage } from '../usuarios/usuarios.page';
 import { RegisterPage } from '../register/register.page';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-welcome',
@@ -9,13 +10,19 @@ import { RegisterPage } from '../register/register.page';
   styleUrls: ['./welcome.page.scss'],
 })
 export class WelcomePage implements OnInit {
+  constructor(public modalCtrl: ModalController, private router: Router) {}
 
-  constructor(public modalCtrl: ModalController,) { }
+  ngOnInit() {}
 
-  ngOnInit() {
+  login() {
+    this.router.navigate(['/usuarios']);
   }
 
-  async login() {
+  register() {
+    this.router.navigate(['/register']);
+  }
+
+  /*  async login() {
     const modal = await this.modalCtrl.create({
       component: UsuariosPage,
       animated: true,
@@ -37,7 +44,5 @@ export class WelcomePage implements OnInit {
     })
 
     return await modal.present();
-  }
-
-
+  }*/
 }

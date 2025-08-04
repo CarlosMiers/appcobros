@@ -1,60 +1,36 @@
-<ion-content class="ion-padding ion-text-center" style="background: linear-gradient(to bottom, #E3F2FD, #BBDEFB);">
-  <!-- Fondo con líneas sutiles -->
-  <div class="background-lines" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%), linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%); background-size: 40px 40px; z-index: -1;"></div>
-  <!-- Contenedor del logo -->
-  <div class="logo-container" style="width: 100%; overflow: hidden;">
-    <img src="../../../assets/img/logo.png" class="logo"
-      style="width: 100%; height: auto; object-fit: contain; border-bottom: 10px solid #0D47A1; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);" />
+<ion-content class="login-content" [fullscreen]="true">
+  <!-- Logo -->
+  <div class="logo-container">
+    <img src="../../../assets/img/logo.jpg" class="logo" alt="Logo S&N APP" />
   </div>
 
-  <!-- Formulario de acceso centrado en la pantalla -->
-  <form>
-    <div class="container" style="padding: 20px; margin-top: 30px;">
-      <ion-grid>
-        <ion-row justify-content-center>
-          <ion-col align-self-center size-xs="12" size-sm="10" size-md="8" size-lg="6">
-            <div class="item-content" style="margin-bottom: 20px;">
-              <ion-item lines="full" style="border-radius: 10px; margin-bottom: 15px;">
-                <ion-icon name="person" color="primary"></ion-icon>
-                <ion-input type="text" name="loginacceso" placeholder="Usuario" [(ngModel)]="loginacceso"
-                  style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);"></ion-input>
-              </ion-item>
+  <!-- Formulario -->
+  <div class="form-wrapper">
+    <ion-grid>
+      <ion-row justify-content-center>
+        <ion-col size="12" size-sm="12" size-md="12" size-lg="8" size-xl="6">
+          <ion-item lines="full" class="input-box">
+            <ion-icon name="person" slot="start" color="primary"></ion-icon>
+            <ion-input type="text" placeholder="Usuario" [(ngModel)]="loginacceso"></ion-input>
+          </ion-item>
 
-              <!-- Campo de contraseña con opción para ver la contraseña -->
-              <ion-item lines="full" style="border-radius: 10px; margin-bottom: 15px;">
-                <!-- Ícono del ojo en el lado izquierdo -->
-                <ion-icon name="eye-off" color="primary" (click)="togglePasswordVisibility()"></ion-icon>
+          <ion-item lines="full" class="input-box">
+            <ion-icon name="eye-off" slot="start" color="primary" (click)="togglePasswordVisibility()"></ion-icon>
+            <ion-input [type]="showPassword ? 'text' : 'password'" placeholder="Contraseña" [(ngModel)]="password"></ion-input>
+          </ion-item>
 
-                <!-- Input de la contraseña con visibilidad toggle -->
-                <ion-input [type]="showPassword ? 'text' : 'password'" placeholder="Contraseña" name="password"
-                  [(ngModel)]="password"
-                  style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);"></ion-input>
-              </ion-item>
-            </div>
-
-            <!-- Botón de acceso -->
-            <div style="margin-top: 20px;">
-              <ion-button expand="block" color="primary" type="submit"
-                style="border-radius: 25px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);"
-                (click)="Ingresar()">Ingresar</ion-button>
-            </div>
-
-            <!-- Botón para salir -->
-            <div class="ion-margin-top ion-text-center" style="margin-top: 20px;">
-              <ion-button expand="block" color="light"
-                style="border-radius: 25px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);"
-                (click)="dismiss()">Salir</ion-button>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </div>
-  </form>
+          <ion-button expand="block"  class="action-btn" (click)="Ingresar()">Ingresar</ion-button>
+          
+          <ion-button expand="block" color="medium" class="action-btn" (click)="dismiss()">Salir</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 </ion-content>
-  
-<ion-footer style="background-color: #0D47A1; color: #FFF; padding: 10px 0;">
-  <div class="row responsive-sm" style="text-align: center; font-size: 1.1em;">
+
+<ion-footer class="footer">
+  <div class="footer-text">
     <h1>© 2025 S&N APP</h1>
-    <p style="font-size: 0.9em; color: #B0BEC5;">Todos los derechos reservados.</p>
+    <p>Todos los derechos reservados.</p>
   </div>
 </ion-footer>

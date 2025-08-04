@@ -2,13 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AnimationController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import {
-  ModalController,
-  ToastController,
-  ActionSheetController,
-} from '@ionic/angular';
+import { ToastController, ActionSheetController } from '@ionic/angular';
 import { ClientesService } from 'src/app/services/clientes/clientes.service';
-import { EditClientesPage } from '../edit-clientes/edit-clientes.page';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { NavController } from '@ionic/angular';
 import { fadeInAnimation } from 'src/app/animations';
@@ -30,7 +25,6 @@ export class ClientesPage implements OnInit {
   constructor(
     private animationCtrl: AnimationController,
     private clienteService: ClientesService,
-    public modalCtrl: ModalController,
     public formBuilder: FormBuilder,
     private navCtrl: NavController,
     public loadingService: LoadingService,
@@ -136,40 +130,13 @@ export class ClientesPage implements OnInit {
   }
 
   async dismiss() {
-    return await this.modalCtrl.dismiss();
+      this.router.navigate(['/menu']);
   }
 
-  /* async openEditClienteModal(clienteCodigo: number) {
-  const modal = await this.modalCtrl.create({
-    component: EditClientesPage,
-    componentProps: {
-      clienteCodigo,
-    },
-    cssClass: 'editCliente-modal',
-    backdropDismiss: false,
-    animated: true,
-    mode: 'md',
-  });
-
-  const { data } = await modal.onDidDismiss();
-
-  if (data?.actualizado) {
-    this.loadClientes(); // Recargar lista
-  }
-}*/
-
-  async openEditClienteModal(clienteCodigo: number) {
-    const modal = await this.modalCtrl.create({
-      component: EditClientesPage,
-      componentProps: {
-        clienteCodigo,
-      },
-      cssClass: 'editCliente-modal',
-      backdropDismiss: false,
-      animated: true,
-      mode: 'md',
-    });
-    return await modal.present();
+  async openEditCliente(clienteCodigo: number) {
+    // Cambié el nombre de la función a algo más descriptivo
+    // Navegamos a la ruta 'clientes/editar' y pasamos el clienteCodigo como 'id'
+    await this.navCtrl.navigateForward(`/edit-clientes/${clienteCodigo}`);
   }
 
   async presentToast(message: string) {

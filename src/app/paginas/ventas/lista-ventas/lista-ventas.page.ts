@@ -101,14 +101,20 @@ export class ListaVentasPage implements OnInit {
   }
 
   async dismiss() {
-    return await this.modalCtrl.dismiss();
+     this.router.navigate(['/menu']);
   }
 
   goBack() {
     this.router.navigate(['/menu']);
   }
 
+
   async OpenEditVenta(idVenta: number) {
+    // Navegar a la página de detalle de venta con el ID de la venta
+    await this.navCtrl.navigateForward(`/detalle-venta/${idVenta}`);
+  }
+
+  /*async OpenEditVenta(idVenta: number) {
     const modal = await this.modalCtrl.create({
       component: DetalleVentaPage,
       animated: true,
@@ -120,5 +126,5 @@ export class ListaVentasPage implements OnInit {
       },
     });
     return await modal.present();
-  }
+  }*/
 }

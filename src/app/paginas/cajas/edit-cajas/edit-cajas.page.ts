@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   AlertController,
   ModalController,
+  NavController,
 } from '@ionic/angular';
 import { Caja } from 'src/app/models/cajas/cajas';
 import { CajasService } from 'src/app/services/cajas/cajas.service';
@@ -14,7 +16,7 @@ import { LoadingService } from 'src/app/services/loading/loading.service';
   styleUrls: ['./edit-cajas.page.scss'],
 })
 export class EditCajasPage implements OnInit {
-  @Input() cajaCodigo: number = 0; // Recibe el parámetro 'codigo' desde el modal
+  cajaCodigo: number | null = null; // Para almacenar el código del cliente
 
   id: any;
   titulo: any = '';
@@ -37,6 +39,8 @@ export class EditCajasPage implements OnInit {
   };
 
   constructor(
+    private activatedRoute: ActivatedRoute,
+    private navCtrl: NavController,
     private _cajaService: CajasService,
     public modalCtrl: ModalController,
     public alertController: AlertController,
@@ -45,7 +49,10 @@ export class EditCajasPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.cajaCodigo > 0) {
+    const idParam = this.activatedRoute.snapshot.paramMap.get('id');
+    this.cajaCodigo = idParam !== null ? Number(idParam) : null;
+
+    if (this.cajaCodigo !== null && this.cajaCodigo > 0) {
       this.titulo = 'Editar Caja N° ' + this.cajaCodigo;
       this.Consultar();
     } else {
@@ -107,8 +114,12 @@ export class EditCajasPage implements OnInit {
 
     try {
       // Esperamos la respuesta de la consulta de la caja
-      const data = await this._cajaService.getCaja(this.cajaCodigo);
-      this.EditCaja = data; // Asignamos los datos a EditCaja
+      if (this.cajaCodigo !== null) {
+        const data = await this._cajaService.getCaja(this.cajaCodigo);
+        this.EditCaja = data; // Asignamos los datos a EditCaja
+      } else {
+        throw new Error('El código de la caja es nulo.');
+      }
     } catch (error) {
       console.error('Error al consultar la caja:', error);
       // Aquí podrías agregar un mensaje de error si es necesario
@@ -123,6 +134,6 @@ export class EditCajasPage implements OnInit {
   };
 
   async dismiss() {
-    await this.modalCtrl.dismiss({}); // Devuelve un valor
+    await this.navCtrl.pop();
   }
 }

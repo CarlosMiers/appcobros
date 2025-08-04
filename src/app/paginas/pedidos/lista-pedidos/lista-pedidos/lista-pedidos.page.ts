@@ -7,7 +7,6 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { LoadingService } from 'src/app/services/loading/loading.service';
-import { DetallePedidoPage } from '../../detalle-pedido/detalle-pedido/detalle-pedido.page';
 import { ListaPedido } from '../../../../models/pedidos/lista-pedidos';
 import { ListaPedidosService } from 'src/app/services/pedidos/lista-pedidos.service';
 
@@ -87,7 +86,7 @@ export class ListaPedidosPage implements OnInit {
   }
 
   async dismiss() {
-    return await this.modalCtrl.dismiss();
+    this.router.navigate(['/menu']);
   }
 
   goBack() {
@@ -95,16 +94,8 @@ export class ListaPedidosPage implements OnInit {
   }
 
   async OpenEditPedido(pedidoNumero: number) {
-    const modal = await this.modalCtrl.create({
-      component: DetallePedidoPage,
-      animated: true,
-      mode: 'md',
-      backdropDismiss: false,
-      cssClass: 'editPedido-modal',
-      componentProps: {
-        pedidoNumero: pedidoNumero,
-      },
-    });
-    return await modal.present();
+    await this.navCtrl.navigateForward(`/detalle-pedido/${pedidoNumero}`);
   }
+
+
 }

@@ -81,8 +81,8 @@ export class RegisterPage implements OnInit {
         duration: 800,
       });
 
-      this.dismiss();
-      // this.router.navigate(['/usuarios']); // Si necesitas redirigir después del registro
+      //this.dismiss();
+       this.router.navigate(['/usuarios']); // Si necesitas redirigir después del registro
     } catch (error) {
       this.loading = false;
       console.error('Error al registrar el usuario:', error);
@@ -94,7 +94,7 @@ export class RegisterPage implements OnInit {
     }
   }
 
-  async dismiss() {
-    return await this.modalCtrl.dismiss();
+ dismiss() {
+        this.router.navigate(['/welcome']);
   }
 }

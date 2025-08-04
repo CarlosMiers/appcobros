@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
-import { ClientesPage } from '../clientes/clientes/clientes.page';
-import { ProductosPage } from '../productos/lista-productos/productos/productos.page';
-import { ListaPedidosPage } from '../pedidos/lista-pedidos/lista-pedidos/lista-pedidos.page';
-import { CajasPage } from '../cajas/cajas/cajas.page';
-import { ListaVentasPage } from '../ventas/lista-ventas/lista-ventas.page';
-import { ConfiguracionPage } from '../configuracion/configuracion/configuracion.page';
-import { HomePage } from 'src/app/home/home.page';
-import { ListaCobranzaPage } from '../cobranzas/lista-cobranza/lista-cobranza/lista-cobranza.page';
+import { NavController } from '@ionic/angular'; // Importa NavController
+// No necesitas ModalController si solo usas navegación
+// import { ModalController } from '@ionic/angular';
+
+// No necesitas importar las clases de las páginas aquí si solo usas sus rutas
+// Solo las necesitas si quieres pasarles datos complejos al navegar,
+// o si tu aplicación es pequeña y no quieres rutas separadas por módulos.
+// Para esta solución, usaremos rutas de string.
 
 @Component({
   selector: 'app-menu',
@@ -18,80 +17,84 @@ export class MenuPage implements OnInit {
   componentes: Array<{
     icon: string;
     name: string;
-    component: any;
+    // Cambiamos 'component' a 'path' para usar la ruta de navegación
+    path: string; // <-- Cambiado a string para la ruta
     color: string;
   }> = [
     {
       icon: 'people-outline',
       name: 'Clientes',
-      component: ClientesPage,
+      path: '/clientes', // <-- Usa la ruta definida en app-routing.module.ts
       color: 'blue',
     },
     {
       icon: 'file-tray-stacked-outline',
       name: 'Productos',
-      component: ProductosPage,
+      path: '/productos',
       color: 'green',
     },
     {
       icon: 'briefcase-outline',
       name: 'Cajas',
-      component: CajasPage,
+      path: '/cajas',
       color: 'brown',
     },
     {
       icon: 'cube-outline',
       name: 'Pedidos',
-      component: ListaPedidosPage,
+      path: '/lista-pedidos',
       color: 'orange',
     },
     {
       icon: 'cart-outline',
       name: 'Ventas',
-      component: ListaVentasPage,
+      path: '/lista-ventas',
       color: 'red',
     },
-
     {
       icon: 'people',
       name: 'Cobranzas',
-      component: ListaCobranzaPage,
+      path: '/lista-cobranza',
       color: 'purple',
     },
-
     {
       icon: 'print-outline',
       name: 'Impresora',
-      component: HomePage,
+      path: '/home', // Ajusta si la ruta de HomePage es diferente
       color: 'gray',
     },
-
     {
       icon: 'settings',
       name: 'Configuración',
-      component: ConfiguracionPage,
+      path: '/configuracion',
       color: 'green',
     },
   ];
 
-
   constructor(
-    private modalController: ModalController,
+    // private modalController: ModalController, // Ya no es necesario
+    private navCtrl: NavController, // Inyecta NavController
   ) {}
 
   ngOnInit() {
+    // Si necesitas que la página del menú se cierre al navegar,
+    // asegúrate de que esté en una pila de navegación adecuada.
+    // Para un menú, es común que sea una página raíz o un tab.
   }
 
-  async openModal(component: any) {
-    const modal = await this.modalController.create({
-      component: component,
-    });
-    return await modal.present();
+  // Cambiamos openModal por navigateToPage
+  async navigateToPage(path: string) { // Recibe la ruta como string
+    await this.navCtrl.navigateForward(path); // Navega hacia adelante a la ruta especificada
   }
 
+  // Para el botón "Salir", si el menú es un modal que se presentó sobre HomePage,
+  // y quieres volver a HomePage, puedes usar pop() o navigateBack().
+  // Si el menú es tu página principal y "Salir" debe cerrar la app, es diferente.
+  // Asumiendo que "Salir" vuelve a una pantalla de login/home anterior:
   dismiss() {
-    this.modalController.dismiss();
+     // Si el menú fue abierto con navigateForward y quieres volver atrás:
+     
+     // O si quieres ir a una ruta específica, por ejemplo, la página de login:
+      this.navCtrl.navigateRoot('/welcome'); 
   }
-
-
 }

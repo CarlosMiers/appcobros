@@ -23,7 +23,6 @@ export class UsuariosPage implements OnInit {
   confirmPassword: string = '';
   showPassword: boolean = false;
 
-
   constructor(
     private _userService: UserService,
     private router: Router,
@@ -62,10 +61,8 @@ export class UsuariosPage implements OnInit {
         localStorage.setItem('idusuario', data.userId.toString()); // Guarda el ID como string
         this.configuracion(new ConfigEmpresaService());
 
-        this.Menu(); // Redirección a menú
-        this.loginacceso = '';
+        this.router.navigate(['/menu']);
         this.password = '';
-        this.dismiss(); // Cierra el modal o diálogo de login
       },
       error: (e: HttpErrorResponse) => {
         this.loading = false;
@@ -78,24 +75,15 @@ export class UsuariosPage implements OnInit {
     });
   }
 
-  async Menu() {
-    const modal = await this.modalCtrl.create({
-      component: MenuPage,
-      animated: true,
-      mode: 'ios',
-      backdropDismiss: false,
-      cssClass: 'menu-modal',
-    });
-
-    return await modal.present();
-  }
-
+  
   Registrar() {
-    this.router.navigate(['register']);
+    this.router.navigate(['/register']);
   }
 
-  async dismiss() {
-    return await this.modalCtrl.dismiss();
+  dismiss() {
+    this.router.navigate(['/welcome']);
+
+    //   return await this.modalCtrl.dismiss();
   }
 
   submitForm() {
@@ -107,21 +95,24 @@ export class UsuariosPage implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
-async configuracion(configserviceEmpresa: ConfigEmpresaService): Promise<void> {
-  try {
-    const configArr = await configserviceEmpresa.getConfig(); // recibe el objeto directamente
-    const data = typeof configArr === 'string' ? JSON.parse(configArr) : configArr;
-    localStorage.setItem('empresa', data.empresa || '');
-    localStorage.setItem('ruc', data.ruc || '');
-    localStorage.setItem('direccion', data.direccion || '');
-    localStorage.setItem('telefono', data.telefono || '');
-    localStorage.setItem('fax', data.fax || '');
-    localStorage.setItem('mail', data.mail || '');
-    localStorage.setItem('web', data.web || '');
-    localStorage.setItem('ramo', data.ramo || '');
-    localStorage.setItem('responsable', data.responsable || '');
-  } catch (error) {
-    console.error('❌ Error obteniendo configuración:', error);
+  async configuracion(
+    configserviceEmpresa: ConfigEmpresaService
+  ): Promise<void> {
+    try {
+      const configArr = await configserviceEmpresa.getConfig(); // recibe el objeto directamente
+      const data =
+        typeof configArr === 'string' ? JSON.parse(configArr) : configArr;
+      localStorage.setItem('empresa', data.empresa || '');
+      localStorage.setItem('ruc', data.ruc || '');
+      localStorage.setItem('direccion', data.direccion || '');
+      localStorage.setItem('telefono', data.telefono || '');
+      localStorage.setItem('fax', data.fax || '');
+      localStorage.setItem('mail', data.mail || '');
+      localStorage.setItem('web', data.web || '');
+      localStorage.setItem('ramo', data.ramo || '');
+      localStorage.setItem('responsable', data.responsable || '');
+    } catch (error) {
+      console.error('❌ Error obteniendo configuración:', error);
+    }
   }
-}
 }

@@ -2,17 +2,19 @@
   <div class="header-logo">
     <img src="../../../assets/img/logo.png" class="logo-full" />
   </div>
-  
+
   <div class="divider-line"></div>
-  
-  <ion-toolbar color="primary">
-    <ion-title class=".toolbar-gradient">Menú Principal</ion-title>
+
+
+  <ion-toolbar class="title-gradient">
+    <ion-title>Menú Principal</ion-title>
   </ion-toolbar>
+
 </ion-header>
 
 <ion-content class="ion-padding">
   <ion-list lines="none" class="menu-list">
-    <ion-card *ngFor="let item of componentes" class="menu-card" (click)="openModal(item.component)">
+    <ion-card *ngFor="let item of componentes" class="menu-card" (click)="navigateToPage(item.path)">
       <ion-item lines="none" class="menu-item">
         <ion-icon [name]="item.icon" slot="start" [style.color]="item.color" class="menu-icon"></ion-icon>
         <ion-label class="menu-label">{{ item.name }}</ion-label>
@@ -23,5 +25,4 @@
 
 <ion-footer class="footer-dismiss">
   <ion-button expand="block" color="medium" (click)="dismiss()">Salir</ion-button>
-  
 </ion-footer>

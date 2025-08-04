@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { AlertController, ModalController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { Producto } from 'src/app/models/productos/producto';
 import { FormateoService } from 'src/app/services/formateo/formateo.service';
 import { LoadingService } from 'src/app/services/loading/loading.service';
@@ -12,8 +13,8 @@ import { ProductosService } from 'src/app/services/productos/productos.service';
   styleUrls: ['./edit-productos.page.scss'],
 })
 export class EditProductosPage implements OnInit {
-  @Input() productoCodigo: string = ''; // Recibe el parámetro 'codigo' desde el modal
 
+  productoCodigo: string = '';
   id: any;
   titulo: any = '';
   loading: boolean = false;
@@ -34,6 +35,8 @@ export class EditProductosPage implements OnInit {
   otroCampoNumerico?: string | number;
 
   constructor(
+    private activatedRoute: ActivatedRoute,
+    private navCtrl: NavController,
     private formateoService: FormateoService,
     private productoService: ProductosService,
     public modalCtrl: ModalController,
@@ -43,6 +46,11 @@ export class EditProductosPage implements OnInit {
   ) {}
 
   ngOnInit() {
+
+    const idParam = this.activatedRoute.snapshot.paramMap.get('id');
+    this.productoCodigo = idParam !== null ? String(idParam) : '';
+
+
     if (this.productoCodigo.length > 0) {
       this.titulo = 'Editar Producto ' + this.productoCodigo;
       this.Consultar();
@@ -121,7 +129,7 @@ export class EditProductosPage implements OnInit {
   };
 
   async dismiss() {
-    return await this.modalCtrl.dismiss();
+    await this.navCtrl.pop();
   }
 
   // Formatea número con separadores y prefijo 'Gs.'

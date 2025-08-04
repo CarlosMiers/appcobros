@@ -12,6 +12,7 @@
   export interface Pedido {
     numero: number;
     fecha: Date;
+    vencimiento: Date; // Nuevo campo para la fecha de vencimiento
     comprobante:number;
     cliente: number;
     totalneto:number;

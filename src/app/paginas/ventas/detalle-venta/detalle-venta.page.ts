@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
   AlertController,
   ModalController,
+  NavController,
   ToastController,
 } from '@ionic/angular';
 import { ClientesService } from 'src/app/services/clientes/clientes.service';
@@ -17,6 +18,7 @@ import { CajasService } from 'src/app/services/cajas/cajas.service';
 import { BluetoothSerial } from '@awesome-cordova-plugins/bluetooth-serial/ngx';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { Device } from '@capacitor/device';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-detalle-venta',
@@ -84,12 +86,15 @@ export class DetalleVentaPage implements OnInit {
   codigoClienteSeleccionado: number = 0;
   clienteNombre = 'CLIENTES VARIOS';
 
-  @Input() ventaNumero!: number;
+  //@Input() ventaNumero!: number;
+  ventaNumero: number | null = null; // Número del pedido a editar, si es nuevo será null
 
   constructor(
     private alertController: AlertController,
     private _cajaService: CajasService,
     private ventasService: VentasService,
+    private activatedRoute: ActivatedRoute,
+    private navCtrl: NavController,
     private productosService: ProductosService,
     private loadingService: LoadingService,
     private clienteServices: ClientesService,
@@ -111,6 +116,9 @@ export class DetalleVentaPage implements OnInit {
     this.loadClientes();
     await this.loadConfig();
     this.ObtenerCaja();
+
+    const idParam = this.activatedRoute.snapshot.paramMap.get('id');
+    this.ventaNumero = idParam !== null ? Number(idParam) : null;
 
     if (!this.ventaNumero || this.ventaNumero === 0) {
       this.titulo = '🧾 Nueva Factura ';
@@ -498,6 +506,7 @@ export class DetalleVentaPage implements OnInit {
 
         await this.updateFactura();
         // Presentar el toast y cerrar el modal
+        // Imprimir la factura
         await this.imprimirFactura(ventaConDetalles);
         await toast.present();
       } else {
@@ -622,8 +631,6 @@ export class DetalleVentaPage implements OnInit {
         return;
       }
 
-      console.log('Intentando conectar a la impresora...');
-
       this.bluetoothSerial.connectInsecure(impresoraMAC).subscribe(
         async () => {
           console.log('Conectado a la impresora.');
@@ -631,17 +638,12 @@ export class DetalleVentaPage implements OnInit {
           await new Promise((r) => setTimeout(r, 1500));
 
           await this.bluetoothSerial.write(contenidoTicket); // Aquí va el ticket real
-          console.log('Ticket enviado correctamente.');
-
           await new Promise((r) => setTimeout(r, 500));
-
           await this.bluetoothSerial.disconnect();
-          console.log('Desconectado de la impresora.');
 
           alert('Factura impresa correctamente.');
         },
         (error) => {
-          console.error('Error de conexión:', error);
           alert(
             'No se pudo conectar a la impresora. Verifica que esté encendida y emparejada.'
           );
@@ -744,7 +746,7 @@ export class DetalleVentaPage implements OnInit {
   }
 
   async dismiss() {
-    return await this.modalCtrl.dismiss();
+    await this.navCtrl.pop();
   }
 
   compareWithComprobante = (o1: any, o2: any) => {
@@ -752,10 +754,10 @@ export class DetalleVentaPage implements OnInit {
   };
 
   async goBack() {
-    return await this.modalCtrl.dismiss();
+    await this.navCtrl.pop();
   }
 
   async regresarListado() {
-    return await this.modalCtrl.dismiss();
+    await this.navCtrl.pop();
   }
 }

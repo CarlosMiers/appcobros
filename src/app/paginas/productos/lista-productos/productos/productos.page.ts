@@ -113,10 +113,15 @@ export class ProductosPage implements OnInit {
   }
 
   async dismiss() {
-    return await this.modalCtrl.dismiss();
+    this.router.navigate(['/menu']);
   }
 
   async openEditProductoModal(productoCodigo: string) {
+    await this.navCtrl.navigateForward(`/edit-productos/${productoCodigo}`);
+  }
+    
+    
+    /*async openEditProductoModal(productoCodigo: string) {
     const modal = await this.modalCtrl.create({
       component: EditProductosPage,
       animated: true,
@@ -128,5 +133,5 @@ export class ProductosPage implements OnInit {
       },
     });
     return await modal.present();
-  }
+  }*/
 }

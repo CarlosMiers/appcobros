@@ -1,113 +1,145 @@
-$white-color: #fff;
-$height100: 100%;
+/* --- ion-content: Reseteando padding y asegurando el flexbox principal --- */
+ion-content.login-content {
+  --background: linear-gradient(to bottom, #E3F2FD, #BBDEFB);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center; /* Centra el contenido horizontalmente dentro del ion-content */
+  height: 100%;
+  width: 100%; /* Asegura que el ion-content ocupe todo el ancho */
 
-.logo {
-    margin-top: 8px;
-    height: 100px;
-  }
+  /* ¡CLAVE! Elimina el padding por defecto de ion-content para que el contenido toque los bordes si es necesario */
+  --padding-top: 0px !important; /* ¡Usamos !important para forzar! */
+  --padding-bottom: 0px !important;
+  --padding-start: 0px !important;
+  --padding-end: 0px !important;
+  --keyboard-offset: 0px !important;
+}
+
+/* --- .logo-container: Asegurando el ancho completo del contenedor del logo --- */
+.logo-container {
+  width: 100%; /* ¡CLAVE! El contenedor debe ocupar el 100% del ancho de su padre (ion-content) */
+  padding: 0 !important; /* Sin padding interno para que el logo pueda ir de borde a borde */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center; /* Centra el logo horizontalmente si su imagen no es 100% de ancho */
+  align-items: flex-start; /* Alinea el logo en la parte superior de su contenedor */
   
-  .logo-container {
-    margin-bottom: 20px;
+  min-height: 0; /* Permite que la altura se ajuste al contenido del logo */
+  height: auto; 
+  margin-top: 0rem !important; /* Pegado arriba, ¡forzado! */
+
+  // Media queries para ajustar el margen superior si es necesario en ciertos dispositivos
+  @media screen and (orientation: landscape) {
+    margin-top: 0rem !important;
   }
-
-
-  .container{
-    align-content: center;
-    display: block;
-    position: relative;
-    top: 35px;
+  @media screen and (min-width: 768px) {
+    margin-top: 0rem !important;
   }
-    
-
-
-.title {
-    margin-bottom: 30px;
 }
 
-.title p {
-    margin-top: 0 !important;
+/* --- img.logo (SVG): Forzando la imagen del logo a tomar el 100% del ancho de su contenedor --- */
+.logo-container img.logo {
+  display: block; /* La imagen se comporta como un bloque */
+  margin: 0 !important; /* Elimina cualquier margen que pueda causar centrado no deseado, ¡forzado! */
+  width: 100% !important; /* ¡CLAVE! Fuerza al logo a ocupar el 100% del ancho de .logo-container, ¡forzado! */
+  height: auto; /* Mantiene la proporción de la imagen */
+  
+  object-fit: contain; /* Con SVG, 'contain' es a menudo el comportamiento por defecto y deseado */
+  object-position: top center; /* Alinea la imagen en la parte superior y centrada */
+
+  border-bottom: 10px solid #0D47A1;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  
+  max-height: 120px; /* Altura máxima general para el logo, ajústala según tu diseño */
+
+  @media screen and (orientation: landscape) {
+    max-height: 90px;
+  }
+  @media screen and (min-width: 768px) {
+    max-height: 100px;
+  }
 }
 
+/* --- .form-wrapper: Centrando y controlando el ancho del formulario --- */
+.form-wrapper {
+  width: 100%; /* Ocupa el 100% del ancho de ion-content */
+  padding: 1rem;
+  margin-top: 2rem; /* Ajusta este margen para posicionar el formulario debajo del logo */
+  flex-grow: 1; /* Permite que el formulario ocupe el espacio restante y empuje el footer */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center; /* ¡CLAVE! Centra la ion-grid y sus columnas horizontalmente */
 
-
-/*ion-item::part(native) {
-    background-color:#93b697 ;
-  }*/
-
-
-.textocentrado {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    color: white;
-    font-size: medium;
-    font-family: fantasy;
-    transform: translate(-50%, -50%);
+  // Media queries para ajustes específicos del formulario
+  @media screen and (min-width: 768px) {
+    padding: 2rem;
+    margin-top: 3rem;
+    max-width: 600px; /* Limita el ancho del formulario en pantallas más grandes */
+  }
+  @media screen and (orientation: landscape) {
+    padding: 1rem 3rem;
+    margin-top: 2rem;
+    max-width: 500px;
+  }
 }
 
-.card {
-    background-color: #004fff; // azul
+/* --- ion-grid, ion-row, ion-col: Asegurando que las columnas de Ionic funcionen correctamente --- */
+ion-grid {
+  width: 100%; /* La grilla debe ocupar el 100% del form-wrapper */
+  // Si ves padding extra, puedes resetearlo aquí:
+  // --ion-grid-padding: 0 !important;
 }
 
-.color-fondo {
-    --background: #FA9E0D;
+ion-row {
+  width: 100%; /* La fila debe ocupar el 100% de la grilla */
+  justify-content: center; /* Centra las columnas dentro de la fila */
 }
 
-ion-content {
-       padding:10px 10px 10px 10px;
+ion-col {
+  /* ¡CLAVE! Asegura que los hijos de la columna ocupen el 100% de su ancho */
+  width: 100% !important; /* ¡Forzado! */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra los input-box y action-btn dentro de la columna */
+  
+  // Puedes anular el padding por defecto de ion-col si notas espacios no deseados
+  // --ion-grid-column-padding-end: 0px !important;
+  // --ion-grid-column-padding-start: 0px !important;
 }
 
-
-#container strong {
-    font-size: 20px;
-    line-height: 26px;
+/* --- input-box y action-btn: Asegurando el ancho completo dentro de la columna --- */
+.input-box {
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  width: 100% !important; /* ¡Forzado! */
 }
 
-#container p {
-    font-size: 16px;
-    line-height: 22px;
+.action-btn {
+  border-radius: 25px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+  width: 100% !important; /* ¡Forzado! */
+}
 
-    color: #848688;
+/* --- Footer: Se mantiene igual --- */
+.footer {
+  background-color: #0D47A1;
+  color: #FFF;
+  padding: 10px 0;
+  text-align: center;
+  width: 100%;
+  flex-shrink: 0;
 
+  .footer-text h1 {
+    font-size: 1.1rem;
     margin: 0;
-}
-
-#container a {
-    text-decoration: none;
-}
-
-.div-color {
-    background: #FA9E0D;
-}
-
-.input {
-    display: block;
-    margin: 2rem 0;
-    width: 100%;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    border: none;
-    box-shadow: inset -5px -5px 15px rgba(255, 255, 255, 0.8), inset 5px 5px 10px rgba(0, 0, 0, 0.1);
-    border: 0 none;
-    background: #ebf5fc;
-}
-
-.boton {
-    border: none;
-    color: #007DCC;
-    font-weight: bold;
-    display: block;
-     cursor: pointer;
-}
-
-
-@media (min-width: 240px) and (max-width: 768px) and (max-width:991px) and (max-width:1199px) and (min-width:1200px) {
-
-    ion-grid {
-        background: $white-color;
-    }
-
-    ion-col {
-        border: none;
-    }
+  }
+  .footer-text p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
 }

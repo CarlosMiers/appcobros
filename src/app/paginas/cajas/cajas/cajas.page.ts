@@ -82,9 +82,9 @@ export class CajasPage implements OnInit {
     } catch (error) {
       // Manejo de errores en caso de que algo falle
       console.error('Error al cargar las cajas:', error);
-    } 
+    }
   }
-  
+
   buscar(event: any) {
     this.textoBuscar = event.detail.value;
   }
@@ -132,21 +132,11 @@ export class CajasPage implements OnInit {
   }
 
   async dismiss() {
-    return await this.modalCtrl.dismiss();
+    this.router.navigate(['/menu']);
   }
 
   async openEditCajaModal(cajaCodigo: number) {
-    const modal = await this.modalCtrl.create({
-      component: EditCajasPage,
-      componentProps: {
-        cajaCodigo,
-      },
-      cssClass: 'editCaja-modal',
-      backdropDismiss: false,
-      animated: true,
-      mode: 'md',
-    });
-    return await modal.present();
+    await this.navCtrl.navigateForward(`/edit-cajas/${cajaCodigo}`);
   }
 
   async presentToast(message: string) {

@@ -40,7 +40,7 @@ const routes: Routes = [
     loadChildren: () => import('./paginas/clientes/clientes/clientes.module').then( m => m.ClientesPageModule) , canActivate: [AuthGuard]
   },
   {
-    path: 'edit-clientes/:codigo',
+    path: 'edit-clientes/:id',
     loadChildren: () => import('./paginas/clientes/edit-clientes/edit-clientes.module').then( m => m.EditClientesPageModule) , canActivate: [AuthGuard]
   },
   {
@@ -48,7 +48,7 @@ const routes: Routes = [
     loadChildren: () => import('./paginas/productos/lista-productos/productos/productos.module').then( m => m.ProductosPageModule), canActivate: [AuthGuard]
   },
   {
-    path: 'edit-productos',
+    path: 'edit-productos/:id',
     loadChildren: () => import('./paginas/productos/edit-productos/edit-productos/edit-productos.module').then( m => m.EditProductosPageModule), canActivate: [AuthGuard]
   },
   {
@@ -56,7 +56,7 @@ const routes: Routes = [
     loadChildren: () => import('./paginas/pedidos/lista-pedidos/lista-pedidos/lista-pedidos.module').then( m => m.ListaPedidosPageModule), canActivate: [AuthGuard]
   },
   {
-    path: 'detalle-pedido',
+    path: 'detalle-pedido/:id',
     loadChildren: () => import('./paginas/pedidos/detalle-pedido/detalle-pedido/detalle-pedido.module').then( m => m.DetallePedidoPageModule), canActivate: [AuthGuard]
   },
   {
@@ -72,7 +72,7 @@ const routes: Routes = [
     loadChildren: () => import('./paginas/cajas/cajas/cajas.module').then( m => m.CajasPageModule), canActivate: [AuthGuard]
   },
   {
-    path: 'edit-cajas',
+    path: 'edit-cajas/:id',
     loadChildren: () => import('./paginas/cajas/edit-cajas/edit-cajas.module').then( m => m.EditCajasPageModule), canActivate: [AuthGuard]
   },
   {
@@ -80,7 +80,7 @@ const routes: Routes = [
     loadChildren: () => import('./paginas/ventas/lista-ventas/lista-ventas.module').then( m => m.ListaVentasPageModule), canActivate: [AuthGuard] 
   },
   {
-    path: 'detalle-venta',
+    path: 'detalle-venta/:id',
     loadChildren: () => import('./paginas/ventas/detalle-venta/detalle-venta.module').then( m => m.DetalleVentaPageModule), canActivate: [AuthGuard]
   },
   {

@@ -2,6 +2,7 @@ import { Input, Component } from '@angular/core';
 import {
   AlertController,
   ModalController,
+  NavController,
   ToastController,
 } from '@ionic/angular';
 import { DetalleProducto } from 'src/app/models/productos/DetalleProducto';
@@ -12,6 +13,7 @@ import { LoadingService } from '../../../../services/loading/loading.service';
 import { ClientesService } from '../../../../services/clientes/clientes.service';
 import { BuscarClientesPage } from 'src/app/paginas/clientes/buscar-clientes/buscar-clientes/buscar-clientes.page';
 import { BuscarProductosPage } from 'src/app/paginas/productos/buscar-productos/buscar-productos/buscar-productos.page';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-detalle-pedido',
@@ -22,6 +24,7 @@ export class DetallePedidoPage {
   pedido = {
     numero: 0,
     fecha: new Date().toISOString(),
+    vencimiento: new Date().toISOString(),
     cliente: 0,
     clienteNombre: '',
     comprobante: 0,
@@ -30,10 +33,12 @@ export class DetallePedidoPage {
   };
   titulo: any = '';
   codigoClienteSeleccionado: number = 0;
-  @Input() pedidoNumero!: number;
+  pedidoNumero: number | null = null; // Para almacenar el código del cliente
 
   constructor(
     private alertController: AlertController,
+    private activatedRoute: ActivatedRoute,
+    private navCtrl: NavController,
     private pedidosService: PedidosService,
     private productosService: ProductosService,
     private loadingService: LoadingService,
@@ -52,12 +57,15 @@ export class DetallePedidoPage {
   ngOnInit() {
     this.loadProductos();
     this.loadClientes();
+    const idParam = this.activatedRoute.snapshot.paramMap.get('id');
+    this.pedidoNumero = idParam !== null ? Number(idParam) : null;
 
     if (!this.pedidoNumero || this.pedidoNumero === 0) {
       this.titulo = '🧾 Nuevo Pedido ';
       this.pedido = {
         numero: 0,
         fecha: new Date().toISOString().substring(0, 10),
+        vencimiento: new Date().toISOString().substring(0, 10),
         cliente: this.selectedClient?.codigo || '',
         clienteNombre: this.selectedClient?.nombre || '',
         comprobante: 1, // comprobante por defecto
@@ -219,6 +227,7 @@ export class DetallePedidoPage {
     // Crear un objeto que contenga los datos necesarios para el backend
     const pedidoConDetalles = {
       fecha: this.pedido.fecha,
+      vencimiento: this.pedido.vencimiento,
       comprobante: +this.pedido.comprobante,
       cliente: this.pedido.cliente,
       codusuario: this.pedido.codusuario,
@@ -363,7 +372,7 @@ export class DetallePedidoPage {
   }
 
   async dismiss() {
-    return await this.modalCtrl.dismiss();
+    await this.navCtrl.pop();
   }
 
   async loadPedidoDesdeApi(numeroPedido: number) {
@@ -375,6 +384,7 @@ export class DetallePedidoPage {
       this.pedido = {
         numero: response.numero,
         fecha: response.fecha,
+        vencimiento: response.vencimiento || new Date().toISOString(),
         cliente: response.cliente,
         clienteNombre: response.clientenombre,
         comprobante: response.comprobante,
