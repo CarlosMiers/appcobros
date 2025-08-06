@@ -9,7 +9,6 @@ import {
 import { ListaVenta } from 'src/app/models/ventas/lista-ventas';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { ListaVentasService } from 'src/app/services/ventas/lista-ventas.service';
-import { DetalleVentaPage } from '../detalle-venta/detalle-venta.page';
 
 @Component({
   selector: 'app-lista-ventas',
@@ -82,8 +81,6 @@ export class ListaVentasPage implements OnInit {
 
       // Cargar los datos en el array
       this.ListaVenta = data;
-      console.log(data);
-
       // Calcular el total
       let totalRow = this.ListaVenta.length;
       totalRow -= 1;
