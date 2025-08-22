@@ -64,7 +64,6 @@ export class ListaPedidosPage implements OnInit {
 
       // Cargamos la respuesta en el array ListaPedido
       this.ListaPedido = data;
-      console.log(data);
 
       // Calculamos el total del pedido
       let totalRow = this.ListaPedido.length;

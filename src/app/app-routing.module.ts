@@ -11,12 +11,12 @@ const routes: Routes = [
   
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule) , canActivate: [AuthGuard]
   },
   
   {
     path: 'menu',
-    loadChildren: () => import('./paginas/menu/menu.module').then( m => m.MenuPageModule)
+    loadChildren: () => import('./paginas/menu/menu.module').then( m => m.MenuPageModule), canActivate: [AuthGuard]
   },
   {
     path: 'register',
@@ -65,7 +65,7 @@ const routes: Routes = [
   },
   {
     path: 'buscar-productos',
-    loadChildren: () => import('./paginas/productos/buscar-productos/buscar-productos/buscar-productos.module').then( m => m.BuscarProductosPageModule)
+    loadChildren: () => import('./paginas/productos/buscar-productos/buscar-productos/buscar-productos.module').then( m => m.BuscarProductosPageModule) , canActivate: [AuthGuard]
   },
   {
     path: 'cajas',
@@ -89,7 +89,11 @@ const routes: Routes = [
   },
   {
     path: 'lista-cobranza',
-    loadChildren: () => import('./paginas/cobranzas/lista-cobranza/lista-cobranza/lista-cobranza.module').then( m => m.ListaCobranzaPageModule)
+    loadChildren: () => import('./paginas/cobranzas/lista-cobranza/lista-cobranza/lista-cobranza.module').then( m => m.ListaCobranzaPageModule), canActivate: [AuthGuard]
+  },
+  {
+    path: 'detalle-cobranza/:id',
+    loadChildren: () => import('./paginas/cobranzas/detalle-cobranza/detalle-cobranza/detalle-cobranza.module').then( m => m.DetalleCobranzaPageModule) , canActivate: [AuthGuard]
   },
 
 ];

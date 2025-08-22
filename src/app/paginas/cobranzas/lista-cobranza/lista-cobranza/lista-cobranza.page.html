@@ -1,5 +1,10 @@
 <ion-header>
   <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="dismiss()">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title class="ion-text-center">💳 Lista de Cobranzas</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -37,7 +42,7 @@
   <!-- Lista de cobranzas -->
   <ion-list>
     <ion-item-sliding *ngFor="let cobro of ListaCobranzas">
-      <ion-item (click)="OpenEditCobranza(cobro.idcobro)" lines="none">
+      <ion-item lines="none">
         <ion-label class="ion-text-wrap">
           <h2>💰 Cobranza #{{ cobro.numero }}</h2>
           <p>
@@ -52,13 +57,20 @@
   </ion-list>
 </ion-content>
 
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-adjusted">
+  <ion-fab-button (click)="OpenEditCobranza(0)" color="success">
+    <ion-icon name="add-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+
 <!-- Footer con total -->
 <ion-footer class="footer-total">
   <ion-grid>
     <ion-row class="ion-align-items-center">
-      <ion-col size="6"><h3 class="footer-label">💵 Total registros</h3></ion-col>
+      <ion-col size="6"><h3 class="footer-label">💵 Total Cobranza</h3></ion-col>
       <ion-col size="6" class="ion-text-right">
-        <h3 class="footer-value">{{ ListaCobranzas.length }}</h3>
+        <h3 class="footer-value">{{ totalcobranza | number:'1.0-0' }}</h3>
       </ion-col>
     </ion-row>
   </ion-grid>

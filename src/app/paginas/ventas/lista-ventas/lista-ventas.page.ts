@@ -110,18 +110,4 @@ export class ListaVentasPage implements OnInit {
     // Navegar a la página de detalle de venta con el ID de la venta
     await this.navCtrl.navigateForward(`/detalle-venta/${idVenta}`);
   }
-
-  /*async OpenEditVenta(idVenta: number) {
-    const modal = await this.modalCtrl.create({
-      component: DetalleVentaPage,
-      animated: true,
-      mode: 'md',
-      backdropDismiss: false,
-      cssClass: 'editVenta-modal',
-      componentProps: {
-        ventaNumero: idVenta,
-      },
-    });
-    return await modal.present();
-  }*/
 }

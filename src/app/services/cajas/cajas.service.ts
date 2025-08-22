@@ -11,13 +11,15 @@ export class CajasService {
   private myApId: string;
   private myApIdFactura: string = '';
   private myApIdImpresora: string = '';
-
+  private myApIdRecibo: string = '';
+  
   constructor() {
     this.base_path = environment.apiUrl;
     this.myApiUrl = '/caja';
     this.myApId = '/id';
     this.myApIdFactura = '/update-factura';
     this.myApIdImpresora = '/update-impresora';
+    this.myApIdRecibo = '/update-recibo';
   }
 
   // Método para obtener todas las cajas (paginado)
@@ -78,8 +80,6 @@ export class CajasService {
     const url = `${this.base_path}${this.myApiUrl}${this.myApId}`;
     const body = { codigo: id };
     const token = localStorage.getItem('token');  // Obtener el token
-
-
     try {
       const response = await Http.post({
         url: url,
@@ -183,4 +183,27 @@ export class CajasService {
       throw error;
     }
   }
+
+
+  async updateReciboCaja(caja: any): Promise<any> {
+    const url = `${this.base_path}${this.myApiUrl}${this.myApIdRecibo}`;
+    const token = localStorage.getItem('token');  // Obtener el token
+    try {
+      const response = await Http.put({
+        url: url,
+        params: {},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,  // Agregar token en los headers
+        },
+        data: caja,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error al actualizar el recibo de la caja:', error);
+      throw error;
+    }
+  }
+
+
 }

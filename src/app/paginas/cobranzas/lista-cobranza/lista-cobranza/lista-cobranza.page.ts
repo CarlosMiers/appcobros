@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { ListaCobranza } from 'src/app/models/cobranzas/lista-cobranzas';
 import { ListaCobranzasService } from 'src/app/services/cobranzas/lista-cobranzas.service';
 import { LoadingService } from 'src/app/services/loading/loading.service';
@@ -15,10 +15,12 @@ export class ListaCobranzaPage implements OnInit {
   fechafinal: any;
   ListaCobranzas: any = [];
   totalcobranza: number = 0;
+  nombreCliente: string = '';
 
   constructor(
     public modalCtrl: ModalController,
     public router: Router,
+    private navCtrl: NavController,
     public loadingService: LoadingService,
     private listaCobranzasService: ListaCobranzasService
   ) {}
@@ -86,7 +88,7 @@ export class ListaCobranzaPage implements OnInit {
       let totalRow = this.ListaCobranzas.length;
       totalRow -= 1;
       for (let i = 0; i <= totalRow; i++) {
-        this.totalcobranza += parseFloat(this.ListaCobranzas[i].totalneto);
+        this.totalcobranza += parseFloat(this.ListaCobranzas[i].totalpago);
       }
     } catch (err) {
       // Manejo de errores
@@ -98,5 +100,11 @@ export class ListaCobranzaPage implements OnInit {
     }
   }
 
-  async OpenEditCobranza(idCobro: number) {}
+  async OpenEditCobranza(idCobro: number) {
+          await this.navCtrl.navigateForward(`/detalle-cobranza/${idCobro}`);
+  }
+
+
+
+  
 }

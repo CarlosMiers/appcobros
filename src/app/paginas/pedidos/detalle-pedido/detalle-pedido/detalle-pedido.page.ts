@@ -13,7 +13,7 @@ import { LoadingService } from '../../../../services/loading/loading.service';
 import { ClientesService } from '../../../../services/clientes/clientes.service';
 import { BuscarClientesPage } from 'src/app/paginas/clientes/buscar-clientes/buscar-clientes/buscar-clientes.page';
 import { BuscarProductosPage } from 'src/app/paginas/productos/buscar-productos/buscar-productos/buscar-productos.page';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-detalle-pedido',
@@ -32,9 +32,9 @@ export class DetallePedidoPage {
     total: 0,
   };
   titulo: any = '';
+  pedidoNumero: number | null = null; // 
   codigoClienteSeleccionado: number = 0;
-  pedidoNumero: number | null = null; // Para almacenar el código del cliente
-
+  
   constructor(
     private alertController: AlertController,
     private activatedRoute: ActivatedRoute,
@@ -45,14 +45,14 @@ export class DetallePedidoPage {
     private clienteServices: ClientesService,
     private sharedClienteService: SharedClienteService,
     private toastController: ToastController,
+    private router: Router,
     public modalCtrl: ModalController
   ) {}
-
-  selectedClient: any;
 
   productos: any[] = [];
   clientes: any[] = [];
   clienteSeleccionado: any;
+  selectedClient: any;
 
   ngOnInit() {
     this.loadProductos();
@@ -364,15 +364,15 @@ export class DetallePedidoPage {
   };
 
   async goBack() {
-    return await this.modalCtrl.dismiss();
-  }
+    await this.navCtrl.pop();
+  }   
 
   async regresarListado() {
-    return await this.modalCtrl.dismiss();
+       await this.navCtrl.pop();
   }
 
   async dismiss() {
-    await this.navCtrl.pop();
+      this.router.navigate(['/lista-pedidos']);
   }
 
   async loadPedidoDesdeApi(numeroPedido: number) {

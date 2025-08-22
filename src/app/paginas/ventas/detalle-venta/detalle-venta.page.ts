@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AlertController,
   ModalController,
@@ -106,7 +106,6 @@ export class DetalleVentaPage implements OnInit {
   ) {}
 
   selectedClient: any;
-
   productos: any[] = [];
   clientes: any[] = [];
   clienteSeleccionado: any;
@@ -175,7 +174,6 @@ export class DetalleVentaPage implements OnInit {
 
       // Asignamos la respuesta a EditCaja
       this.EditCaja = data;
-      console.log('Caja obtenida:', this.EditCaja);
 
       const expedicion = this.EditCaja.expedicion;
       const factura = Number(this.EditCaja.factura) + 1;
@@ -306,7 +304,7 @@ export class DetalleVentaPage implements OnInit {
       precio: this.productoSeleccionado.precio,
       ivaporcentaje: this.productoSeleccionado.ivaporcentaje,
       porcentaje: this.productoSeleccionado.ivaporcentaje,
-      impuesto: this.productoSeleccionado.ivaporcentaje,
+      impuesto: this.productoSeleccionado.impuesto,
       descripcion: this.productoSeleccionado.descripcion,
       costo: this.productoSeleccionado.costo,
       producto: {
@@ -516,7 +514,7 @@ export class DetalleVentaPage implements OnInit {
           ventaConDetalles
         );
 
-        //        await this.imprimirVenta(ventaConDetalles);
+        // Imprimir la factura
         await this.imprimirFactura(ventaConDetalles);
 
         // Mostrar el mensaje de éxito
@@ -540,34 +538,34 @@ export class DetalleVentaPage implements OnInit {
       // Llamamos al servicio para obtener la venta por su número
       const data = await this.ventasService.getVentaByNumero(numeroVenta);
 
-      // Asigna los valores del objeto recibido
+      // Asigna los valores del objeto recibido, asegurando que los numéricos sean convertidos
       this.venta = {
         idventa: data.idventa,
         formatofactura: data.formatofactura,
-        factura: data.factura,
+        factura: parseFloat(data.factura),
         creferencia: data.creferencia,
-        fecha: data.fecha, // <-- Agregado
+        fecha: data.fecha,
         vencimiento: data.vencimiento,
         camion: data.camion,
         sucursal: data.sucursal,
         moneda: data.moneda,
-        comprobante: data.comprobante,
-        cotizacion: data.cotizacion,
+        comprobante: parseFloat(data.comprobante),
+        cotizacion: parseFloat(data.cotizacion),
         vendedor: data.vendedor,
         caja: data.caja,
-        supago: data.supago,
-        sucambio: data.sucambio,
-        exentas: data.exentas,
-        gravadas10: data.gravadas10,
-        gravadas5: data.gravadas5,
-        totalneto: data.totalneto,
-        cuotas: data.cuotas,
+        supago: parseFloat(data.supago),
+        sucambio: parseFloat(data.sucambio),
+        exentas: parseFloat(data.exentas),
+        gravadas10: parseFloat(data.gravadas10),
+        gravadas5: parseFloat(data.gravadas5),
+        totalneto: parseFloat(data.totalneto),
+        cuotas: parseFloat(data.cuotas),
         iniciovencetimbrado: data.iniciovencetimbrado,
         vencimientotimbrado: data.vencimientotimbrado,
         nrotimbrado: data.nrotimbrado,
         idusuario: data.idusuario,
         cliente: data.cliente,
-        nombrecliente: data.nombrecliente ?? data.clientenombre ?? '', // <-- Agregado
+        nombrecliente: data.nombrecliente ?? data.clientenombre ?? '',
         clienteNombre: data.clientenombre,
       };
 
@@ -575,6 +573,11 @@ export class DetalleVentaPage implements OnInit {
       this.detalles = data.detalles.map((detalle: any) => ({
         ...detalle,
         descripcion: detalle.producto?.descripcion || '',
+        cantidad: parseFloat(detalle.cantidad) || 0,
+        precio: parseFloat(detalle.precio) || 0,
+        prcosto: parseFloat(detalle.prcosto) || 0,
+        ivaporcentaje: parseFloat(detalle.ivaporcentaje) || 0,
+        porcentaje: parseFloat(detalle.porcentaje) || 0,
       }));
     } catch (error) {
       console.error('Error al cargar la venta:', error);
@@ -702,7 +705,8 @@ export class DetalleVentaPage implements OnInit {
     contenido += negritaOff + izquierda;
     ventaConDetalles.detalles.forEach((d: any) => {
       const descripcion = d.producto?.descripcion || d.descripcion;
-      const precioTotal = (Number(d.cantidad) * Number(d.precio)).toFixed(0);
+      // Corregido: se asegura de que los valores sean números antes de multiplicar y usar toFixed
+      const precioTotal = (parseFloat(d.cantidad) * parseFloat(d.precio)).toFixed(0);
 
       contenido += descripcion.slice(0, 32) + '\n';
       const lineaPrecio =
@@ -714,20 +718,21 @@ export class DetalleVentaPage implements OnInit {
     //contenido += '-'.repeat(32) + '\n';
 
     // Totales
-    contenido += `GRAV. 10%: ${ventaConDetalles.gravadas10
+    // Corregido: se asegura de que los valores sean números antes de usar toFixed
+    contenido += `GRAV. 10%: ${parseFloat(ventaConDetalles.gravadas10)
       .toFixed(0)
       .padStart(20)}\n`;
-    contenido += `GRAV. 5%:  ${ventaConDetalles.gravadas5
+    contenido += `GRAV. 5%:  ${parseFloat(ventaConDetalles.gravadas5)
       .toFixed(0)
       .padStart(20)}\n`;
-    contenido += `EXENTAS:   ${(ventaConDetalles.exentas?.toFixed(0) || 0)
-      .toString()
-      .padStart(20)}\n`;
-    contenido += `TOTAL:     ${ventaConDetalles.totalneto
+    // Corregido: se asegura de que los valores sean números antes de usar toFixed
+    const exentas = parseFloat(ventaConDetalles.exentas);
+    contenido += `EXENTAS:   ${(isNaN(exentas) ? 0 : exentas).toFixed(0).padStart(20)}\n`;
+    contenido += `TOTAL:     ${parseFloat(ventaConDetalles.totalneto)
       .toFixed(0)
       .padStart(20)}\n`;
 
-    //    contenido += '-'.repeat(32) + '\n';
+    //    contenido += '-'.repeat(32) + '\n';
 
     // Mensaje final
     contenido += centrado;
@@ -761,3 +766,4 @@ export class DetalleVentaPage implements OnInit {
     await this.navCtrl.pop();
   }
 }
+// Fin del código

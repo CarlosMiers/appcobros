@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavController,ModalController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 import { ConfigService } from 'src/app/services/configuracion/configuracion.service';
 
 @Component({
@@ -14,7 +14,8 @@ export class ConfiguracionPage implements OnInit {
     caja: null,
     camion: null,
     moneda: null,
-    sucursal: null
+    sucursal: null,
+    cobrador: null,
   };
 
   constructor(
@@ -22,7 +23,6 @@ export class ConfiguracionPage implements OnInit {
     private configService: ConfigService,
     private navCtrl: NavController,
     public modalCtrl: ModalController
-   
   ) {}
 
   async ngOnInit() {
@@ -38,7 +38,8 @@ export class ConfiguracionPage implements OnInit {
       this.config.caja == null ||
       this.config.camion == null ||
       this.config.moneda == null ||
-      this.config.sucursal == null
+      this.config.sucursal == null ||
+      this.config.cobrador === null
     ) {
       alert('Todos los campos son obligatorios.');
       return;
@@ -50,8 +51,6 @@ export class ConfiguracionPage implements OnInit {
   }
 
   async dismiss() {
-     this.router.navigate(['/menu']);
+    this.router.navigate(['/menu']);
   }
-
 }
-
