@@ -16,12 +16,12 @@
 
     .custom-toast {
       text-align: center; /* Centra el texto */
-      --background: #ff9800; /* Naranja */
+      --background: #00aeff; /* Naranja */
       --color: white; /* Texto en blanco */
     }
 
     .custom-title {
-      background-color: #c9520d; /* Azul */
+      background-color: #12a7cc; /* Azul */
       color: white; /* Texto en blanco */
       padding: 8px;
       border-radius: 8px;
@@ -29,6 +29,34 @@
       text-align: center;
       font-size: 14px; /* Tamaño de la fuente más pequeño */      
     }
+
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+ion-card {
+  margin: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+ion-title {
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.carrito-producto {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
 
 
     /** primary **/

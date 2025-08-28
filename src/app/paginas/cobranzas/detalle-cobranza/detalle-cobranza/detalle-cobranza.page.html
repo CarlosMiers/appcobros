@@ -1,117 +1,127 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header class="ion-no-border">
+  <ion-toolbar class="header-toolbar">
     <ion-buttons slot="start">
-      <ion-button fill="clear" (click)="volver()">
-        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      <ion-button fill="clear" (click)="volver()" class="back-button">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">{{ pageTitle }}</ion-title>
+    <ion-title class="header-title">{{ pageTitle }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" color="light" (click)="imprimirRecibo(cobranza)" *ngIf="idcobro > 0">
+        <ion-icon name="print-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-
-  <!-- Cliente y Moneda -->
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title class="ion-text-center">🧾 Datos del Recibo</ion-card-title>
+<ion-content [fullscreen]="true" class="content-background">
+  <ion-card class="main-card fade-in-up">
+    <ion-card-header class="card-header-icon">
+      <ion-icon name="receipt-outline"></ion-icon>
+      <ion-card-title>Datos del Recibo</ion-card-title>
     </ion-card-header>
-    <ion-card-content>
-
-      <!-- Número de Recibo -->
-      <ion-item>
-        <ion-label position="stacked">N° Recibo</ion-label>
-        <ion-input [(ngModel)]="cobranza.numero" [readonly]="idcobro > 0"></ion-input>
-      </ion-item>
-
-      <!-- Fecha -->
-      <ion-item>
-        <ion-label position="stacked">Fecha</ion-label>
-        <ion-input type="date" [(ngModel)]="cobranza.fecha"></ion-input>
-      </ion-item>
-
-      <!-- Cliente por Código -->
-      <ion-item>
-        <ion-label position="stacked">Código de Cliente</ion-label>
-        <ion-input [(ngModel)]="cobranza.cliente"></ion-input>
-      </ion-item>
-
-      <ion-button expand="block" color="tertiary" (click)="validarCliente()">🔍 Consultar Cliente</ion-button>
-
-      <!-- Nombre del Cliente -->
-      <div class="ion-text-center ion-padding-top">
-        <h2 style="font-size: 1rem; font-weight: 500;">{{ cobranza.clienteNombre || 'Cliente no encontrado' }}</h2>
-      </div>
-
-      <!-- Observación -->
-      <ion-item>
-        <ion-label position="stacked">Observación</ion-label>
-        <ion-textarea [(ngModel)]="cobranza.observacion" rows="3"></ion-textarea>
-      </ion-item>
-
-    </ion-card-content>
-
-  </ion-card> <!-- Cuentas a Cobrar -->
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title class="ion-text-center">📄 Cuentas Pendientes</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <div class="ion-text-center" *ngIf="cuentasPendientes.length === 0">
-        <h4 style="color: #666;">No hay cuentas pendientes para este cliente.</h4>
-      </div>
-
-      <ion-grid *ngIf="cuentasPendientes.length > 0">
+    <ion-card-content class="card-content-grid">
+      <ion-grid>
         <ion-row>
-          <ion-col size="12" sizeMd="6" *ngFor="let cuenta of cuentasPendientes">
-            <ion-card class="cuenta-card">
-              <ion-item lines="none">
-                <ion-checkbox slot="start" [(ngModel)]="cuenta.seleccionado"
-                  (ionChange)="recalcularTotal()"></ion-checkbox>
-                <ion-label>
-                  <h2>{{ cuenta.documento }}</h2>
-                  <p>Emisión: {{ cuenta.fecha | date:'shortDate' }}</p>
-                  <p>Vence: {{ cuenta.vencimiento | date:'shortDate' }}</p>
-                  <p>Saldo: {{ cuenta.saldo | number:'1.2-2' }} {{ getMonedaTexto(cuenta.moneda) }}</p>
-                </ion-label>
-              </ion-item>
-            </ion-card>
+          <ion-col size="12">
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-label position="stacked">N° Recibo</ion-label>
+              <ion-input [(ngModel)]="cobranza.numero" [readonly]="idcobro > 0" class="form-input"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-label position="stacked">Fecha</ion-label>
+              <ion-input type="date" [(ngModel)]="cobranza.fecha" class="form-input"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-label position="stacked">Código de Cliente</ion-label>
+              <ion-input [(ngModel)]="cobranza.cliente" class="form-input"></ion-input>
+            </ion-item>
           </ion-col>
         </ion-row>
       </ion-grid>
+
+      <ion-button expand="block" color="tertiary" (click)="validarCliente()" class="action-button-search">
+        <ion-icon name="search-outline"></ion-icon>
+        Buscar Cliente
+      </ion-button>
+
+      <div class="client-info-container">
+        <ion-text class="client-name">{{ cobranza.clienteNombre || 'Cliente no encontrado' }}</ion-text>
+      </div>
+
+      <div class="divider-line"></div>
+
+      <ion-item class="ion-no-padding" lines="none">
+        <ion-label position="stacked">Observación</ion-label>
+        <ion-textarea [(ngModel)]="cobranza.observacion" rows="3" class="form-input"></ion-textarea>
+      </ion-item>
     </ion-card-content>
   </ion-card>
+
+  <ion-card class="products-card fade-in-up">
+    <ion-card-header class="card-header-icon">
+      <ion-icon name="documents-outline"></ion-icon>
+      <ion-card-title>Cuentas Pendientes</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="card-content-list">
+      <ion-list lines="none" *ngIf="cuentasPendientes.length > 0">
+        <ion-item *ngFor="let cuenta of cuentasPendientes" class="product-item">
+          <ion-checkbox slot="start" [(ngModel)]="cuenta.seleccionado" (ionChange)="recalcularTotal()"></ion-checkbox>
+          <div class="product-info-wrapper">
+            <ion-label class="ion-text-wrap">
+              <p class="product-description">{{ cuenta.documento }}</p>
+              <p class="product-details">
+                Emisión: <strong>{{ cuenta.fecha | date:'shortDate' }}</strong>
+                Vence: <strong>{{ cuenta.vencimiento | date:'shortDate' }}</strong>
+              </p>
+            </ion-label>
+            <div class="item-total">
+              <span class="subtotal">{{ cuenta.saldo | number:'1.0-0' }}</span>
+              <span class="quantity">{{ getMonedaTexto(cuenta.moneda) }}</span>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+      <div class="empty-state-list" *ngIf="cuentasPendientes.length === 0">
+        <ion-icon name="cash-outline"></ion-icon>
+        <p>No hay cuentas pendientes para este cliente.</p>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-grid class="total-grid">
+    <ion-row class="ion-align-items-center">
+      <ion-col size="6">
+        <ion-text class="total-label">Total a Cobrar</ion-text>
+      </ion-col>
+      <ion-col size="6" class="ion-text-right">
+        <ion-text class="total-value">{{ totalSeleccionado | number:'1.0-0' }}</ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
-<ion-card>
-  <ion-card-header>
-    <ion-card-title class="ion-text-center">💰Resumen del Cobro</ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-
-    <ion-item lines="none">
-      <ion-label>
-        <h3>Total a Cobrar:</h3>
-      </ion-label>
-      <ion-text color="primary">
-        <h3 style="font-weight: bold;">{{ totalSeleccionado | number:'1.2-2' }}</h3>
-      </ion-text>
-    </ion-item>
-  </ion-card-content>
-</ion-card>
-
-<!-- Botón Guardar -->
-<ion-footer class="ion-padding">
+<ion-footer class="ion-no-border footer-buttons">
   <ion-grid>
     <ion-row>
-      <ion-col>
+      <ion-col size="6">
         <ion-button expand="block" color="success" (click)="guardarCobro()">
-          💾 Grabar
+          <ion-icon name="save-outline"></ion-icon>
+          Grabar
         </ion-button>
       </ion-col>
-      <ion-col>
+      <ion-col size="6">
         <ion-button expand="block" color="medium" (click)="volver()">
-          ↩️ Salir
+          <ion-icon name="arrow-back-outline"></ion-icon>
+          Salir
         </ion-button>
       </ion-col>
     </ion-row>

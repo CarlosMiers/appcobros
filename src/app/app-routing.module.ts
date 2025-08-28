@@ -95,6 +95,10 @@ const routes: Routes = [
     path: 'detalle-cobranza/:id',
     loadChildren: () => import('./paginas/cobranzas/detalle-cobranza/detalle-cobranza/detalle-cobranza.module').then( m => m.DetalleCobranzaPageModule) , canActivate: [AuthGuard]
   },
+  {
+    path: 'carrito',
+    loadChildren: () => import('./paginas/ventas/carrito/carrito/carrito.module').then( m => m.CarritoPageModule)
+  },
 
 ];
 

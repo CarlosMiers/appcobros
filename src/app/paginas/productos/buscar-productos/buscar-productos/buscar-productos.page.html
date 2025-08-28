@@ -1,47 +1,76 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header class="ion-no-border">
+  <ion-toolbar class="header-gradient">
     <ion-buttons slot="start">
-      <ion-button fill="clear" (click)="cancelar()">
-        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      <ion-button fill="clear" (click)="cancelar()" class="back-button">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">📦 Lista de Productos</ion-title>
+    
+    <ion-title class="header-title">
+      <div class="title-container">
+        <ion-icon name="cube" class="title-icon"></ion-icon>
+        Buscar Producto
+      </div>
+    </ion-title>
+    
   </ion-toolbar>
 
-  <ion-toolbar>
-    <ion-searchbar [(ngModel)]="textoBuscar" (ionInput)="buscarProducto($event)" debounce="300"
-      placeholder="🔍 Buscar por nombre o código" showCancelButton="focus">
-    </ion-searchbar>
+  <ion-toolbar class="search-toolbar">
+    <div class="search-container">
+      <ion-searchbar
+        class="modern-searchbar"
+        placeholder="Buscar por nombre o código..."
+        (ionInput)="buscarProducto($event)"
+        [value]="textoBuscar"
+        animated
+        show-clear-button="focus"
+        search-icon="search"
+        clear-icon="close-circle">
+      </ion-searchbar>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content [fullscreen]="true" class="content-background ion-padding">
 
-  <!-- Mensaje si no hay resultados -->
-  <div class="ion-text-center" *ngIf="productosFiltrados.length === 0">
-    <ion-icon name="cube-outline" size="large" color="medium"></ion-icon>
-    <p style="color: gray;">No se encontraron productos.</p>
+  <div class="empty-state" *ngIf="productosFiltrados.length === 0">
+    <div class="empty-icon">
+      <ion-icon name="cube-outline"></ion-icon>
+    </div>
+    <h3>No se encontraron productos</h3>
+    <p>Intenta ajustar tu búsqueda para obtener resultados.</p>
   </div>
 
-  <!-- Lista de productos -->
-  <ion-list *ngIf="productosFiltrados.length > 0">
-    <ion-item *ngFor="let producto of productosFiltrados | filtro:textoBuscar:'nombre'" button lines="inset"
-      class="producto-item" (click)="seleccionarProducto(producto)">
+  <ion-list class="products-list" lines="none" *ngIf="productosFiltrados.length > 0">
+    <ion-card
+      *ngFor="let producto of productosFiltrados | filtro:textoBuscar:'nombre'"
+      button
+      class="product-card"
+      (click)="seleccionarProducto(producto)">
 
-      <ion-avatar slot="start">
-        <ion-icon name="cube-outline" size="large" color="secondary"></ion-icon>
-      </ion-avatar>
+      <div class="product-card-content">
+        <div class="product-icon-container">
+          <div class="product-icon">
+            <ion-icon name="cube-outline"></ion-icon>
+          </div>
+        </div>
+        
+        <div class="product-info">
+          <h2 class="product-name">{{ producto.nombre }}</h2>
+          <p class="product-details">
+            Cód: {{ producto.codigo }}
+            <span class="product-price">
+              <span class="simbolo-guarani">₲</span>
+              {{ producto.precio_maximo | number:'1.0-0' }}
+            </span>
+          </p>
+        </div>
 
-      <ion-label>
-        <h2 class="producto-nombre">{{ producto.nombre }}</h2>
-           🔢 {{ producto.codigo }} —
-        <span class="simbolo-guarani">₲</span>{{ producto.precio_maximo | number:'1.0-0' }}
-    
-      </ion-label>
-
-
-      <ion-icon name="chevron-forward-outline" slot="end" color="medium"></ion-icon>
-    </ion-item>
+        <div class="action-indicator">
+          <ion-icon name="chevron-forward"></ion-icon>
+        </div>
+      </div>
+    </ion-card>
   </ion-list>
 
 </ion-content>

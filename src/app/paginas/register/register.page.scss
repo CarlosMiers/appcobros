@@ -1,13 +1,375 @@
-.logo {
-    margin-top: 8px;
-    height: 100px;
-  }
-  
-  .logo-container {
-    margin-bottom: 20px;
-  }
-  
-ion-content {
-    background: linear-gradient(180deg, rgba(35, 224, 200, 1) 0%, rgba(73, 180, 181, 1) 100%);
+:host {
+  --sn-primary: #0D47A1;
+  --sn-primary-light: #1565C0;
+  --sn-primary-dark: #003c8f;
+  --sn-secondary: #1976D2;
+  --sn-accent: #64B5F6;
 }
 
+.register-content {
+  --background: linear-gradient(135deg, var(--sn-primary) 0%, var(--sn-primary-light) 50%, var(--sn-secondary) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Formas de fondo animadas */
+.background-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.shape {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 50%;
+  animation: float 20s infinite ease-in-out;
+}
+
+.shape-1 {
+  width: 200px;
+  height: 200px;
+  top: 10%;
+  left: -50px;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 150px;
+  height: 150px;
+  top: 60%;
+  right: -75px;
+  animation-delay: 5s;
+}
+
+.shape-3 {
+  width: 100px;
+  height: 100px;
+  top: 30%;
+  right: 20%;
+  animation-delay: 10s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-30px) rotate(180deg);
+    opacity: 0.1;
+  }
+}
+
+/* Logo Header - Extensión completa pero ajustado */
+.logo-header {
+  width: 100vw;
+  height: 160px;
+  margin-left: calc(-50vw + 50%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  padding: 10px;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.3) 20%, 
+      rgba(255, 255, 255, 0.8) 50%, 
+      rgba(255, 255, 255, 0.3) 80%, 
+      transparent 100%
+    );
+    z-index: 3;
+  }
+}
+
+.logo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  z-index: 1;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.logo-full {
+  max-width: 90%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+  filter: brightness(1.1) contrast(1.1);
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.logo-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(13, 71, 161, 0.1) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(13, 71, 161, 0.2) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(100%);
+  }
+}
+
+/* Contenedor principal y formulario */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1rem 1.5rem; /* Espaciado general reducido */
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  background-color: transparent;
+  padding-top: 1rem;
+}
+
+.form-wrapper {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem; /* Padding interno del card reducido */
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-title {
+  font-size: 1.8rem;
+  font-weight: 300;
+  margin-bottom: 0.75rem; /* Espacio reducido después del título */
+  letter-spacing: 1px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos para los inputs - Fondo blanco, menos ovalados */
+.input-box {
+  --background: rgba(255, 255, 255, 0.85);
+  --border-radius: 8px;
+  --border-color: transparent;
+  margin-bottom: 0.75rem; /* Espacio reducido entre inputs */
+  --color: var(--sn-primary-dark);
+  --placeholder-color: rgba(13, 71, 161, 0.8);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  ion-icon {
+    color: var(--sn-primary-dark) !important;
+  }
+}
+
+/* Botones con los mismos estilos de la pantalla de bienvenida */
+.primary-btn {
+  --background: linear-gradient(45deg, #ffffff, #f8f9fa);
+  --background-activated: linear-gradient(45deg, #f8f9fa, #e9ecef);
+  --color: var(--sn-primary);
+  --box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+  margin-bottom: 0.75rem; /* Espacio reducido entre los botones */
+  height: 50px;
+  border-radius: 25px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.secondary-btn {
+  --background: transparent;
+  --background-activated: rgba(255, 255, 255, 0.1);
+  --color: #ffffff;
+  --border-color: rgba(255, 255, 255, 0.3);
+  --border-width: 2px;
+  backdrop-filter: blur(10px);
+  height: 50px;
+  border-radius: 25px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Sección de publicidad con íconos */
+
+.ads-section { display: flex; flex-direction: column; align-items: stretch; width: 100%; max-width: 300px; margin-top: 0rem; /* Reducido el margen superior */ margin-bottom: 0.5rem; padding: 0 1.5rem; }
+
+
+
+
+.ads-title {
+  font-size: 1rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.5rem; /* Espacio reducido entre el título y los íconos */
+}
+
+.ads-icons-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  align-items: center;
+}
+
+.ads-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8rem;
+  flex: 1;
+  margin: 0 0.5rem;
+  
+  ion-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    animation: icon-bounce 2s infinite ease-in-out;
+  }
+
+  span {
+    font-size: 0.75rem;
+  }
+}
+
+@keyframes icon-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Footer idéntico al de la pantalla de bienvenida */
+.custom-footer {
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer-toolbar {
+  --background: var(--sn-primary);
+  width: 100%;
+  --border-width: 0;
+}
+
+.footer-content {
+  text-align: center;
+  color: #ffffff;
+  background-color: transparent !important;
+  
+  h6 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  
+  p {
+    margin: 0.25rem 0;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .company-info {
+    margin-top: 0.5rem;
+    
+    .website-link {
+      font-size: 0.8rem;
+      color: #ffffff;
+      text-decoration: underline;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        color: #E3F2FD;
+        transform: scale(1.05);
+      }
+      
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .logo-header {
+    height: 120px;
+  }
+  
+  .form-wrapper {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-header {
+    height: 100px;
+  }
+}
+
+/* Animaciones para estados reducidos */
+@media (prefers-reduced-motion: reduce) {
+  .shape,
+  .logo-overlay {
+    animation: none;
+  }
+}

@@ -1,59 +1,202 @@
-ion-content {
-  --background: #f0f4f8;
+/* --- Variables y Mixins Globales (mantener consistencia) --- */
+
+:host {
+  --ion-color-primary-rgb: 56, 128, 255;
+  --ion-color-secondary-rgb: 61, 194, 255;
+  --ion-color-tertiary-rgb: 102, 114, 204;
+  --ion-color-success-rgb: 45, 211, 111;
+  --ion-color-danger-rgb: 235, 68, 99;
 }
 
-ion-button {
-  margin-top: 10px;
-  font-size: 16px;
+/* --- Estilos Generales y del Fondo --- */
+
+.content-background {
+  --background: #f7f9fc;
 }
+
+/* --- Encabezado y Barra de Herramientas --- */
+
+.header-toolbar {
+  --background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-tertiary) 100%);
+  --color: white;
+  padding: 0 10px;
+}
+
+.header-title {
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.back-button {
+  --color: white;
+}
+
+/* --- Estilos de las Tarjetas --- */
 
 ion-card {
-  margin-top: 20px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  margin: 16px 12px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  &:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+}
+
+.card-header-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  padding-bottom: 0;
+  border-bottom: 1px solid #f0f0f0;
+
+  ion-icon {
+    font-size: 1.5rem;
+    color: var(--ion-color-primary);
+  }
+
+  ion-card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+.card-content {
+  padding: 16px;
+}
+
+.divider-line {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 16px 0;
+}
+
+/* --- Estilos de la Lista de Dispositivos --- */
+.device-list {
+  background: transparent;
+  margin-top: 16px;
+}
+
+.device-item {
+  --background: #fff;
   border-radius: 10px;
-}
-
-ion-card-title {
-  font-size: 18px;
-  color: #2c3e50;
-}
-
-ion-card-content p {
-  margin: 6px 0;
-  font-size: 15px;
-  color: #34495e;
-}
-
-ion-toolbar {
-  --background: #3880ff;
-  --color: #ffffff;
-}
-
-ion-title {
-  font-weight: bold;
-  text-align: center;
-}
-
-ion-toast {
-  text-align: center;
-  font-size: 14px;
-}
-
-/* Diferenciamos los botones por color */
-ion-button[color="success"] {
-  --background: #2ecc71;
-  --background-activated: #27ae60;
-  --background-focused: #27ae60;
-}
-
-ion-button[color="primary"] {
-  --background: #3498db;
-  --background-activated: #2980b9;
-  --background-focused: #2980b9;
-}
-
-/* Lista de dispositivos con hover */
-ion-item:hover {
-  background-color: #e1eaff;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
   cursor: pointer;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.list-icon {
+  color: var(--ion-color-tertiary);
+}
+
+.device-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.device-address {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.empty-state-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  color: #ccc;
+  text-align: center;
+
+  ion-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+}
+
+/* --- Estilos de los Botones de Acción --- */
+ion-button {
+  --border-radius: 10px;
+  --box-shadow: none;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.action-button-search {
+  --background: var(--ion-color-tertiary);
+}
+
+.action-button-success {
+  --background: var(--ion-color-success);
+}
+
+.action-button-primary {
+  --background: var(--ion-color-primary);
+}
+
+/* --- Estilos de los estados de conexión/registro --- */
+.status-info {
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.6;
+    strong {
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+/* --- Pie de página --- */
+.footer-total {
+  --background: white;
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 99;
+}
+
+/* --- Animaciones --- */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -5,9 +5,9 @@ import {
   ModalController,
   NavController,
   ToastController,
+  ActionSheetController, // Importamos el ActionSheetController
 } from '@ionic/angular';
 import { LoadingService } from 'src/app/services/loading/loading.service';
-import { ListaPedido } from '../../../../models/pedidos/lista-pedidos';
 import { ListaPedidosService } from 'src/app/services/pedidos/lista-pedidos.service';
 
 @Component({
@@ -20,6 +20,7 @@ export class ListaPedidosPage implements OnInit {
   fechainicio: any;
   fechafinal: any;
   ListaPedido: any = [];
+
   constructor(
     private listapedidosService: ListaPedidosService,
     public modalCtrl: ModalController,
@@ -27,59 +28,41 @@ export class ListaPedidosPage implements OnInit {
     private navCtrl: NavController,
     public loadingService: LoadingService,
     public router: Router,
-    private toast: ToastController
+    private toast: ToastController,
+    private actionSheetCtrl: ActionSheetController // Inyectamos el ActionSheetController
   ) {}
 
   ngOnInit() {
-    const listadoPedido: ListaPedido = {
-      numero: 0,
-      fecha: new Date(),
-      comprobante: 0,
-      cliente: 0,
-      nombrecliente: '',
-      codusuario: 0,
-      totalneto: 0,
-    };
     this.fechainicio = new Date().toISOString().substring(0, 10);
     this.fechafinal = new Date().toISOString().substring(0, 10);
     this.Consultar();
   }
 
   async Consultar() {
-    this.totalpedido = 0; // Reiniciamos el total del pedido
+    this.totalpedido = 0;
+    this.ListaPedido = [];
 
-    // Mostramos el loading
     this.loadingService.present({
       message: 'Aguarde un Momento.',
       duration: 300,
     });
 
     try {
-      // Llamamos al servicio de lista de pedidos y obtenemos la respuesta de manera asíncrona
       const data = await this.listapedidosService.getListaPedidos(
         parseInt(localStorage.getItem('idusuario') || '0', 10),
         this.fechainicio,
         this.fechafinal
       );
 
-      // Cargamos la respuesta en el array ListaPedido
       this.ListaPedido = data;
 
-      // Calculamos el total del pedido
-      let totalRow = this.ListaPedido.length;
-      totalRow -= 1;
+      // Cálculo del total más eficiente
+      this.totalpedido = this.ListaPedido.reduce((sum: number, pedido: any) => sum + parseFloat(pedido.totalneto), 0);
 
-      for (let i = 0; i <= totalRow; i++) {
-        this.totalpedido += parseFloat(this.ListaPedido[i].totalneto);
-      }
     } catch (err) {
       console.error('Error al obtener la lista de pedidos:', err);
-      // Aquí puedes agregar manejo de errores, como mostrar un mensaje de alerta si lo deseas
-      alert(
-        'Ocurrió un error al cargar la lista de pedidos. Intenta nuevamente.'
-      );
+      // Aquí podrías mostrar un toast de error si lo deseas
     } finally {
-      // Cerramos el loading en todos los casos
       this.loadingService.dismiss();
     }
   }
@@ -88,13 +71,47 @@ export class ListaPedidosPage implements OnInit {
     this.router.navigate(['/menu']);
   }
 
-  goBack() {
-    this.router.navigate(['/menu']);
-  }
-
   async OpenEditPedido(pedidoNumero: number) {
     await this.navCtrl.navigateForward(`/detalle-pedido/${pedidoNumero}`);
   }
 
-
+  /**
+   * Muestra el menú de acciones al deslizar un item.
+   * Por ahora, solo es un placeholder para mantener la misma funcionalidad que ventas.
+   * Se pueden agregar más acciones aquí, como anular o compartir el pedido.
+   * @param numeroPedido El número del pedido seleccionado.
+   */
+  async presentActionSheet(numeroPedido: number) {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Opciones de Pedido',
+      buttons: [
+        {
+          text: 'Anular',
+          role: 'destructive',
+          icon: 'trash',
+          handler: () => {
+            // Lógica para anular el pedido
+            console.log(`Anular pedido: ${numeroPedido}`);
+          },
+        },
+        {
+          text: 'Compartir',
+          icon: 'share',
+          handler: () => {
+            // Lógica para compartir el pedido
+            console.log(`Compartir pedido: ${numeroPedido}`);
+          },
+        },
+        {
+          text: 'Cancelar',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => {
+            console.log('Acción cancelada');
+          },
+        },
+      ],
+    });
+    await actionSheet.present();
+  }
 }

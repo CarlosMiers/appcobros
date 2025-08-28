@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">🛒 Carrito de Facturación</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Cliente -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>🧍 Cliente</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Documento</ion-label>
+        <ion-input [(ngModel)]="venta.cliente"></ion-input>
+      </ion-item>
+      <ion-button expand="block" color="tertiary" (click)="ValidarCliente()">🔍 Buscar</ion-button>
+      <ion-button expand="block" color="warning" >➕ Crear Cliente</ion-button>
+      <div class="ion-text-center ion-padding">
+        <h2>{{ venta.clienteNombre }}</h2>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Productos -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>📦 Productos</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item-sliding *ngFor="let detalle of detalles; let i = index">
+          <ion-item class="carrito-producto">
+            <ion-label class="ion-text-wrap">
+              <h3>{{ detalle.descripcion }}</h3>
+              <p>
+                Código: <strong>{{ detalle.codprod }}</strong><br>
+                Precio: <strong>{{ detalle.precio }}</strong> |
+                Cantidad: <strong>{{ detalle.cantidad }}</strong> |
+                Subtotal: <strong>{{ detalle.precio * detalle.cantidad }}</strong>
+              </p>
+            </ion-label>
+          </ion-item>
+          <ion-item-options side="end">
+            <ion-item-option color="secondary" (click)="editarProducto(i)">✏️</ion-item-option>
+            <ion-item-option color="danger" (click)="eliminarProducto(i)">🗑️</ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+
+      <!-- Agregar producto -->
+      <ion-item>
+        <ion-label position="stacked">Código</ion-label>
+        <ion-input [(ngModel)]="codigoProductoSeleccionado"></ion-input>
+      </ion-item>
+      <ion-button expand="block" color="tertiary" (click)="ValidarProducto()">🔎 Buscar Producto</ion-button>
+      <div class="ion-text-center ion-padding">
+        <h2>{{ productoSeleccionado.descripcion }}</h2>
+      </div>
+      <ion-item>
+        <ion-label position="stacked">Cantidad</ion-label>
+        <ion-input [(ngModel)]="productoSeleccionado.cantidad" type="number"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Precio</ion-label>
+        <ion-input [(ngModel)]="productoSeleccionado.precio" type="number"></ion-input>
+      </ion-item>
+      <ion-button expand="block" color="success" (click)="agregarProducto()">➕ Agregar</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Total -->
+  <ion-card color="light">
+    <ion-card-content>
+      <ion-row>
+        <ion-col size="6"><strong>Total:</strong></ion-col>
+        <ion-col size="6" class="ion-text-right">
+          <strong style="color: #3880ff;">{{ totalVenta() }}</strong>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
+
+<ion-footer class="ion-padding">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="success" (click)="guardarVenta()">💾 Finalizar Venta</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" color="medium" (click)="dismiss()">↩️ Cancelar</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>

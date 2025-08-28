@@ -4,6 +4,7 @@ import {
   ModalController,
   NavController,
   ToastController,
+  Platform, // Importamos Platform
 } from '@ionic/angular';
 import { DetalleProducto } from 'src/app/models/productos/DetalleProducto';
 import { SharedClienteService } from '../../../../services/clientes/shared-cliente.service';
@@ -32,8 +33,7 @@ export class DetallePedidoPage {
     total: 0,
   };
   titulo: any = '';
-  pedidoNumero: number | null = null; // 
-  codigoClienteSeleccionado: number = 0;
+  pedidoNumero: number | null = null;
   
   constructor(
     private alertController: AlertController,
@@ -46,13 +46,23 @@ export class DetallePedidoPage {
     private sharedClienteService: SharedClienteService,
     private toastController: ToastController,
     private router: Router,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    private platform: Platform // Inyectamos Platform
   ) {}
 
   productos: any[] = [];
   clientes: any[] = [];
-  clienteSeleccionado: any;
-  selectedClient: any;
+  detalles: DetalleProducto[] = [];
+
+  productoSeleccionado = {
+    codprod: '',
+    descripcion: '',
+    cantidad: 0,
+    costo: 0,
+    precio: 0,
+    ivaporcentaje: 0,
+  };
+  codigoProductoSeleccionado = '';
 
   ngOnInit() {
     this.loadProductos();
@@ -66,14 +76,13 @@ export class DetallePedidoPage {
         numero: 0,
         fecha: new Date().toISOString().substring(0, 10),
         vencimiento: new Date().toISOString().substring(0, 10),
-        cliente: this.selectedClient?.codigo || '',
-        clienteNombre: this.selectedClient?.nombre || '',
+        cliente: 0,
+        clienteNombre: '',
         comprobante: 1, // comprobante por defecto
         codusuario: parseInt(localStorage.getItem('idusuario') || '0', 10), // usuario por defecto
         total: 0,
       };
     } else {
-      // Pedido existente
       this.titulo = '🧾 Editar Pedido N°' + this.pedidoNumero;
       this.loadPedidoDesdeApi(this.pedidoNumero);
     }
@@ -90,13 +99,11 @@ export class DetallePedidoPage {
     }
   }
 
-  // Productos disponibles para seleccionar
   async loadProductos() {
     try {
       const data = await this.productosService.getTodos();
-      this.productos = data; // Asigna directamente el array de productos
+      this.productos = data;
     } catch (error) {
-      // Manejo de error si ocurre algo al cargar los productos
       console.error('Error al cargar los productos:', error);
       this.loadingService.dismiss();
       alert(
@@ -105,39 +112,21 @@ export class DetallePedidoPage {
     }
   }
 
-  //Clientes disponibles para seleccionar
   async loadClientes() {
     try {
-      // Usamos el servicio para obtener todos los clientes
       const data = await this.clienteServices.getTodos();
-      this.clientes = data; // Asigna los clientes obtenidos
+      this.clientes = data;
     } catch (error) {
       console.error('Error al cargar los clientes:', error);
-      // Puedes agregar un mensaje adicional de error aquí si es necesario
     }
   }
 
-  detalles: DetalleProducto[] = [];
-
-  productoSeleccionado = {
-    codprod: '',
-    descripcion: '',
-    cantidad: 0,
-    costo: 0,
-    precio: 0,
-    ivaporcentaje: 0,
-  };
-  codigoProductoSeleccionado = '';
-
-  // Calcular el total del pedido
   totalPedido() {
     return this.detalles.reduce(
       (totalneto, detalle) => totalneto + detalle.precio * detalle.cantidad,
       0
     );
   }
-
-  // Seleccionar un producto por su código
 
   seleccionarProducto() {
     const producto = this.productos.find(
@@ -148,9 +137,7 @@ export class DetallePedidoPage {
     }
   }
 
-  // Agregar producto al detalle
   agregarProducto() {
-    // Verificar si se seleccionó un producto y tiene todos los datos
     if (!this.productoSeleccionado.codprod) {
       console.error('No se ha seleccionado un producto correctamente');
       return;
@@ -169,31 +156,28 @@ export class DetallePedidoPage {
       ivaporcentaje:
         Math.round(Number(this.productoSeleccionado.ivaporcentaje)) || 0,
       impuesto:
-        Math.round(Number(this.productoSeleccionado.ivaporcentaje)) || 0, // Asegúrate de que este campo sea un número,
+        Math.round(Number(this.productoSeleccionado.ivaporcentaje)) || 0,
       descripcion: this.productoSeleccionado.descripcion,
       costo: this.productoSeleccionado.costo,
       producto: {
         codigo: '',
         descripcion: '',
-      }, // Aquí puedes agregar más detalles del producto si es necesario
+      },
     };
     this.detalles.push(detalle);
     this.resetProductoSeleccionado();
   }
 
-  // Eliminar producto del detalle
   eliminarProducto(index: number) {
     this.detalles.splice(index, 1);
   }
 
-  // Editar producto del detalle
   editarProducto(index: number) {
     const detalle = this.detalles[index];
     this.productoSeleccionado = { ...detalle };
     this.detalles.splice(index, 1);
   }
 
-  // Restablecer los datos del producto seleccionado
   resetProductoSeleccionado() {
     this.productoSeleccionado = {
       codprod: '',
@@ -206,9 +190,6 @@ export class DetallePedidoPage {
     this.codigoProductoSeleccionado = '';
   }
 
-  // Guardar el pedido
-
-  // Ajusta la función guardarPedido para enviar los detalles correctamente sin el campo 'numero'
   async guardarPedido() {
     if (
       !this.pedido.cliente ||
@@ -224,7 +205,6 @@ export class DetallePedidoPage {
       return;
     }
 
-    // Crear un objeto que contenga los datos necesarios para el backend
     const pedidoConDetalles = {
       fecha: this.pedido.fecha,
       vencimiento: this.pedido.vencimiento,
@@ -233,14 +213,12 @@ export class DetallePedidoPage {
       codusuario: this.pedido.codusuario,
       totalneto: this.totalPedido(),
       detalles: this.detalles.map((detalle) => {
-        // Elimina 'numero' de los detalles, ya que lo genera el backend
         const { iddetalle, ...detalleSinNumero } = detalle;
         return detalleSinNumero;
       }),
     };
 
     try {
-      // Revisar si es un nuevo pedido o uno existente
       if (!this.pedidoNumero || this.pedidoNumero === 0) {
         const response = await this.pedidosService.createPreventa(
           pedidoConDetalles
@@ -249,7 +227,7 @@ export class DetallePedidoPage {
           message: response.message,
           duration: 3000,
           position: 'middle',
-          cssClass: 'custom-toast', // Aplica la clase CSS personalizada
+          cssClass: 'custom-toast',
         });
         await toast.present();
         this.dismiss();
@@ -262,7 +240,7 @@ export class DetallePedidoPage {
           message: response.message,
           duration: 3000,
           position: 'middle',
-          cssClass: 'custom-toast', // Aplica la clase CSS personalizada
+          cssClass: 'custom-toast',
         });
         await toast.present();
         this.dismiss();
@@ -280,7 +258,7 @@ export class DetallePedidoPage {
 
   ValidarCliente() {
     const cliente = this.clientes.find(
-      (c) => String(c.codigo) === String(this.pedido.cliente) // Convierte ambos a strings si es necesario
+      (c) => String(c.codigo) === String(this.pedido.cliente)
     );
     if (cliente) {
       this.pedido.cliente = cliente.codigo;
@@ -311,8 +289,6 @@ export class DetallePedidoPage {
 
   ValidarProducto() {
     const codigoIngresado = String(this.codigoProductoSeleccionado).trim();
-    console.log('Código a buscar:', codigoIngresado);
-
     const producto = this.productos.find(
       (p) => String(p.codigo).trim() === String(codigoIngresado).trim()
     );
@@ -360,27 +336,18 @@ export class DetallePedidoPage {
   }
 
   compareWithComprobante = (o1: any, o2: any) => {
-    return o1 == o2; // Para comparar '1' y '2'
+    return o1 == o2;
   };
 
-  async goBack() {
-    await this.navCtrl.pop();
-  }   
-
-  async regresarListado() {
-       await this.navCtrl.pop();
-  }
-
   async dismiss() {
-      this.router.navigate(['/lista-pedidos']);
+    this.router.navigate(['/lista-pedidos']);
   }
 
   async loadPedidoDesdeApi(numeroPedido: number) {
     try {
       const response = await this.pedidosService.getPreventaByNumero(
         numeroPedido
-      ); // Llamada al servicio
-      // Asigna cliente y nombre del cliente desde el objeto recibido
+      );
       this.pedido = {
         numero: response.numero,
         fecha: response.fecha,
@@ -392,7 +359,6 @@ export class DetallePedidoPage {
         total: response.totalneto,
       };
 
-      // Asigna los detalles y extrae nombre del producto
       this.detalles = response.detalles.map((detalle: any) => ({
         ...detalle,
         descripcion: detalle.producto?.descripcion || '',
@@ -400,5 +366,17 @@ export class DetallePedidoPage {
     } catch (err) {
       console.error('Error al cargar pedido:', err);
     }
+  }
+
+  // Nueva función para imprimir el pedido
+  async imprimirPedido(pedido: any) {
+    // Aquí iría la lógica de impresión del ticket
+    console.log('Función de impresión de pedido llamada para el pedido:', pedido.numero);
+    const toast = await this.toastController.create({
+      message: 'Imprimiendo pedido...',
+      duration: 2000,
+      position: 'bottom',
+    });
+    await toast.present();
   }
 }

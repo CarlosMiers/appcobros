@@ -1,53 +1,362 @@
-.title-gradient {
-  background: linear-gradient(to right, #3880ff, #4dd0e1); // azul Ionic a celeste moderno
-  --ion-color-primary: transparent;
-  color: white;
-  text-align: center;
+// Paleta de colores unificada
+:host {
+  --sn-primary: #0D47A1;
+  --sn-primary-light: #1565C0;
+  --sn-secondary: #1976D2;
+  --sn-accent: #64B5F6;
+  --sn-dark: #003c8f;
 }
 
-ion-header {
-  --background: transparent; // fondo transparente para el header
-  --ion-background-color: transparent; // asegura que el fondo sea transparente
+.menu-content {
+  --background: linear-gradient(135deg, var(--sn-primary) 0%, var(--sn-primary-light) 50%, var(--sn-secondary) 100%);
+  position: relative;
+  overflow-y: auto; /* Permite el scroll vertical */
+  padding: 0;
 }
 
-.header-logo {
+/* Formas de fondo animadas */
+.background-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100px;  // reducido para ocupar menos alto
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.shape {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 50%;
+  animation: float 20s infinite ease-in-out;
+}
+
+.shape-1 {
+  width: 200px;
+  height: 200px;
+  top: 10%;
+  left: -50px;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 150px;
+  height: 150px;
+  top: 60%;
+  right: -75px;
+  animation-delay: 5s;
+}
+
+.shape-3 {
+  width: 100px;
+  height: 100px;
+  top: 30%;
+  right: 20%;
+  animation-delay: 10s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-30px) rotate(180deg);
+    opacity: 0.1;
+  }
+}
+
+/* Header de la app */
+ion-header {
+  --background: transparent;
+  --ion-background-color: transparent;
+  position: relative;
   overflow: hidden;
+}
+
+.logo-header {
+  width: 100%;
+  height: 120px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background: var(--ion-color-primary);  // mantiene el azul primario
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+  }
+}
+
+.logo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  z-index: 1;
+  animation: shimmer 3s ease-in-out infinite;
 }
 
 .logo-full {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;  // ocupa todo sin distorsionar
+  max-width: 90%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+  filter: brightness(1.1) contrast(1.1);
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.divider-line {
-  height: 2px;
-  background: white;
-  width: 100%;
+.logo-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(13, 71, 161, 0.1) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(13, 71, 161, 0.2) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
 }
 
-ion-toolbar {
-  --min-height: 48px;  // reducir la altura del toolbar para que no sea tan alto
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.title-container {
+  width: 100%;
+  padding: 15px 0;
+  text-align: center;
+  background: linear-gradient(45deg, var(--sn-primary-light), var(--sn-secondary));
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  position: relative;
 }
 
 .custom-title {
-  font-weight: 600;
-  font-size: 1.2rem;  // tamaño similar al anterior, no tan grande
-  color: white;
-  text-align: center;
+  margin: 0;
+  padding: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  letter-spacing: 1px;
 }
 
-.toolbar-gradient {
-  --background: linear-gradient(90deg, #007bff, #00bfff);
-  /* Alternativamente para degradado vertical:
-  --background: linear-gradient(180deg, #007bff, #00bfff);
-  */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+.title-underline {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: white;
+  animation: underlineExpand 2s ease-in-out infinite;
+}
+
+@keyframes underlineExpand {
+  0%, 100% { width: 60px; }
+  50% { width: 80px; }
+}
+
+/* Contenido y tarjetas de menú */
+.main-container {
+  padding: 2rem 1rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 20px 0;
+  position: relative;
+  z-index: 1;
+  justify-content: center;
+}
+
+.menu-card {
+  margin: 0;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: cardSlideIn 0.6s ease-out both;
+  min-height: 180px;
+
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.card-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  justify-content: space-between;
+  color: var(--sn-dark);
+}
+
+.icon-container {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.menu-icon {
+  font-size: 28px;
+  z-index: 2;
+  transition: all 0.4s ease;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.menu-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--sn-dark);
+  margin: 0;
+  transition: all 0.3s ease;
+  text-shadow: none;
+}
+
+.card-arrow {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: var(--sn-primary);
+  font-size: 16px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+/* Footer de la barra de navegación inferior */
+.custom-footer {
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer-toolbar {
+  --background: var(--sn-primary);
+  width: 100%;
+  --border-width: 0;
+  padding: 10px 0;
+}
+
+.footer-icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #a9a9a9;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  ion-icon {
+    font-size: 28px;
+    margin-bottom: 4px;
+    animation: icon-pulse 2s ease-in-out infinite;
+  }
+
+  ion-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  &:hover {
+    color: #ffffff;
+    transform: translateY(-5px);
+  }
+
+  &.active {
+    color: #ffffff;
+    ion-icon {
+      animation: icon-bounce 0.5s ease-in-out;
+    }
+  }
+}
+
+/* Animaciones de los iconos del menú - Wiggle continuo */
+@keyframes icon-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+  75% { transform: rotate(-2deg); }
+}
+
+.icon-wiggle-animation {
+  animation: icon-wiggle 1.5s ease-in-out infinite;
+}
+
+/* Animaciones de los iconos del footer */
+@keyframes icon-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes icon-bounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .menu-card {
+    min-height: 160px;
+  }
+}
+
+@media (min-width: 768px) {
+  .menu-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .menu-card {
+    min-height: 180px;
+  }
 }

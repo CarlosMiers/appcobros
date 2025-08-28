@@ -1,77 +1,96 @@
-<ion-content class="ion-padding ion-text-center" style="background: linear-gradient(to bottom, #E3F2FD, #BBDEFB);">
-  <!-- Fondo con líneas sutiles -->
-  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: url('../../../assets/img/lineas-geometricas.svg') repeat center center; background-size: 50px 50px; opacity: 0.1;"></div>
-
-  <!-- Contenedor del logo -->
-  <div class="logo-container" style="width: 100%; overflow: hidden;">
-    <img src="../../../assets/img/logo.png" class="logo"
-      style="width: 100%; height: auto; object-fit: contain; border-bottom: 10px solid #0D47A1; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);" />
+<ion-content class="register-content" [scrollY]="false">
+  <!-- Formas de fondo animadas -->
+  <div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
   </div>
 
-  <!-- Formulario de registro de usuario centrado en la pantalla -->
-  <form>
-    <div class="container" style="padding: 20px; margin-top: 30px;">
+  <!-- Logo Header - Extensión completa -->
+  <div class="logo-header">
+    <div class="logo-overlay"></div>
+    <img src="../../../assets/img/logo.jpg" alt="S&N Logo" class="logo-full">
+    <div class="logo-gradient"></div>
+  </div>
+
+  <!-- Contenedor principal para el formulario y publicidad -->
+  <div class="main-container">
+    <div class="form-wrapper">
       <ion-grid>
         <ion-row justify-content-center>
-          <ion-col align-self-center size-xs="12" size-sm="10" size-md="8" size-lg="6">
-            <div class="item-content" style="margin-bottom: 20px;">
-              <!-- Campo de Usuario -->
-              <ion-item lines="full" style="border-radius: 10px; margin-bottom: 15px;">
-                <ion-icon name="person" color="primary"></ion-icon>
-                <ion-input type="text" name="loginacceso" placeholder="Usuario" [(ngModel)]="loginacceso"
-                  style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);"></ion-input>
-              </ion-item>
+          <ion-col size="12" size-sm="12" size-md="12" size-lg="8" size-xl="6">
+            <!-- Título del formulario -->
+            <ion-text color="light">
+              <h2 class="form-title">Crear Cuenta</h2>
+            </ion-text>
+            
+            <!-- Campo de Usuario -->
+            <ion-item lines="full" class="input-box">
+              <ion-icon name="person" slot="start"></ion-icon>
+              <ion-input type="text" placeholder="Usuario" [(ngModel)]="loginacceso"></ion-input>
+            </ion-item>
 
-              <!-- Campo de Contraseña -->
-              <ion-item lines="full" style="border-radius: 10px; margin-bottom: 15px;">
-                <!-- Ícono del ojo en el lado izquierdo -->
-                <ion-icon name="eye-off" color="primary" (click)="togglePasswordVisibility()"></ion-icon>
+            <!-- Campo de Contraseña -->
+            <ion-item lines="full" class="input-box">
+              <ion-icon name="eye-off" slot="start" (click)="togglePasswordVisibility()"></ion-icon>
+              <ion-input [type]="showPassword ? 'text' : 'password'" placeholder="Contraseña" [(ngModel)]="password"></ion-input>
+            </ion-item>
 
-                <!-- Input de la contraseña con visibilidad toggle -->
-                <ion-input [type]="showPassword ? 'text' : 'password'" placeholder="Contraseña" name="password"
-                  [(ngModel)]="password"
-                  style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);"></ion-input>
-              </ion-item>
-
-              <!-- Campo de Confirmación de Contraseña -->
-              <ion-item lines="full" style="border-radius: 10px; margin-bottom: 15px;">
-                <!-- Ícono del ojo en el lado izquierdo -->
-                <ion-icon name="eye-off" color="primary" (click)="togglePasswordVisibility()"></ion-icon>
-
-                <!-- Input para confirmar la contraseña -->
-                <ion-input [type]="showPassword ? 'text' : 'password'" placeholder="Confirmar Contraseña" name="confirmPassword"
-                  [(ngModel)]="confirmPassword"
-                  style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);"></ion-input>
-              </ion-item>
-            </div>
+            <!-- Campo de Confirmación de Contraseña -->
+            <ion-item lines="full" class="input-box">
+              <ion-icon name="eye-off" slot="start" (click)="togglePasswordVisibility()"></ion-icon>
+              <ion-input [type]="showPassword ? 'text' : 'password'" placeholder="Confirmar Contraseña" [(ngModel)]="confirmPassword"></ion-input>
+            </ion-item>
 
             <!-- Botón de Registro -->
-            <div style="margin-top: 20px;">
-              <ion-button expand="block" color="primary" type="submit"
-                style="border-radius: 25px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);"
-                (click)="AgregarUsuario()">Registrarse</ion-button>
-            </div>
+            <ion-button expand="block" class="primary-btn" (click)="AgregarUsuario()">
+              Registrarse
+            </ion-button>
+            
+            <!-- Botón de Salir -->
+            <ion-button expand="block" fill="outline" class="secondary-btn" (click)="dismiss()">
+              <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+              Volver
+            </ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
-
-      <!-- Términos y condiciones -->
-      <p>Al registrarse, acepta nuestros Términos y condiciones.</p>
     </div>
-  </form>
 
-  <!-- Botón de salida -->
-  <div class="ion-margin-top ion-text-center" style="margin-top: 20px;">
-    <ion-button expand="block" color="light"
-      style="border-radius: 25px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);"
-      (click)="dismiss()">Salir</ion-button>
+    <!-- Sección de publicidad con íconos de servicios -->
+    <div class="ads-section">
+      <ion-text class="ads-title">
+        <p>Soluciones a tu medida</p>
+      </ion-text>
+      <div class="ads-icons-container">
+        <div class="ads-item">
+          <ion-icon name="wallet-outline"></ion-icon>
+          <span>Financiamiento</span>
+        </div>
+        <div class="ads-item">
+          <ion-icon name="bar-chart-outline"></ion-icon>
+          <span>Proyectos</span>
+        </div>
+        <div class="ads-item">
+          <ion-icon name="receipt-outline"></ion-icon>
+          <span>Asesoría</span>
+        </div>
+      </div>
+    </div>
   </div>
 </ion-content>
 
-<!-- Footer con copyright -->
-<ion-footer style="background-color: #0D47A1; color: #FFF; padding: 10px 0;">
-  <div class="row responsive-sm" style="text-align: center; font-size: 1.1em;">
-    <h1>© 2025 S&N APP</h1>
-    <p style="font-size: 0.9em; color: #B0BEC5;">Todos los derechos reservados.</p>
-  </div>
+<!-- Footer de la pantalla de bienvenida -->
+<ion-footer class="custom-footer">
+  <ion-toolbar class="footer-toolbar">
+    <ion-text class="footer-content">
+      <h6>© 2025 S&N APP</h6>
+      <p>Todos los derechos reservados</p>
+      <div class="company-info">
+        <span class="website-link" (click)="openWebsite()">
+          www.synsa.com.py
+        </span>
+      </div>
+    </ion-text>
+  </ion-toolbar>
 </ion-footer>

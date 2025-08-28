@@ -1,55 +1,177 @@
-ion-card {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+:host {
+  --sn-primary: #0D47A1;
+  --sn-primary-light: #1565C0;
+  --sn-secondary: #1976D2;
+  --sn-accent: #64B5F6;
+  --sn-dark: #003c8f;
+  --sn-success: #059669;
+  --sn-warning: #d97706;
+  --sn-gradient: linear-gradient(135deg, #0D47A1 0%, #1976D2 50%, #64B5F6 100%);
+  --sn-card-shadow: 0 4px 20px rgba(13, 71, 161, 0.08);
+  --sn-hover-shadow: 0 8px 32px rgba(13, 71, 161, 0.12);
+  --sn-text-primary: #1a202c;
+  --sn-text-secondary: #64748b;
+  --sn-bg-light: #f8fafc;
+}
+
+// Estilos del encabezado
+ion-header {
+  &.ion-no-border::after {
+    display: none;
+  }
+  .header-toolbar {
+    --background: var(--sn-gradient);
+    --color: white;
+  }
+  .header-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+  }
+  .back-button {
+    --color: white;
+  }
+}
+
+.filter-toolbar {
+  --background: var(--sn-bg-light);
+  padding: 16px;
+}
+
+.filter-card {
+  margin: 0;
   border-radius: 12px;
+  box-shadow: var(--sn-card-shadow);
+  background: white;
+}
+
+.modern-input, .modern-button {
+  --border-radius: 10px;
+}
+
+// Estilos del contenido
+ion-content {
+  --background: var(--sn-bg-light);
+  padding-bottom: 120px; /* Espacio para el footer y FAB */
+}
+
+.cobranzas-list {
+  background: transparent;
+  padding: 0 16px;
+}
+
+.cobranza-card {
   margin-bottom: 12px;
+  border-radius: 12px;
+  box-shadow: var(--sn-card-shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sn-hover-shadow);
+  }
 }
 
-ion-item {
-  --inner-padding-end: 10px;
-  --inner-padding-start: 10px;
-  border-radius: 8px;
-  margin: 6px 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+.cobranza-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
 }
 
-ion-label {
-  font-size: 0.95rem;
+.cobranza-info {
+  flex: 1;
 }
 
-h2, h3 {
+.cobranza-info-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cobranza-icon {
+  color: var(--sn-dark);
+  font-size: 1.2rem;
+}
+
+.cobranza-number {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--sn-dark);
   margin: 0;
 }
 
-// Asegura que el contenido no quede detrás del footer ni del FAB
-.content-adjusted {
-  padding-bottom: 120px; // Espacio suficiente para FAB + footer
+.cobranza-details {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--sn-text-secondary);
+  line-height: 1.5;
+
+  strong {
+    font-weight: 600;
+    color: var(--sn-text-primary);
+  }
 }
 
-// Estilo para el FAB ajustado
-.fab-adjusted {
-  z-index: 100;
-  bottom: 80px !important; // Lo subimos para que quede encima del footer
+.cobranza-total {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--sn-success);
 }
 
-// Footer fijo y visualmente separado
+.currency-badge {
+  --background: var(--sn-secondary);
+  --color: white;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+// Estilos para el estado vacío
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--sn-text-secondary);
+  min-height: 300px;
+}
+
+.empty-icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  opacity: 0.6;
+  color: var(--sn-accent);
+}
+
+// Estilos del footer
 .footer-total {
-  background: #f8f8f8;
-  border-top: 1px solid #ddd;
-  padding: 10px 16px;
-  z-index: 99;
+  background: white;
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+  padding: 16px;
   position: fixed;
   bottom: 0;
   width: 100%;
+  z-index: 99;
 }
 
-// Tipografía del footer
 .footer-label {
-  margin: 0;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--sn-text-primary);
 }
 
 .footer-value {
-  margin: 0;
-  font-weight: 700;
-  color: #3880ff;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--sn-success);
+}
+
+.fab-container {
+  bottom: 80px !important; // Lo subimos para que quede encima del footer
 }

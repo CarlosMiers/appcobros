@@ -82,7 +82,7 @@ export class RegisterPage implements OnInit {
       });
 
       //this.dismiss();
-       this.router.navigate(['/usuarios']); // Si necesitas redirigir después del registro
+      this.router.navigate(['/usuarios']); // Si necesitas redirigir después del registro
     } catch (error) {
       this.loading = false;
       console.error('Error al registrar el usuario:', error);
@@ -94,7 +94,11 @@ export class RegisterPage implements OnInit {
     }
   }
 
- dismiss() {
-        this.router.navigate(['/welcome']);
+  openWebsite() {
+    window.open('https://www.synsa.com.py', '_blank');
+  }
+
+  dismiss() {
+    this.router.navigate(['/welcome']);
   }
 }

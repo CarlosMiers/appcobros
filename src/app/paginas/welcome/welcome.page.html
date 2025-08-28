@@ -1,30 +1,85 @@
-<ion-content class="ion-padding ion-text-center" style="background: linear-gradient(to bottom, #E3F2FD, #BBDEFB);">
-  <!-- Fondo con líneas sutiles -->
+<ion-content class="welcome-content" [scrollY]="false">
   
-  <!-- Contenedor del logo -->
-  <div class="logo-container" style="width: 100%; overflow: hidden;">
-    <img src="../../../assets/img/logo.jpg" class="logo" style="width: 100%; height: auto; object-fit: contain; border-bottom: 10px solid #0D47A1; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);" />
+  <!-- Formas de fondo animadas -->
+  <div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
   </div>
 
-  <!-- Contenedor principal de la pantalla -->
-  <div class="container" style="padding: 20px; margin-top: 30px;">
- 
-    <div>
-      <h2 style="font-size: 2em; color: #0D47A1; font-weight: bold;">Bienvenido</h2>
-      <p style="font-size: 1.2em; color: #607D8B;">Disfrute de su visita</p>
-    </div>
-    <div style="margin-top: 30px;">
-      <ion-button expand="block" color="primary" class="ion-margin-top" style="border-radius: 25px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);" (click)="login()">Ingresar</ion-button>
-    </div>
-    <div style="margin-top: 15px;">
-      <ion-button expand="block" color="secondary" class="ion-margin-top" style="border-radius: 25px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);" (click)="register()">Registrarse</ion-button>
-    </div>
+  <!-- Logo Header - Extensión completa -->
+  <div class="logo-header">
+    <div class="logo-overlay"></div>
+    <img src="../../../assets/img/logo.jpg" alt="S&N Logo" class="logo-full">
+    <div class="logo-gradient"></div>
   </div>
+
+  <!-- Contenido principal -->
+  <div class="main-container">
+    
+    <!-- Contenido de Bienvenida -->
+    <div class="welcome-section">
+      <ion-text color="light">
+        <h1 class="welcome-title">Bienvenido</h1>
+      </ion-text>
+      <ion-text class="welcome-subtitle">
+        <p>Sistema de Gestión Empresarial</p>
+      </ion-text>
+      <ion-text class="app-description">
+        <p>Facturación • Cobranzas • Inventario • Cuenta Corriente</p>
+      </ion-text>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="buttons-container">
+      <ion-button 
+        expand="block" 
+        class="primary-btn"
+        (click)="login()">
+        <ion-icon name="log-in-outline" slot="start"></ion-icon>
+        Iniciar Sesión
+      </ion-button>
+      
+      <ion-button 
+        expand="block" 
+        fill="outline" 
+        class="secondary-btn"
+        (click)="register()">
+        <ion-icon name="person-add-outline" slot="start"></ion-icon>
+        Crear Cuenta
+      </ion-button>
+    </div>
+
+    <!-- Características destacadas -->
+    <div class="features-section">
+      <div class="feature-item">
+        <ion-icon name="receipt-outline"></ion-icon>
+        <span>Facturación</span>
+      </div>
+      <div class="feature-item">
+        <ion-icon name="cash-outline"></ion-icon>
+        <span>Cobranzas</span>
+      </div>
+      <div class="feature-item">
+        <ion-icon name="cube-outline"></ion-icon>
+        <span>Inventario</span>
+      </div>
+    </div>
+
+  </div>
+
 </ion-content>
 
-<ion-footer style="background-color: #0D47A1; color: #FFF; padding: 10px 0;">
-  <div class="row responsive-sm" style="text-align: center; font-size: 1.1em;">
-    <h1>© 2025 S&N APP</h1>
-    <p style="font-size: 0.9em; color: #B0BEC5;">Todos los derechos reservados.</p>
-  </div>
+<ion-footer class="custom-footer">
+  <ion-toolbar class="footer-toolbar">
+    <ion-text class="footer-content">
+      <h6>© 2025 S&N APP</h6>
+      <p>Todos los derechos reservados</p>
+      <div class="company-info">
+        <span class="website-link" (click)="openWebsite()">
+          www.synsa.com.py
+        </span>
+      </div>
+    </ion-text>
+  </ion-toolbar>
 </ion-footer>

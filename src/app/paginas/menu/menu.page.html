@@ -1,28 +1,73 @@
-<ion-header>
-  <div class="header-logo">
-    <img src="../../../assets/img/logo.png" class="logo-full" />
+<ion-content class="menu-content" [scrollY]="true">
+  <div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
   </div>
 
-  <div class="divider-line"></div>
+  <ion-header>
+    <div class="logo-header">
+      <div class="logo-overlay"></div>
+      <img src="../../../assets/img/logo.jpg" alt="S&N Logo" class="logo-full">
+      <div class="logo-gradient"></div>
+    </div>
+    <div class="title-container">
+      <h1 class="custom-title">Menú Principal</h1>
+      <div class="title-underline"></div>
+    </div>
+  </ion-header>
 
-
-  <ion-toolbar class="title-gradient">
-    <ion-title>Menú Principal</ion-title>
-  </ion-toolbar>
-
-</ion-header>
-
-<ion-content class="ion-padding">
-  <ion-list lines="none" class="menu-list">
-    <ion-card *ngFor="let item of componentes" class="menu-card" (click)="navigateToPage(item.path)">
-      <ion-item lines="none" class="menu-item">
-        <ion-icon [name]="item.icon" slot="start" [style.color]="item.color" class="menu-icon"></ion-icon>
-        <ion-label class="menu-label">{{ item.name }}</ion-label>
-      </ion-item>
-    </ion-card>
-  </ion-list>
+  <div class="main-container">
+    <div class="menu-grid">
+      <ion-card
+        *ngFor="let item of componentes; let i = index"
+        class="menu-card glass-effect"
+        [style.animation-delay]="i * 0.1 + 's'"
+        (click)="navigateToPage(item.path)"
+      >
+        <div class="card-glow"></div>
+        <div class="card-content">
+          <div class="icon-container">
+            <ion-icon
+              [name]="item.icon"
+              class="menu-icon icon-wiggle-animation"
+              [style.color]="item.color"
+            ></ion-icon>
+            <div class="icon-pulse"></div>
+          </div>
+          <ion-label class="menu-label">{{ item.name }}</ion-label>
+          <div class="card-arrow">
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </div>
+        </div>
+      </ion-card>
+    </div>
+  </div>
 </ion-content>
 
-<ion-footer class="footer-dismiss">
-  <ion-button expand="block" color="medium" (click)="dismiss()">Salir</ion-button>
+<ion-footer class="custom-footer">
+  <ion-toolbar class="footer-toolbar">
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-align-items-center ion-justify-content-around">
+        <ion-col size="4">
+          <div class="footer-icon-item" (click)="navigateToPage('/usuarios')">
+            <ion-icon name="home-outline"></ion-icon>
+            <ion-label>Inicio</ion-label>
+          </div>
+        </ion-col>
+        <ion-col size="4">
+          <div class="footer-icon-item" (click)="navigateToPage('/lista-ventas')">
+            <ion-icon name="cash-outline"></ion-icon>
+            <ion-label>Ventas</ion-label>
+          </div>
+        </ion-col>
+        <ion-col size="4">
+          <div class="footer-icon-item" (click)="navigateToPage('/lista-cobranzas')">
+            <ion-icon name="wallet-outline"></ion-icon>
+            <ion-label>Cobros</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
 </ion-footer>

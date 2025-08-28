@@ -1,130 +1,188 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header class="ion-no-border">
+  <ion-toolbar class="header-toolbar">
     <ion-buttons slot="start">
-      <ion-button fill="clear" (click)="dismiss()">
-        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      <ion-button fill="clear" (click)="dismiss()" class="back-button">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">{{titulo}}</ion-title>
+    <ion-title class="header-title">{{titulo}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" color="light" (click)="imprimirPedido(pedido)" *ngIf="pedido.numero > 0">
+        <ion-icon name="print-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-
-  <!-- Información del Pedido -->
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title class="ion-text-center" style="font-size: 1.2rem; font-weight: 600;">
-        📋 Información del Pedido
-      </ion-card-title>
+<ion-content [fullscreen]="true" class="content-background">
+  <ion-card class="main-card fade-in-up">
+    <ion-card-header class="card-header-icon">
+      <ion-icon name="clipboard-outline"></ion-icon>
+      <ion-card-title>Información del Pedido</ion-card-title>
     </ion-card-header>
-    <ion-card-content>
-      <ion-item>
-        <ion-label position="stacked">Fecha</ion-label>
-        <ion-input type="date" [(ngModel)]="pedido.fecha"></ion-input>
+    <ion-card-content class="card-content-grid">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" *ngIf="pedido.numero > 0">
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-label position="stacked">N° de Pedido</ion-label>
+              <ion-input type="text" [(ngModel)]="pedido.numero" class="form-input" disabled></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-label position="stacked">Fecha</ion-label>
+              <ion-input type="date" [(ngModel)]="pedido.fecha" class="form-input"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-label position="stacked">Comprobante</ion-label>
+              <ion-select [(ngModel)]="pedido.comprobante" class="form-input custom-select">
+                <ion-select-option [value]="1">Contado</ion-select-option>
+                <ion-select-option [value]="2">Crédito</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <div class="divider-line"></div>
+
+      <ion-item lines="none" class="ion-no-padding">
+        <ion-label position="stacked">Código de Cliente</ion-label>
+        <ion-input type="text" [(ngModel)]="pedido.cliente" class="form-input"></ion-input>
       </ion-item>
+      <ion-button expand="block" color="tertiary" (click)="ValidarCliente()" class="action-button-search">
+        <ion-icon name="search-outline"></ion-icon>
+        Buscar Cliente
+      </ion-button>
 
-
-      <ion-item>
-        <ion-label position="stacked">Comprobante</ion-label>
-        <ion-select [(ngModel)]="pedido.comprobante" style="min-width: 150px;">
-          <ion-select-option [value]="1">Contado</ion-select-option>
-          <ion-select-option [value]="2">Crédito</ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="stacked">Cliente</ion-label>
-        <ion-input [(ngModel)]="pedido.cliente"></ion-input>
-      </ion-item>
-
-      <ion-button expand="block" color="tertiary" (click)="ValidarCliente()">🔍 Buscar Cliente</ion-button>
-
-      <div class="ion-padding-top ion-text-center">
-        <h2 style="font-size: 1rem; font-weight: 500;">{{ pedido.clienteNombre }}</h2>
+      <div class="client-info-container">
+        <ion-text class="client-name">{{ pedido.clienteNombre }}</ion-text>
       </div>
     </ion-card-content>
   </ion-card>
 
-  <!-- Productos del Pedido -->
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title class="ion-text-center" style="font-size: 1.2rem; font-weight: 600;">
-        📦 Productos en el Pedido
-      </ion-card-title>
+  <ion-card class="products-card fade-in-up">
+    <ion-card-header class="card-header-icon">
+      <ion-icon name="cube-outline"></ion-icon>
+      <ion-card-title>Productos en el Pedido</ion-card-title>
     </ion-card-header>
-    <ion-card-content>
-
-      <ion-list>
+    <ion-card-content class="card-content-list">
+      <ion-list lines="none" *ngIf="detalles.length > 0">
         <ion-item-sliding *ngFor="let detalle of detalles; let i = index">
-          <ion-item>
-            <ion-label class="ion-text-wrap">
-              <h3>{{ detalle.descripcion}}</h3>
-              <p>
-                Código: <strong>{{ detalle.codprod}}</strong><br>
-                Precio: <strong>{{ detalle.precio | number:'1.0-0' }}</strong> |
-                Cantidad: <strong>{{ detalle.cantidad }}</strong> |
-                Subtotal: <strong>{{ (detalle.precio * detalle.cantidad) | number:'1.0-0' }}</strong>
-              </p>
-            </ion-label>
+          <ion-item class="product-item">
+            <div class="product-info-wrapper">
+              <ion-label class="ion-text-wrap">
+                <p class="product-description">{{ detalle.descripcion }}</p>
+                <p class="product-details">
+                  Cód: <strong>{{ detalle.codprod }}</strong> |
+                  Precio: <strong>{{ detalle.precio | number:'1.0-0' }}</strong>
+                </p>
+              </ion-label>
+              <div class="item-total">
+                <span class="quantity">x{{ detalle.cantidad }}</span>
+                <span class="subtotal">{{ (detalle.precio * detalle.cantidad) | number:'1.0-0' }}</span>
+              </div>
+            </div>
           </ion-item>
           <ion-item-options side="end">
-            <ion-item-option color="secondary" (click)="editarProducto(i)">Editar</ion-item-option>
-            <ion-item-option color="danger" (click)="eliminarProducto(i)">Borrar</ion-item-option>
+            <ion-item-option color="secondary" (click)="editarProducto(i)">
+              <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+            </ion-item-option>
+            <ion-item-option color="danger" (click)="eliminarProducto(i)">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
 
-      <!-- Agregar producto -->
-      <ion-item>
-        <ion-label position="stacked">Código de Producto</ion-label>
-        <ion-input [(ngModel)]="codigoProductoSeleccionado"></ion-input>
-      </ion-item>
-
-      <ion-button expand="block" color="tertiary" (click)="ValidarProducto()">🔎 Buscar Producto</ion-button>
-
-      <div class="ion-text-center ion-padding">
-        <h2 style="font-size: 1rem;">{{ productoSeleccionado.descripcion }}</h2>
+      <div class="empty-state-list" *ngIf="detalles.length === 0">
+        <ion-icon name="cube-outline"></ion-icon>
+        <p>Aún no hay productos añadidos.</p>
       </div>
-
-      <ion-item>
-        <ion-label position="stacked">Cantidad</ion-label>
-        <ion-input [(ngModel)]="productoSeleccionado.cantidad" type="number:'1.0-0' "></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="stacked">Precio</ion-label>
-        <ion-input [(ngModel)]="productoSeleccionado.precio" type="number:'1.0-0' "></ion-input>
-      </ion-item>
-
-      <ion-button expand="block" color="success" (click)="agregarProducto()">➕ Agregar Producto</ion-button>
     </ion-card-content>
   </ion-card>
 
-  <!-- Total -->
-  <ion-grid class="ion-padding">
+  <ion-card class="add-product-card fade-in-up">
+    <ion-card-header class="card-header-icon">
+      <ion-icon name="add-circle-outline"></ion-icon>
+      <ion-card-title>Añadir Producto</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12">
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-label position="stacked">Código de Producto</ion-label>
+              <ion-input [(ngModel)]="codigoProductoSeleccionado" class="form-input"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-button expand="block" color="tertiary" (click)="ValidarProducto()" class="action-button-search">
+        <ion-icon name="search-outline"></ion-icon>
+        Buscar Producto
+      </ion-button>
+
+      <div class="product-selected-info">
+        <ion-text color="primary">{{ productoSeleccionado.descripcion }}</ion-text>
+      </div>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-label position="stacked">Cantidad</ion-label>
+              <ion-input [(ngModel)]="productoSeleccionado.cantidad" type="number" class="form-input"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6">
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-label position="stacked">Precio</ion-label>
+              <ion-input [(ngModel)]="productoSeleccionado.precio" type="number" class="form-input"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-button expand="block" color="success" (click)="agregarProducto()" class="add-button">
+        <ion-icon name="add-outline"></ion-icon>
+        Agregar Producto
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-grid class="total-grid">
     <ion-row class="ion-align-items-center">
       <ion-col size="6">
-        <h2 style="font-weight: 600;">Total</h2>
+        <ion-text class="total-label">Total</ion-text>
       </ion-col>
       <ion-col size="6" class="ion-text-right">
-        <h2 style="font-weight: 700; color: #3880ff;">{{ totalPedido() | number:'1.0-0' }}</h2>
+        <ion-text class="total-value">{{totalPedido() | number:'1.0-0' }}</ion-text>
       </ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
 
-<ion-footer class="ion-padding">
+<ion-footer class="ion-no-border footer-buttons">
   <ion-grid>
     <ion-row>
-      <ion-col>
+      <ion-col size="6">
         <ion-button expand="block" color="success" (click)="guardarPedido()">
-          💾 Guardar
+          <ion-icon name="save-outline"></ion-icon>
+          Guardar
         </ion-button>
       </ion-col>
-      <ion-col>
+      <ion-col size="6">
         <ion-button expand="block" color="medium" (click)="dismiss()">
-          ↩️ Regresar
+          <ion-icon name="arrow-back-outline"></ion-icon>
+          Regresar
         </ion-button>
       </ion-col>
     </ion-row>

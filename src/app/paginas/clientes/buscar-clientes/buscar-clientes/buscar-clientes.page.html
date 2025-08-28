@@ -1,52 +1,72 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header class="ion-no-border">
+  <ion-toolbar class="header-gradient">
     <ion-buttons slot="start">
-      <ion-button fill="clear" (click)="cancelar()">
-        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      <ion-button fill="clear" (click)="cancelar()" class="back-button">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">📇 Lista de Clientes</ion-title>
+    
+    <ion-title class="header-title">
+      <div class="title-container">
+        <ion-icon name="people" class="title-icon"></ion-icon>
+        Buscar Cliente
+      </div>
+    </ion-title>
+    
   </ion-toolbar>
 
-  <ion-toolbar>
-    <ion-searchbar
-      [(ngModel)]="textoBuscar"
-      (ionInput)="buscarCliente($event)"
-      debounce="300"
-      placeholder="🔍 Buscar por nombre o código"
-      showCancelButton="focus">
-    </ion-searchbar>
+  <ion-toolbar class="search-toolbar">
+    <div class="search-container">
+      <ion-searchbar
+        class="modern-searchbar"
+        placeholder="Buscar por nombre, RUC o código..."
+        (ionInput)="buscarCliente($event)"
+        [value]="textoBuscar"
+        animated
+        show-clear-button="focus"
+        search-icon="search"
+        clear-icon="close-circle">
+      </ion-searchbar>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content [fullscreen]="true" class="content-background ion-padding">
 
-  <!-- Mensaje si no hay resultados -->
-  <div class="ion-text-center" *ngIf="clientes.length === 0">
-    <ion-icon name="sad-outline" size="large" color="medium"></ion-icon>
-    <p style="color: gray;">No se encontraron clientes.</p>
+  <div class="empty-state" *ngIf="clientes.length === 0">
+    <div class="empty-icon">
+      <ion-icon name="person-add-outline"></ion-icon>
+    </div>
+    <h3>No se encontraron clientes</h3>
+    <p>Intenta ajustar tu búsqueda para obtener resultados.</p>
   </div>
 
-  <!-- Lista de clientes -->
-  <ion-list *ngIf="clientes.length > 0">
-    <ion-item 
-      *ngFor="let cliente of clientes | filtro:textoBuscar:'nombre'" 
-      button 
-      lines="inset"
-      class="cliente-item"
+  <ion-list class="clients-list" lines="none" *ngIf="clientes.length > 0">
+    <ion-card
+      *ngFor="let cliente of clientes | filtro:textoBuscar:'nombre'"
+      button
+      class="client-card"
       (click)="seleccionarCliente(cliente)">
-      
-      <ion-avatar slot="start">
-        <ion-icon name="person-circle-outline" size="large" color="primary"></ion-icon>
-      </ion-avatar>
 
-      <ion-label>
-        <h2 class="cliente-nombre">{{ cliente.nombre }}</h2>
-        <p class="cliente-detalle">🆔 Código: {{ cliente.codigo }}</p>
-      </ion-label>
+      <div class="client-card-content">
+        <div class="client-avatar-container">
+          <div class="client-avatar">
+            <ion-icon name="person-circle-outline"></ion-icon>
+          </div>
+        </div>
+        
+        <div class="client-info">
+          <h2 class="client-name">{{ cliente.nombre }}</h2>
+          <p class="client-detail">
+            <ion-icon name="barcode-outline"></ion-icon>
+            Código: {{ cliente.codigo }}
+          </p>
+        </div>
 
-      <ion-icon name="chevron-forward-outline" slot="end" color="medium"></ion-icon>
-    </ion-item>
+        <div class="action-indicator">
+          <ion-icon name="chevron-forward"></ion-icon>
+        </div>
+      </div>
+    </ion-card>
   </ion-list>
-
 </ion-content>

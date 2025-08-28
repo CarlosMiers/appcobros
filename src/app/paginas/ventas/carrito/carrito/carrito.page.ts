@@ -9,9 +9,6 @@ import { ClientesService } from 'src/app/services/clientes/clientes.service';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { DetalleProducto } from 'src/app/models/productos/DetalleProducto';
 import { ProductosService } from 'src/app/services/productos/productos.service';
-import { VentasService } from '../../../services/ventas/ventas.service';
-import { BuscarProductosPage } from '../../productos/buscar-productos/buscar-productos/buscar-productos.page';
-import { BuscarClientesPage } from '../../clientes/buscar-clientes/buscar-clientes/buscar-clientes.page';
 import { ConfigService } from 'src/app/services/configuracion/configuracion.service';
 import { Caja } from 'src/app/models/cajas/cajas';
 import { CajasService } from 'src/app/services/cajas/cajas.service';
@@ -19,13 +16,18 @@ import { BluetoothSerial } from '@awesome-cordova-plugins/bluetooth-serial/ngx';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { Device } from '@capacitor/device';
 import { ActivatedRoute } from '@angular/router';
+import { VentasService } from 'src/app/services/ventas/ventas.service';
+import { BuscarProductosPage } from 'src/app/paginas/productos/buscar-productos/buscar-productos/buscar-productos.page';
+import { BuscarClientesPage } from 'src/app/paginas/clientes/buscar-clientes/buscar-clientes/buscar-clientes.page';
+
 
 @Component({
-  selector: 'app-detalle-venta',
-  templateUrl: './detalle-venta.page.html',
-  styleUrls: ['./detalle-venta.page.scss'],
+  selector: 'app-carrito',
+  templateUrl: './carrito.page.html',
+  styleUrls: ['./carrito.page.scss'],
 })
-export class DetalleVentaPage implements OnInit {
+export class CarritoPage implements OnInit {
+
   //NECESARIO PARA OBTENER LOS DATOS DE LA FACTURA A EMITIR
   EditCaja: Caja = {
     codigo: 0,
@@ -766,4 +768,3 @@ export class DetalleVentaPage implements OnInit {
     await this.navCtrl.pop();
   }
 }
-// Fin del código

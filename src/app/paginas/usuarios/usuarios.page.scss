@@ -1,145 +1,354 @@
-/* --- ion-content: Reseteando padding y asegurando el flexbox principal --- */
-ion-content.login-content {
-  --background: linear-gradient(to bottom, #E3F2FD, #BBDEFB);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center; /* Centra el contenido horizontalmente dentro del ion-content */
-  height: 100%;
-  width: 100%; /* Asegura que el ion-content ocupe todo el ancho */
-
-  /* ¡CLAVE! Elimina el padding por defecto de ion-content para que el contenido toque los bordes si es necesario */
-  --padding-top: 0px !important; /* ¡Usamos !important para forzar! */
-  --padding-bottom: 0px !important;
-  --padding-start: 0px !important;
-  --padding-end: 0px !important;
-  --keyboard-offset: 0px !important;
+:host {
+  --sn-primary: #0D47A1;
+  --sn-primary-light: #1565C0;
+  --sn-primary-dark: #003c8f;
+  --sn-secondary: #1976D2;
+  --sn-accent: #64B5F6;
 }
 
-/* --- .logo-container: Asegurando el ancho completo del contenedor del logo --- */
-.logo-container {
-  width: 100%; /* ¡CLAVE! El contenedor debe ocupar el 100% del ancho de su padre (ion-content) */
-  padding: 0 !important; /* Sin padding interno para que el logo pueda ir de borde a borde */
+.login-content {
+  --background: linear-gradient(135deg, var(--sn-primary) 0%, var(--sn-primary-light) 50%, var(--sn-secondary) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Formas de fondo animadas */
+.background-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.shape {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 50%;
+  animation: float 20s infinite ease-in-out;
+}
+
+.shape-1 {
+  width: 200px;
+  height: 200px;
+  top: 10%;
+  left: -50px;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 150px;
+  height: 150px;
+  top: 60%;
+  right: -75px;
+  animation-delay: 5s;
+}
+
+.shape-3 {
+  width: 100px;
+  height: 100px;
+  top: 30%;
+  right: 20%;
+  animation-delay: 10s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-30px) rotate(180deg);
+    opacity: 0.1;
+  }
+}
+
+/* Logo Header - Extensión completa pero ajustado */
+.logo-header {
+  width: 100vw;
+  height: 160px;
+  margin-left: calc(-50vw + 50%);
   position: relative;
   overflow: hidden;
   display: flex;
-  justify-content: center; /* Centra el logo horizontalmente si su imagen no es 100% de ancho */
-  align-items: flex-start; /* Alinea el logo en la parte superior de su contenedor */
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  padding: 10px;
   
-  min-height: 0; /* Permite que la altura se ajuste al contenido del logo */
-  height: auto; 
-  margin-top: 0rem !important; /* Pegado arriba, ¡forzado! */
-
-  // Media queries para ajustar el margen superior si es necesario en ciertos dispositivos
-  @media screen and (orientation: landscape) {
-    margin-top: 0rem !important;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    z-index: 1;
   }
-  @media screen and (min-width: 768px) {
-    margin-top: 0rem !important;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.3) 20%, 
+      rgba(255, 255, 255, 0.8) 50%, 
+      rgba(255, 255, 255, 0.3) 80%, 
+      transparent 100%
+    );
+    z-index: 3;
   }
 }
 
-/* --- img.logo (SVG): Forzando la imagen del logo a tomar el 100% del ancho de su contenedor --- */
-.logo-container img.logo {
-  display: block; /* La imagen se comporta como un bloque */
-  margin: 0 !important; /* Elimina cualquier margen que pueda causar centrado no deseado, ¡forzado! */
-  width: 100% !important; /* ¡CLAVE! Fuerza al logo a ocupar el 100% del ancho de .logo-container, ¡forzado! */
-  height: auto; /* Mantiene la proporción de la imagen */
-  
-  object-fit: contain; /* Con SVG, 'contain' es a menudo el comportamiento por defecto y deseado */
-  object-position: top center; /* Alinea la imagen en la parte superior y centrada */
+.logo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  z-index: 1;
+  animation: shimmer 3s ease-in-out infinite;
+}
 
-  border-bottom: 10px solid #0D47A1;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  
-  max-height: 120px; /* Altura máxima general para el logo, ajústala según tu diseño */
+.logo-full {
+  max-width: 90%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+  filter: brightness(1.1) contrast(1.1);
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
 
-  @media screen and (orientation: landscape) {
-    max-height: 90px;
+.logo-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(13, 71, 161, 0.1) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(13, 71, 161, 0.2) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translateX(-100%);
   }
-  @media screen and (min-width: 768px) {
-    max-height: 100px;
+  50% {
+    opacity: 1;
+    transform: translateX(100%);
   }
 }
 
-/* --- .form-wrapper: Centrando y controlando el ancho del formulario --- */
-.form-wrapper {
-  width: 100%; /* Ocupa el 100% del ancho de ion-content */
-  padding: 1rem;
-  margin-top: 2rem; /* Ajusta este margen para posicionar el formulario debajo del logo */
-  flex-grow: 1; /* Permite que el formulario ocupe el espacio restante y empuje el footer */
+/* Contenedor principal y formulario */
+.main-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: flex-start;
-  align-items: center; /* ¡CLAVE! Centra la ion-grid y sus columnas horizontalmente */
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  background-color: transparent;
+  padding-top: 1rem;
+}
 
-  // Media queries para ajustes específicos del formulario
-  @media screen and (min-width: 768px) {
-    padding: 2rem;
-    margin-top: 3rem;
-    max-width: 600px; /* Limita el ancho del formulario en pantallas más grandes */
+.form-wrapper {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Estilos para los inputs - Fondo blanco, menos ovalados */
+.input-box {
+  --background: rgba(255, 255, 255, 0.85); /* Blanco semi-transparente */
+  --border-radius: 8px; /* Menos ovalado */
+  --border-color: transparent;
+  margin-bottom: 1.5rem;
+  --color: var(--sn-primary-dark); /* Color de texto oscuro para el contraste */
+  --placeholder-color: rgba(13, 71, 161, 0.8); /* Placeholder oscuro */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  ion-icon {
+    /* Color del icono en contraste con el input */
+    color: var(--sn-primary-dark) !important;
   }
-  @media screen and (orientation: landscape) {
-    padding: 1rem 3rem;
-    margin-top: 2rem;
-    max-width: 500px;
-  }
 }
 
-/* --- ion-grid, ion-row, ion-col: Asegurando que las columnas de Ionic funcionen correctamente --- */
-ion-grid {
-  width: 100%; /* La grilla debe ocupar el 100% del form-wrapper */
-  // Si ves padding extra, puedes resetearlo aquí:
-  // --ion-grid-padding: 0 !important;
+/* Botones con los mismos estilos de la pantalla de bienvenida */
+.primary-btn {
+  --background: linear-gradient(45deg, #ffffff, #f8f9fa);
+  --background-activated: linear-gradient(45deg, #f8f9fa, #e9ecef);
+  --color: var(--sn-primary);
+  --box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
 }
 
-ion-row {
-  width: 100%; /* La fila debe ocupar el 100% de la grilla */
-  justify-content: center; /* Centra las columnas dentro de la fila */
+.secondary-btn {
+  --background: transparent;
+  --background-activated: rgba(255, 255, 255, 0.1);
+  --color: #ffffff;
+  --border-color: rgba(255, 255, 255, 0.3);
+  --border-width: 2px;
+  backdrop-filter: blur(10px);
 }
 
-ion-col {
-  /* ¡CLAVE! Asegura que los hijos de la columna ocupen el 100% de su ancho */
-  width: 100% !important; /* ¡Forzado! */
+/* Sección de publicidad con íconos */
+.ads-section {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra los input-box y action-btn dentro de la columna */
-  
-  // Puedes anular el padding por defecto de ion-col si notas espacios no deseados
-  // --ion-grid-column-padding-end: 0px !important;
-  // --ion-grid-column-padding-start: 0px !important;
-}
-
-/* --- input-box y action-btn: Asegurando el ancho completo dentro de la columna --- */
-.input-box {
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
-  width: 100% !important; /* ¡Forzado! */
-}
-
-.action-btn {
-  border-radius: 25px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  margin-top: 1rem;
-  width: 100% !important; /* ¡Forzado! */
-}
-
-/* --- Footer: Se mantiene igual --- */
-.footer {
-  background-color: #0D47A1;
-  color: #FFF;
-  padding: 10px 0;
-  text-align: center;
+  align-items: center;
   width: 100%;
-  flex-shrink: 0;
+  max-width: 300px;
+  margin-top: auto;
+  margin-bottom: 1rem;
+}
 
-  .footer-text h1 {
-    font-size: 1.1rem;
-    margin: 0;
+.ads-title {
+  font-size: 1rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1rem;
+}
+
+.ads-icons-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.ads-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8rem;
+  
+  ion-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    animation: icon-bounce 2s infinite ease-in-out;
   }
-  .footer-text p {
-    font-size: 0.9rem;
+}
+
+@keyframes icon-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Footer idéntico al de la pantalla de bienvenida */
+.custom-footer {
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer-toolbar {
+  --background: var(--sn-primary);
+  width: 100%;
+  --border-width: 0;
+}
+
+.footer-content {
+  text-align: center;
+  color: #ffffff;
+  background-color: transparent !important;
+  
+  h6 {
     margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  
+  p {
+    margin: 0.25rem 0;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .company-info {
+    margin-top: 0.5rem;
+    
+    .website-link {
+      font-size: 0.8rem;
+      color: #ffffff;
+      text-decoration: underline;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        color: #E3F2FD;
+        transform: scale(1.05);
+      }
+      
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .logo-header {
+    height: 120px;
+  }
+  
+  .form-wrapper {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-header {
+    height: 100px;
+  }
+}
+
+/* Animaciones para estados reducidos */
+@media (prefers-reduced-motion: reduce) {
+  .shape,
+  .logo-overlay {
+    animation: none;
   }
 }

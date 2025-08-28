@@ -1,26 +1,414 @@
-/* Animación para el contenido */
-.container div {
-  opacity: 0;
-  animation: fadeIn 0.5s ease-in-out forwards;
+:host {
+  --sn-primary: #0D47A1;
+  --sn-primary-light: #1565C0;
+  --sn-primary-dark: #003c8f;
+  --sn-secondary: #1976D2;
+  --sn-accent: #64B5F6;
 }
 
-.container div:nth-child(1) {
-  animation-delay: 0.2s;
-}
-.container div:nth-child(2) {
-  animation-delay: 0.4s;
-}
-.container div:nth-child(3) {
-  animation-delay: 0.6s;
+.welcome-content {
+  --background: linear-gradient(135deg, var(--sn-primary) 0%, var(--sn-primary-light) 50%, var(--sn-secondary) 100%);
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
+/* Formas de fondo animadas */
+.background-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.shape {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 50%;
+  animation: float 20s infinite ease-in-out;
+}
+
+.shape-1 {
+  width: 200px;
+  height: 200px;
+  top: 10%;
+  left: -50px;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 150px;
+  height: 150px;
+  top: 60%;
+  right: -75px;
+  animation-delay: 5s;
+}
+
+.shape-3 {
+  width: 100px;
+  height: 100px;
+  top: 30%;
+  right: 20%;
+  animation-delay: 10s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.3;
   }
-  100% {
+  50% {
+    transform: translateY(-30px) rotate(180deg);
+    opacity: 0.1;
+  }
+}
+
+/* Logo Header - Extensión completa pero ajustado */
+.logo-header {
+  width: 100vw;
+  height: 160px;
+  margin-left: calc(-50vw + 50%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  padding: 10px;
+  
+  /* Efecto de superposición sutil */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+  }
+  
+  /* Bordes decorativos */
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.3) 20%, 
+      rgba(255, 255, 255, 0.8) 50%, 
+      rgba(255, 255, 255, 0.3) 80%, 
+      transparent 100%
+    );
+    z-index: 3;
+  }
+}
+
+.logo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  z-index: 1;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.logo-full {
+  max-width: 90%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+  filter: brightness(1.1) contrast(1.1);
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.logo-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(13, 71, 161, 0.1) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(13, 71, 161, 0.2) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translateX(-100%);
+  }
+  50% {
     opacity: 1;
+    transform: translateX(100%);
+  }
+}
+
+/* Contenedor principal */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  /* Aseguramos que el fondo sea transparente */
+  background-color: transparent;
+}
+
+/* Contenido de bienvenida */
+.welcome-section {
+  margin-bottom: 3rem;
+  
+  .welcome-title {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .welcome-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1rem;
+    background-color: transparent !important;
+    
+    p {
+      margin: 0;
+    }
+  }
+  
+  .app-description {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    background-color: transparent !important;
+    
+    p {
+      margin: 0;
+    }
+  }
+}
+
+/* Botones mejorados */
+.buttons-container {
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 2rem;
+  background-color: transparent;
+  
+  ion-button {
+    margin: 0.5rem 0;
+    height: 50px;
+    border-radius: 25px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+.primary-btn {
+  --background: linear-gradient(45deg, #ffffff, #f8f9fa);
+  --background-activated: linear-gradient(45deg, #f8f9fa, #e9ecef);
+  --color: var(--sn-primary);
+  --box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+  
+  ion-icon {
+    margin-inline-end: 8px;
+  }
+}
+
+.secondary-btn {
+  --background: transparent;
+  --background-activated: rgba(255, 255, 255, 0.1);
+  --color: #ffffff;
+  --border-color: rgba(255, 255, 255, 0.3);
+  --border-width: 2px;
+  backdrop-filter: blur(10px);
+  
+  ion-icon {
+    margin-inline-end: 8px;
+  }
+}
+
+/* Sección de características */
+.features-section {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 300px;
+  margin-top: 1rem;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8rem;
+  
+  ion-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    animation: icon-bounce 2s infinite ease-in-out;
+  }
+}
+
+/* Nuevo keyframe para la animación de los íconos */
+@keyframes icon-bounce {
+  0%, 100% {
     transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Footer personalizado */
+.custom-footer {
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer-toolbar {
+  /* Establecemos el color del fondo aquí para anular el estilo por defecto de Ionic */
+  --background: var(--sn-primary); 
+  /* Aseguramos que el ancho no sobrepase la pantalla */
+  width: 100%;
+  --border-width: 0;
+}
+
+.footer-content {
+  text-align: center;
+  color: #ffffff;
+  /* Eliminamos cualquier fondo de ion-text que pueda causar un bloque blanco */
+  background-color: transparent !important;
+  
+  h6 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  
+  p {
+    margin: 0.25rem 0;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .company-info {
+    margin-top: 0.5rem;
+    
+    .website-link {
+      font-size: 0.8rem;
+      color: #ffffff;
+      text-decoration: underline;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        color: #E3F2FD;
+        transform: scale(1.05);
+      }
+      
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .logo-header {
+    height: 120px;
+  }
+  
+  .welcome-section .welcome-title {
+    font-size: 2rem;
+  }
+  
+  .buttons-container {
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-header {
+    height: 100px;
+  }
+  
+  .welcome-section {
+    .welcome-title {
+      font-size: 1.8rem;
+    }
+    
+    .welcome-subtitle {
+      font-size: 1rem;
+    }
+    
+    .app-description {
+      font-size: 0.9rem;
+    }
+  }
+  
+  .buttons-container ion-button {
+    height: 45px;
+    font-size: 0.95rem;
+  }
+  
+  .features-section {
+    max-width: 250px;
+  }
+  
+  .feature-item {
+    font-size: 0.75rem;
+    
+    ion-icon {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+/* Animaciones para estados reducidos */
+@media (prefers-reduced-motion: reduce) {
+  .shape,
+  .logo-overlay {
+    animation: none;
   }
 }

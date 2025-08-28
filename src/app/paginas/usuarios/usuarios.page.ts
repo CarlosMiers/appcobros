@@ -76,6 +76,11 @@ export class UsuariosPage implements OnInit {
   }
 
   
+    openWebsite() {
+      window.open('https://www.synsa.com.py', '_blank');
+    }
+  
+
   Registrar() {
     this.router.navigate(['/register']);
   }

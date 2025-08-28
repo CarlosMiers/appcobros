@@ -1,77 +1,570 @@
-.lista-clientes {
-  ion-card {
-    border-radius: 16px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
+/* clientes.page.scss */
+
+// Variables de Synsa (Colores Corporativos)
+:host {
+  --sn-primary: #0D47A1;
+  --sn-primary-light: #1565C0;
+  --sn-secondary: #1976D2;
+  --sn-accent: #64B5F6;
+  --sn-dark: #003c8f;
+  --sn-success: #059669;
+  --sn-warning: #d97706;
+  --sn-gradient: linear-gradient(135deg, #0D47A1 0%, #1976D2 50%, #64B5F6 100%);
+  --sn-gradient-light: linear-gradient(135deg, rgba(13, 71, 161, 0.1) 0%, rgba(25, 118, 210, 0.1) 100%);
+  --sn-card-shadow: 0 4px 20px rgba(13, 71, 161, 0.08);
+  --sn-hover-shadow: 0 8px 32px rgba(13, 71, 161, 0.12);
+  --sn-text-primary: #1a202c;
+  --sn-text-secondary: #64748b;
+}
+
+// Header mejorado
+ion-header {
+  &.ion-no-border::after {
+    display: none;
+  }
+
+  .header-gradient {
+    --background: var(--sn-gradient);
+    --color: white;
     position: relative;
-    overflow: hidden;
-
-    &:hover {
-      transform: scale(1.02);
-    }
-
-    .icono-superior {
+    
+    &::after {
+      content: '';
       position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 32px;
-      color: var(--ion-color-primary);
-      opacity: 0.3;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
     }
+  }
 
-    ion-card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--ion-color-primary);
+  .back-button,
+  .action-button {
+    --color: white;
+    --background-hover: rgba(255, 255, 255, 0.1);
+    --border-radius: 12px;
+    
+    ion-icon {
+      font-size: 1.3rem;
     }
+  }
 
-    ion-card-content {
-      font-size: 0.95rem;
-      color: #444;
+  .header-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
 
-      .icono {
-        font-size: 1.1rem;
-        margin-right: 4px;
-        color: var(--ion-color-medium);
-        vertical-align: middle;
+    .title-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .title-icon {
+        font-size: 1.4rem;
+        opacity: 0.9;
       }
+    }
+  }
 
-      strong {
-        margin-right: 4px;
-      }
+  .search-toolbar {
+    --background: white;
+    --border-color: #e2e8f0;
+    padding: 8px 0;
 
-      span {
-        color: var(--ion-color-dark);
+    .search-container {
+      padding: 0 16px;
+
+      .modern-searchbar {
+        --background: #f8fafc;
+        --border-radius: 16px;
+        --box-shadow: var(--sn-card-shadow);
+        --placeholder-color: var(--sn-text-secondary);
+        --icon-color: var(--sn-secondary);
+        --clear-button-color: var(--sn-text-secondary);
+        
+        border: 2px solid transparent;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &.searchbar-has-focus {
+          --background: white;
+          border-color: var(--sn-accent);
+          transform: translateY(-2px);
+          --box-shadow: var(--sn-hover-shadow);
+        }
       }
     }
   }
 }
 
-ion-searchbar {
-  --background: #ffffff;
-  --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-radius: 8px;
+// Content
+ion-content {
+  &.content-background {
+    --background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  }
+
+  .loading-container {
+    padding: 20px 16px;
+  }
+
+  .clients-container {
+    padding: 20px 16px 120px;
+  }
 }
 
-ion-fab-button {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+// Estados de carga (Skeleton)
+.skeleton-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--sn-card-shadow);
+  display: flex;
+  gap: 16px;
+  
+  .skeleton-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    flex-shrink: 0;
+  }
+
+  .skeleton-content {
+    flex: 1;
+
+    .skeleton-line {
+      height: 14px;
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 1.5s infinite;
+      border-radius: 4px;
+      margin-bottom: 8px;
+
+      &.skeleton-title {
+        height: 18px;
+        width: 70%;
+      }
+
+      &.skeleton-subtitle {
+        width: 50%;
+        margin-bottom: 16px;
+      }
+
+      &.skeleton-small {
+        height: 12px;
+        width: 60%;
+      }
+    }
+
+    .skeleton-info {
+      display: flex;
+      gap: 20px;
+      margin-top: 12px;
+    }
+  }
 }
 
-ion-toolbar[color=primary] {
-  color: #fff;
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-ion-toolbar[color=light] {
-  --background: #f8f8f8;
+// Estado vacío
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--sn-text-secondary);
+  min-height: 300px;
+
+  .empty-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    opacity: 0.6;
+    color: var(--sn-accent);
+  }
+
+  h3 {
+    color: var(--sn-text-primary);
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.5;
+    max-width: 280px;
+  }
 }
 
-ion-button[color=light] {
-  --background: #ffffff;
-  --color: var(--ion-color-primary);
+// Lista de clientes
+.clients-list {
+  background: transparent;
+  padding: 0;
+
+  // Cards de clientes mejoradas
+  .client-card {
+    margin: 0 0 20px 0;
+    border-radius: 20px;
+    box-shadow: var(--sn-card-shadow);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    background: white;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: visible;
+    cursor: pointer;
+
+    // Línea superior de color Synsa
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--sn-gradient);
+      border-radius: 20px 20px 0 0;
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    &:hover {
+      &::before {
+        transform: scaleX(1);
+      }
+      
+      transform: translateY(-8px);
+      box-shadow: var(--sn-hover-shadow);
+      border-color: var(--sn-accent);
+
+      .action-indicator {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .client-avatar {
+        transform: scale(1.05);
+      }
+    }
+
+    // Avatar del cliente con colores Synsa
+    .client-avatar-container {
+      position: absolute;
+      top: -8px;
+      right: 20px;
+      z-index: 2;
+
+      .client-avatar {
+        width: 56px;
+        height: 56px;
+        background: var(--sn-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.6rem;
+        box-shadow: 0 6px 20px rgba(13, 71, 161, 0.2);
+        border: 3px solid white;
+        transition: transform 0.3s ease;
+
+        ion-icon {
+          font-size: 1.6rem;
+        }
+      }
+
+      .status-badge {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        font-size: 0.7rem;
+        min-width: auto;
+        height: 18px;
+        border: 2px solid white;
+      }
+    }
+
+    // Header de la card
+    .client-card-header {
+      padding: 20px 80px 16px 20px;
+
+      .client-name {
+        color: var(--sn-primary);
+        font-weight: 700;
+        font-size: 1.25rem;
+        line-height: 1.3;
+        margin: 0 0 4px 0;
+        text-transform: capitalize;
+      }
+
+      .client-subtitle {
+        color: var(--sn-text-secondary);
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin: 0;
+
+        .location-icon {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    // Contenido de la card
+    .client-card-content {
+      padding: 0 20px 20px;
+
+      .info-grid {
+        padding: 0;
+
+        .info-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 12px;
+
+          .info-icon-container {
+            width: 36px;
+            height: 36px;
+            background: var(--sn-gradient-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            .info-icon {
+              font-size: 1rem;
+              color: var(--sn-secondary);
+            }
+          }
+
+          .info-content {
+            flex: 1;
+            min-width: 0;
+
+            .info-label {
+              display: block;
+              font-size: 0.8rem;
+              color: var(--sn-text-secondary);
+              font-weight: 500;
+              margin-bottom: 2px;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+
+            .info-value {
+              display: block;
+              font-size: 1rem;
+              color: var(--sn-text-primary);
+              font-weight: 600;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+        }
+
+        .additional-info {
+          margin-top: 12px;
+
+          .info-chip {
+            --background: var(--sn-gradient-light);
+            --color: var(--sn-secondary);
+            height: 28px;
+            font-size: 0.8rem;
+
+            ion-icon {
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+    }
+
+    // Indicador de acción
+    .action-indicator {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%) translateX(10px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      color: var(--sn-accent);
+
+      ion-icon {
+        font-size: 1.2rem;
+      }
+    }
+  }
 }
 
+// Item deslizante
+ion-item-sliding {
+  margin: 0 0 20px 0;
+
+  ion-item-options {
+    ion-item-option {
+      --background: var(--color);
+      
+      ion-icon {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+// FAB mejorado con colores Synsa
+.fab-container {
+  --box-shadow: var(--sn-hover-shadow);
+
+  .main-fab {
+    --background: var(--sn-gradient);
+    --box-shadow: 0 8px 32px rgba(5, 150, 105, 0.3);
+    --color: white;
+    
+    width: 64px;
+    height: 64px;
+    
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      transform: scale(1.05) rotate(90deg);
+      --box-shadow: 0 12px 40px rgba(5, 150, 105, 0.4);
+    }
+
+    ion-icon {
+      font-size: 1.8rem;
+    }
+  }
+}
+
+// Footer mejorado
 ion-footer {
-  ion-button {
-    font-size: 0.9rem;
+  &.ion-no-border::before {
+    display: none;
+  }
+
+  .footer-toolbar {
+    --background: white;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    --min-height: 60px; /* Reducido de 80px a 60px */
+
+    .pagination-container {
+      padding: 8px 16px; /* Reducido el padding vertical de 16px a 8px */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .page-info {
+        flex: 1;
+
+        ion-text {
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+      }
+
+      .nav-buttons {
+        display: flex;
+        gap: 12px;
+
+        .nav-button {
+          --border-width: 2px;
+          --border-color: var(--sn-secondary);
+          --color: var(--sn-secondary);
+          --background: transparent;
+          --border-radius: 12px;
+          height: 38px; /* Ajustada la altura del botón */
+          font-weight: 600;
+          font-size: 0.85rem; /* Fuente un poco más pequeña */
+
+          transition: all 0.3s ease;
+
+          &:not([disabled]):hover {
+            --background: var(--sn-secondary);
+            --color: white;
+            transform: translateY(-2px);
+          }
+
+          &[disabled] {
+            opacity: 0.4;
+          }
+
+          ion-icon {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animaciones
+.fade-in-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .client-card {
+    .client-card-header {
+      padding-right: 70px;
+      
+      .client-name {
+        font-size: 1.1rem;
+      }
+    }
+
+    .client-avatar-container .client-avatar {
+      width: 48px;
+      height: 48px;
+      font-size: 1.4rem;
+    }
+
+    .info-grid ion-row ion-col {
+      padding: 4px;
+    }
+  }
+
+  .pagination-container {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+
+    .nav-buttons {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// Mejoras adicionales para tema oscuro
+@media (prefers-color-scheme: dark) {
+  .client-card {
+    --background: #1e293b;
+    border-color: rgba(71, 85, 105, 0.3);
+  }
+
+  .skeleton-card {
+    background: #1e293b;
   }
 }

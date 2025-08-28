@@ -1,76 +1,218 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<!-- clientes.page.html -->
+<ion-header class="ion-no-border">
+  <ion-toolbar class="header-gradient">
     <ion-buttons slot="start">
-      <ion-button fill="clear" (click)="dismiss()">
+      <ion-button fill="clear" (click)="dismiss()" class="back-button">
         <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Lista de Clientes</ion-title>
+    
+    <ion-title class="header-title">
+      <div class="title-container">
+        <ion-icon name="people" class="title-icon"></ion-icon>
+        Lista de Clientes
+      </div>
+    </ion-title>
+    
+    <ion-buttons slot="end">
+      <ion-button fill="clear" class="action-button">
+        <ion-icon name="filter" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
-
-  <ion-toolbar color="light">
-    <ion-searchbar
-      placeholder="Buscar cliente..."
-      (ionInput)="buscar($event)"
-      animated
-      color="primary">
-    </ion-searchbar>
+  
+  <ion-toolbar class="search-toolbar">
+    <div class="search-container">
+      <ion-searchbar
+        class="modern-searchbar"
+        placeholder="Buscar por nombre, RUC o código..."
+        (ionInput)="buscar($event)"
+        [value]="textoBuscar"
+        animated
+        show-clear-button="focus"
+        search-icon="search"
+        clear-icon="close-circle">
+      </ion-searchbar>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-list lines="none" class="lista-clientes">
-    <ion-card *ngFor="let datos of clientes | filtro:textoBuscar:'nombre'" (click)="openEditCliente(datos.codigo)" class="card-cliente ion-margin">
-      <ion-card-header class="cliente-card">
-        <ion-card-title class="ion-text-capitalize">{{ datos.nombre }}</ion-card-title>
-      </ion-card-header>
+<ion-content [fullscreen]="true" class="content-background">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div *ngFor="let item of [1,2,3]" class="skeleton-card">
+      <div class="skeleton-avatar"></div>
+      <div class="skeleton-content">
+        <div class="skeleton-line skeleton-title"></div>
+        <div class="skeleton-line skeleton-subtitle"></div>
+        <div class="skeleton-info">
+          <div class="skeleton-line skeleton-small"></div>
+          <div class="skeleton-line skeleton-small"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <ion-card-content class="cliente-card">
-        <ion-grid>
-          <ion-row>
-            <ion-col size="6" class="ion-text-start">
-              <ion-icon name="card" class="icono"></ion-icon>
-              <strong>Cuenta:</strong>
-              <span>{{ datos.codigo }}</span>
-            </ion-col>
-            <ion-col size="6" class="ion-text-start">
-              <ion-icon name="business" class="icono"></ion-icon>
-              <strong>RUC:</strong>
-              <span>{{ datos.ruc }}</span>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-content>
+  <!-- Lista de Clientes -->
+  <div *ngIf="!isLoading" class="clients-container">
+    <!-- Estado vacío -->
+    <div *ngIf="(clientes | filtro:textoBuscar:'nombre').length === 0" class="empty-state">
+      <div class="empty-icon">
+        <ion-icon name="people-outline"></ion-icon>
+      </div>
+      <h3>No se encontraron clientes</h3>
+      <p>{{ textoBuscar ? 'Intenta ajustar tu búsqueda' : 'Comienza agregando tu primer cliente' }}</p>
+    </div>
 
-      <ion-icon name="person-circle" class="icono-superior"></ion-icon>
-    </ion-card>
-  </ion-list>
+    <!-- Cards de Clientes -->
+    <ion-list class="clients-list" lines="none" *ngIf="(clientes | filtro:textoBuscar:'nombre').length > 0">
+      <ion-item-sliding 
+        *ngFor="let datos of clientes | filtro:textoBuscar:'nombre'; let i = index" 
+        #slidingItem>
+        
+        <!-- Card Principal -->
+        <ion-card 
+          class="client-card fade-in-up" 
+          [style.animation-delay]="(i * 0.1) + 's'"
+          button 
+          (click)="openEditCliente(datos.codigo)">
+          
+          <!-- Avatar y Badge de Estado -->
+          <div class="client-avatar-container">
+            <div class="client-avatar">
+              <ion-icon name="person"></ion-icon>
+            </div>
+            <ion-badge class="status-badge" color="success">Activo</ion-badge>
+          </div>
 
+          <!-- Header de la Card -->
+          <ion-card-header class="client-card-header">
+            <ion-card-title class="client-name">
+              {{ datos.nombre }}
+            </ion-card-title>
+            <ion-card-subtitle class="client-subtitle">
+              <ion-icon name="location" class="location-icon"></ion-icon>
+              Cliente desde 2023
+            </ion-card-subtitle>
+          </ion-card-header>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-adjusted">
-    <ion-fab-button color="success" (click)="openEditCliente(0)">
-      <ion-icon name="add-outline"></ion-icon>
+          <!-- Contenido de la Card -->
+          <ion-card-content class="client-card-content">
+            <ion-grid class="info-grid">
+              <ion-row>
+                <ion-col size="6">
+                  <div class="info-item">
+                    <div class="info-icon-container">
+                      <ion-icon name="card" class="info-icon"></ion-icon>
+                    </div>
+                    <div class="info-content">
+                      <span class="info-label">Código</span>
+                      <span class="info-value">{{ datos.codigo }}</span>
+                    </div>
+                  </div>
+                </ion-col>
+                
+                <ion-col size="6">
+                  <div class="info-item">
+                    <div class="info-icon-container">
+                      <ion-icon name="business" class="info-icon"></ion-icon>
+                    </div>
+                    <div class="info-content">
+                      <span class="info-label">RUC</span>
+                      <span class="info-value">{{ datos.ruc }}</span>
+                    </div>
+                  </div>
+                </ion-col>
+              </ion-row>
+              
+              <!-- Información adicional -->
+              <ion-row>
+                <ion-col size="12">
+                  <div class="additional-info">
+                    <ion-chip class="info-chip" fill="outline" color="primary">
+                      <ion-icon name="calendar" start></ion-icon>
+                      <ion-label>Última compra: hace 3 días</ion-label>
+                    </ion-chip>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+
+          <!-- Indicador de acción -->
+          <div class="action-indicator">
+            <ion-icon name="chevron-forward"></ion-icon>
+          </div>
+        </ion-card>
+
+        <!-- Opciones deslizantes -->
+        <ion-item-options side="end">
+          <ion-item-option 
+            color="primary" 
+            (click)="openEditCliente(datos.codigo); slidingItem.close()">
+            <ion-icon name="create" slot="icon-only"></ion-icon>
+          </ion-item-option>
+          
+          <ion-item-option 
+            color="tertiary" 
+            (click)="presentActionSheet(datos.codigo); slidingItem.close()">
+            <ion-icon name="ellipsis-horizontal" slot="icon-only"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </div>
+
+  <!-- FAB Mejorado -->
+  <ion-fab 
+    vertical="bottom" 
+    horizontal="end" 
+    slot="fixed" 
+    class="fab-container"
+    edge>
+    <ion-fab-button 
+      class="main-fab" 
+      color="success"
+      (click)="openEditCliente(0)">
+      <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>
 
-<ion-footer>
-  <ion-toolbar color="primary">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6" class="ion-text-center">
-          <ion-button color="light" fill="solid" shape="round" (click)="prevPage()" [disabled]="page === 1">
-            <ion-icon name="arrow-back" slot="start"></ion-icon>
-            Anterior
-          </ion-button>
-        </ion-col>
-        <ion-col size="6" class="ion-text-center">
-          <ion-button color="light" fill="solid" shape="round" (click)="nextPage()">
-            Siguiente
-            <ion-icon name="arrow-forward" slot="end"></ion-icon>
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+<!-- Footer mejorado -->
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="footer-toolbar">
+    <div class="pagination-container">
+      <!-- Info de página -->
+      <div class="page-info">
+        <ion-text color="medium">
+          Página {{ page }} • {{ (clientes | filtro:textoBuscar:'nombre').length }} resultados
+        </ion-text>
+      </div>
+      
+      <!-- Botones de navegación -->
+      <div class="nav-buttons">
+        <ion-button
+          class="nav-button"
+          fill="outline"
+          size="small"
+          color="primary"
+          (click)="prevPage()"
+          [disabled]="page === 1">
+          <ion-icon name="chevron-back" slot="start"></ion-icon>
+          Anterior
+        </ion-button>
+        
+        <ion-button
+          class="nav-button"
+          fill="outline"
+          size="small"
+          color="primary"
+          (click)="nextPage()">
+          Siguiente
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-footer>
