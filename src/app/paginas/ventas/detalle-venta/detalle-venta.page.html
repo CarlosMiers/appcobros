@@ -49,6 +49,22 @@
             </ion-item>
           </ion-col>
         </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-label position="stacked">N° Preventa</ion-label>
+              <ion-input type="text" [(ngModel)]="venta.preventa" (ionChange)="ValidarPreventa()" class="form-input" placeholder="Opcional"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-button expand="block" color="tertiary" (click)="abrirBusquedaPreventa()" class="action-button-search">
+              <ion-icon name="search-outline"></ion-icon>
+              Buscar Preventa
+            </ion-button>
+          </ion-col>
+        </ion-row>
       </ion-grid>
 
       <div class="divider-line"></div>

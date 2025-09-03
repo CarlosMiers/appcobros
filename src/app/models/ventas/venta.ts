@@ -22,6 +22,7 @@ export interface Venta {
   sucursal: number;
   moneda: number;
   comprobante: number;
+  preventa: number;
   cotizacion: number;
   vendedor: number;
   caja: number;

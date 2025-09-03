@@ -99,6 +99,10 @@ const routes: Routes = [
     path: 'carrito',
     loadChildren: () => import('./paginas/ventas/carrito/carrito/carrito.module').then( m => m.CarritoPageModule)
   },
+  {
+    path: 'buscarpreventa',
+    loadChildren: () => import('./paginas/pedidos/buscarpreventa/buscarpreventa/buscarpreventa.module').then( m => m.BuscarpreventaPageModule), canActivate: [AuthGuard]
+  },
 
 ];
 

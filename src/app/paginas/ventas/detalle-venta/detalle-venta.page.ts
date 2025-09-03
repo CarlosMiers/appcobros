@@ -19,6 +19,9 @@ import { BluetoothSerial } from '@awesome-cordova-plugins/bluetooth-serial/ngx';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { Device } from '@capacitor/device';
 import { ActivatedRoute } from '@angular/router';
+import { ListaPedidosService } from 'src/app/services/pedidos/lista-pedidos.service';
+import { BuscarpreventaPage } from '../../pedidos/buscarpreventa/buscarpreventa/buscarpreventa.page';
+import { PedidosService } from 'src/app/services/pedidos/pedidos.service';
 
 @Component({
   selector: 'app-detalle-venta',
@@ -57,6 +60,7 @@ export class DetalleVentaPage implements OnInit {
     sucursal: 1,
     moneda: 1,
     comprobante: 1,
+    preventa: 0, // Nuevo campo para el número de preventa
     cotizacion: 1,
     vendedor: 1,
     caja: 1,
@@ -93,6 +97,8 @@ export class DetalleVentaPage implements OnInit {
     private alertController: AlertController,
     private _cajaService: CajasService,
     private ventasService: VentasService,
+    private _listaPedidosService: ListaPedidosService,
+    private pedidosService: PedidosService,
     private activatedRoute: ActivatedRoute,
     private navCtrl: NavController,
     private productosService: ProductosService,
@@ -135,6 +141,7 @@ export class DetalleVentaPage implements OnInit {
         sucursal: this.config.sucursal || 1, // Sucursal por defecto
         moneda: this.config.moneda || 1,
         comprobante: 1,
+        preventa: 0, // Nuevo campo para el número de preventa
         cotizacion: 1,
         vendedor: this.config.vendedor || 1,
         caja: this.config.caja || 1,
@@ -156,6 +163,90 @@ export class DetalleVentaPage implements OnInit {
       this.loadVentaDesdeApi(this.ventaNumero);
     }
   }
+
+  async ValidarPreventa() {
+    const numeroPreventa = parseInt(this.venta.preventa as any, 10);
+    if (!numeroPreventa) {
+      // Si el campo está vacío, limpiar los detalles de la venta
+      this.detalles = [];
+      return;
+    }
+
+    try {
+      const preventa = await this.pedidosService.getPreventaByNumero(
+        numeroPreventa
+      );
+
+      if (preventa) {
+        console.log('Preventa encontrada:', preventa);
+        // Si la preventa tiene un cliente, lo asignamos
+        if (preventa.cliente) {
+          const clientePreventa = await this.clienteServices.getCliente(
+            preventa.cliente
+          );
+          if (clientePreventa) {
+            this.venta.cliente = clientePreventa.codigo;
+            this.venta.clienteNombre = clientePreventa.nombre;
+          }
+        }
+        // Limpiamos los detalles actuales y cargamos los de la preventa
+        this.detalles = [];
+        this.detalles = preventa.detalles.map((detalle: any) => ({
+          ...detalle,
+          descripcion: detalle.producto?.descripcion || 'Producto sin descripción',
+          cantidad: parseFloat(detalle.cantidad) || 0,
+          precio: parseFloat(detalle.precio) || 0,
+          prcosto: parseFloat(detalle.prcosto) || 0,
+          ivaporcentaje: parseFloat(detalle.porcentaje) || 0,
+        }));
+        this.showToast('Preventa cargada con éxito');
+      } else {
+        this.showToast(
+          'Preventa no encontrada, por favor verifique el número.'
+        );
+        // Opcional: limpiar los campos si la preventa no existe
+        this.detalles = [];
+      }
+    } catch (error) {
+      console.error('Error al validar preventa:', error);
+      this.showToast('Error al buscar preventa. Intente de nuevo.');
+      this.detalles = [];
+    }
+  }
+
+  async abrirBusquedaPreventa() {
+    const modal = await this.modalCtrl.create({
+      component: BuscarpreventaPage,
+      componentProps: {
+        // Puedes pasarle datos al modal si es necesario
+      },
+    });
+
+    modal.onDidDismiss().then((result) => {
+      const preventaSeleccionada = result.data;
+      if (preventaSeleccionada) {
+        // Asignar el número de preventa al campo del formulario
+        this.venta.preventa = preventaSeleccionada.numero;
+        // Llamar a la función para cargar los detalles
+        this.ValidarPreventa();
+      }
+    });
+
+    await modal.present();
+  }
+
+
+  async showToast(message: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000,
+      position: 'middle',
+      cssClass: 'custom-toast',
+    });
+    await toast.present();
+  }
+
+  // Función para abrir el modal de búsqueda de preventas
 
   // Generar una referencia única de 30 caracteres
   generarReferencia(): string {
@@ -468,6 +559,7 @@ export class DetalleVentaPage implements OnInit {
       camion: this.venta.camion,
       moneda: this.venta.moneda,
       comprobante: +this.venta.comprobante, // Asegurarse de que sea un número
+      preventa:this.venta.preventa,
       cotizacion: this.venta.cotizacion,
       vendedor: this.venta.vendedor,
       caja: this.venta.caja,
@@ -550,6 +642,7 @@ export class DetalleVentaPage implements OnInit {
         sucursal: data.sucursal,
         moneda: data.moneda,
         comprobante: parseFloat(data.comprobante),
+        preventa: parseFloat(data.preventa) || 0, // Nuevo campo para el número de preventa
         cotizacion: parseFloat(data.cotizacion),
         vendedor: data.vendedor,
         caja: data.caja,
@@ -706,7 +799,9 @@ export class DetalleVentaPage implements OnInit {
     ventaConDetalles.detalles.forEach((d: any) => {
       const descripcion = d.producto?.descripcion || d.descripcion;
       // Corregido: se asegura de que los valores sean números antes de multiplicar y usar toFixed
-      const precioTotal = (parseFloat(d.cantidad) * parseFloat(d.precio)).toFixed(0);
+      const precioTotal = (
+        parseFloat(d.cantidad) * parseFloat(d.precio)
+      ).toFixed(0);
 
       contenido += descripcion.slice(0, 32) + '\n';
       const lineaPrecio =
@@ -727,7 +822,9 @@ export class DetalleVentaPage implements OnInit {
       .padStart(20)}\n`;
     // Corregido: se asegura de que los valores sean números antes de usar toFixed
     const exentas = parseFloat(ventaConDetalles.exentas);
-    contenido += `EXENTAS:   ${(isNaN(exentas) ? 0 : exentas).toFixed(0).padStart(20)}\n`;
+    contenido += `EXENTAS:   ${(isNaN(exentas) ? 0 : exentas)
+      .toFixed(0)
+      .padStart(20)}\n`;
     contenido += `TOTAL:     ${parseFloat(ventaConDetalles.totalneto)
       .toFixed(0)
       .padStart(20)}\n`;

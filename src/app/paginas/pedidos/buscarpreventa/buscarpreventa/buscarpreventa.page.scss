@@ -1,0 +1,190 @@
+/* --- Variables y Mixins Globales --- */
+:host {
+  --sn-primary: #0D47A1;
+  --sn-primary-light: #1565C0;
+  --sn-secondary: #1976D2;
+  --sn-accent: #64B5F6;
+  --sn-dark: #003c8f;
+  --sn-success: #059669;
+  --sn-warning: #d97706;
+  --sn-gradient: linear-gradient(135deg, #0D47A1 0%, #1976D2 50%, #64B5F6 100%);
+  --sn-card-shadow: 0 4px 20px rgba(13, 71, 161, 0.08);
+  --sn-hover-shadow: 0 8px 32px rgba(13, 71, 161, 0.12);
+  --sn-text-primary: #1a202c;
+  --sn-text-secondary: #64748b;
+  --sn-bg-light: #f8fafc;
+}
+
+/* --- Estilos del Encabezado --- */
+ion-header {
+  &.ion-no-border::after {
+    display: none;
+  }
+  .header-gradient {
+    --background: var(--sn-gradient);
+    --color: white;
+  }
+  .back-button,
+  .action-button {
+    --color: white;
+    --background-hover: rgba(255, 255, 255, 0.1);
+    --border-radius: 12px;
+    ion-icon {
+      font-size: 1.3rem;
+    }
+  }
+  .header-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    .title-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      .title-icon {
+        font-size: 1.4rem;
+        opacity: 0.9;
+      }
+    }
+  }
+  .search-toolbar {
+    --background: white;
+    --border-color: #e2e8f0;
+    padding: 8px 0;
+    .search-container {
+      padding: 0 16px;
+      .modern-searchbar {
+        --background: #f8fafc;
+        --border-radius: 16px;
+        --box-shadow: var(--sn-card-shadow);
+        --placeholder-color: var(--sn-text-secondary);
+        --icon-color: var(--sn-secondary);
+        --clear-button-color: var(--sn-text-secondary);
+        border: 2px solid transparent;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        &.searchbar-has-focus {
+          --background: white;
+          border-color: var(--sn-accent);
+          transform: translateY(-2px);
+          --box-shadow: var(--sn-hover-shadow);
+        }
+      }
+    }
+  }
+}
+
+/* --- Contenido y Lista --- */
+ion-content {
+  &.content-background {
+    --background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  }
+  .clients-list {
+    background: transparent;
+    padding: 10px 0;
+  }
+}
+
+/* --- Estilo de Tarjeta para cada Preventa --- */
+.client-card {
+  margin: 0 0 12px 0;
+  border-radius: 12px;
+  box-shadow: var(--sn-card-shadow);
+  background: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sn-hover-shadow);
+  }
+}
+
+.client-card-content {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.client-avatar-container {
+  flex-shrink: 0;
+  margin-right: 12px;
+  .client-avatar {
+    width: 48px;
+    height: 48px;
+    background: var(--sn-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    ion-icon {
+      font-size: 2.2rem;
+      color: white;
+    }
+  }
+}
+
+.client-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.client-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--sn-dark);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.client-detail {
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: var(--sn-text-secondary);
+  margin: 4px 0 0 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  ion-icon {
+    font-size: 0.9rem;
+  }
+}
+
+.action-indicator {
+  flex-shrink: 0;
+  color: var(--sn-text-secondary);
+  font-size: 1.2rem;
+  margin-left: 12px;
+}
+
+/* --- Estado Vacío --- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--sn-text-secondary);
+  min-height: 300px;
+}
+
+.empty-icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  opacity: 0.6;
+  color: var(--sn-accent);
+}
+
+h3 {
+  color: var(--sn-text-primary);
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 1.3rem;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.5;
+  max-width: 280px;
+}

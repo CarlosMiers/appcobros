@@ -1,0 +1,80 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="header-gradient">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="cancelar()" class="back-button">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title class="header-title">
+      <div class="title-container">
+        <ion-icon name="list-outline" class="title-icon"></ion-icon>
+        Buscar Preventa
+      </div>
+    </ion-title>
+
+  </ion-toolbar>
+
+  <ion-toolbar class="search-toolbar">
+    <div class="search-container">
+      <ion-searchbar
+        class="modern-searchbar"
+        placeholder="Buscar por cliente o número..."
+        (ionInput)="buscarPreventa($event)"
+        [value]="textoBuscar"
+        animated
+        show-clear-button="focus"
+        search-icon="search"
+        clear-icon="close-circle">
+      </ion-searchbar>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="content-background ion-padding">
+
+  <div class="empty-state" *ngIf="preventasFiltradas.length === 0">
+    <div class="empty-icon">
+      <ion-icon name="clipboard-outline"></ion-icon>
+    </div>
+    <h3>No se encontraron preventas</h3>
+    <p>Intenta ajustar tu búsqueda para obtener resultados.</p>
+  </div>
+
+  <ion-list class="clients-list" lines="none" *ngIf="preventasFiltradas.length > 0">
+    <ion-card
+      *ngFor="let preventa of preventasFiltradas"
+      button
+      class="client-card"
+      (click)="seleccionarPreventa(preventa)">
+
+      <div class="client-card-content">
+        <div class="client-avatar-container">
+          <div class="client-avatar">
+            <ion-icon name="clipboard-outline"></ion-icon>
+          </div>
+        </div>
+
+        <div class="client-info">
+          <h2 class="client-name">Preventa N° {{ preventa.numero }}</h2>
+          <p class="client-detail">
+            <ion-icon name="person-outline"></ion-icon>
+            Cliente: {{ preventa.nombrecliente }}
+          </p>
+          <p class="client-detail">
+            <ion-icon name="calendar-outline"></ion-icon>
+            Fecha: {{ preventa.fecha | date:'dd/MM/yyyy' }}
+          </p>
+          <p class="client-detail">
+            <ion-icon name="cash-outline"></ion-icon>
+            Total: {{ preventa.totalneto | number:'1.0-0' }} Gs.
+          </p>
+        </div>
+
+        <div class="action-indicator">
+          <ion-icon name="chevron-forward"></ion-icon>
+        </div>
+      </div>
+    </ion-card>
+  </ion-list>
+</ion-content>

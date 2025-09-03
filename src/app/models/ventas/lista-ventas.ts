@@ -6,6 +6,7 @@ export interface ListaVenta {
   formatofactura: string;
   vencimiento: Date;
   cliente: number;
+  preventa: number;
   nombrecliente:string;
   sucursal: number;
   moneda: number;
